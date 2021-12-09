@@ -35,47 +35,60 @@ var days = new Dictionary<int, IDay>
 };
 
 Console.WriteLine("Hello, Santa!");
-Console.WriteLine($"Which day would you like to process? ({days.Keys.Min()}-{days.Keys.Max()} or 'All' for a complete run)");
-var selectedDay = 0;
-while (selectedDay == 0)
-{
-    var input = Console.ReadLine();
-    if (input == All)
-    {        
-        selectedDay = -1;        
-    }
-    else if (!int.TryParse(input, out int day) || day < days.Min(d => d.Key) || day > days.Max(d => d.Key))
+bool running = true;
+while (running)
+{    
+    Console.WriteLine($"Which day would you like to process? ({days.Keys.Min()}-{days.Keys.Max()} or '{All}' for a complete run)");
+    var selectedDay = 0;
+    while (selectedDay == 0)
     {
-        Console.WriteLine($"Enter a valid day (from {days.Min(d => d.Key)} to { days.Max(d => d.Key)})");
-    }
-    else
-    {
-        selectedDay = day;
-    }
-}
-
-if (selectedDay == -1)
-{
-    Console.WriteLine("How many runs would you like?");
-    var runs = 0;
-    while (runs == 0)
-    {
-        var runInput = Console.ReadLine();
-        if (int.TryParse(runInput, out int parsedRuns) && parsedRuns > 0)
+        var input = Console.ReadLine();
+        if (input == All)
         {
-            runs = parsedRuns;
+            selectedDay = -1;
+        }
+        else if (!int.TryParse(input, out int day) || day < days.Min(d => d.Key) || day > days.Max(d => d.Key))
+        {
+            Console.WriteLine($"Enter a valid day (from {days.Min(d => d.Key)} to { days.Max(d => d.Key)})");
         }
         else
         {
-            Console.WriteLine("Please enter a positive integer");
+            selectedDay = day;
         }
     }
-    await ProcessAllAsync(runs);
-}
-else
-{
-    await ProcessDayAsync(selectedDay, Part.One);
-    await ProcessDayAsync(selectedDay, Part.Two);
+
+    if (selectedDay == -1)
+    {
+        Console.WriteLine("How many runs would you like?");
+        var runs = 0;
+        while (runs == 0)
+        {
+            var runInput = Console.ReadLine();
+            if (int.TryParse(runInput, out int parsedRuns) && parsedRuns > 0)
+            {
+                runs = parsedRuns;
+            }
+            else
+            {
+                Console.WriteLine("Please enter a positive integer");
+            }
+        }
+        await ProcessAllAsync(runs);
+    }
+    else
+    {
+        await ProcessDayAsync(selectedDay, Part.One);
+        await ProcessDayAsync(selectedDay, Part.Two);
+    }
+
+    Console.Write("Would you like to process another day? (y/N): ");
+    var key = Console.ReadKey();
+    Console.WriteLine();
+    Console.WriteLine();
+    if (key.Key != ConsoleKey.Y)
+    {
+        running = false;
+    }
 }
 
 Console.WriteLine("Press any key to close");
