@@ -77,8 +77,7 @@ while (running)
     }
     else
     {
-        await ProcessDayAsync(selectedDay, Part.One);
-        await ProcessDayAsync(selectedDay, Part.Two);
+        await ProcessDayAsync(days[selectedDay], 1);        
     }
 
     Console.Write("Would you like to process another day? (y/N): ");
@@ -99,62 +98,44 @@ async Task ProcessAllAsync(int runs)
     var memory = GC.GetTotalMemory(true);
     foreach (var day in days)
     {
-        Console.WriteLine($"Day {day.Key}");
-        Console.WriteLine($"Part one:");
-        try
-        {
-            await ProcessRunAsync(day.Value, Part.One, runs);
-        }
-        catch (NotImplementedException)
-        {
-            Console.WriteLine($"Day {day.Key}, part {Part.One} has not yet been solved.");
-        }
-        Console.WriteLine("");
-        Console.WriteLine($"Part two:");
-        try
-        { 
-            await ProcessRunAsync(day.Value, Part.Two, runs);
-        }
-        catch (NotImplementedException)
-        {
-            Console.WriteLine($"Day {day.Key}, part {Part.Two} has not yet been solved.");
-        }
-        Console.WriteLine("");
+        await ProcessDayAsync(day.Value, runs);        
     }
+    Console.WriteLine();
     var newMemory = GC.GetTotalMemory(false) - memory;
     Console.WriteLine($"Memory increase (before GC): {newMemory / 1024} kB");
     newMemory = GC.GetTotalMemory(true) - memory;
     Console.WriteLine($"Memory increase (after GC): {newMemory / 1024} kB");
 }
 
-async Task ProcessRunAsync(IDay day, Part part, int runs)
+async Task ProcessDayAsync(IDay day, int runs)
 {
-    long answered = 0;
-    List<long> durations = new();
-    for (int i = 0; i < runs; i++)
-    {
-        var (answer, duration) = await day.ProcessPartAsync(part);
-        answered = answer;
-        durations.Add(duration);
-    }
-    Console.WriteLine($"The answer is: {answered}");
-    var avg = Math.Round(durations.Average());
-    Console.WriteLine($"Processing took an average of {avg} ms over {runs} runs (min {durations.Min()} ms, max {durations.Max()} ms)");
+    await ProcessPartAsync(day, Part.One, runs);
+    await ProcessPartAsync(day, Part.Two, runs);
+    Console.WriteLine();
 }
 
-async Task ProcessDayAsync(int day, Part part)
+async Task ProcessPartAsync(IDay day, Part part, int runs)
 {
-    Console.WriteLine("");
     try
     {
-        var (answer, duration) = await days[day].ProcessPartAsync(part);
+        long answered = 0;
+        List<long> durations = new();
+        for (int i = 0; i < runs; i++)
+        {
+            var (answer, duration) = await day.ProcessPartAsync(part);
+            answered = answer;
+            durations.Add(duration);
+        }
+        Console.WriteLine($"The answer for day {day.DayNumber}, part {part} is: {answered}");
 
-        Console.WriteLine($"The answer for part {part} is: {answer}");
-        Console.WriteLine($"Processing took {duration} ms");
+        var avg = Math.Round(durations.Average());
+        var message = runs > 1
+            ? $"Processing took an average of {avg} ms over {runs} runs (min {durations.Min()} ms, max {durations.Max()} ms)"
+            : $"Processing took {durations[0]} ms";
+        Console.WriteLine(message);
     }
     catch (NotImplementedException)
     {
-        Console.WriteLine($"Day {day} part {part} has not yet been solved.");
+        Console.WriteLine($"Day {day.DayNumber} part {part} has not yet been solved.");
     }
-    Console.WriteLine("");
 }

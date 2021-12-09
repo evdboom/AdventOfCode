@@ -9,7 +9,7 @@ namespace AdventOfCode2021.Days
         private const string Up = "up";
         private const char SplitChar = ' ';
 
-        protected override int DayNumber => 2;
+        public override int DayNumber => 2;
 
         public Day02(IFileImporter importer) : base(importer)
         {

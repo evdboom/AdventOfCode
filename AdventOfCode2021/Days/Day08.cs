@@ -6,7 +6,7 @@ namespace AdventOfCode2021.Days
     {
         private const string PartSplit = " | ";
         private const char DigitSplit = ' ';
-        protected override int DayNumber => 8;
+        public override int DayNumber => 8;
 
         private const int OneLength = 2;
         private const int TwoLength = 5;

@@ -9,7 +9,7 @@ namespace AdventOfCode2021.Days
         }
 
         private const int MaximumBasinValue = 8;
-        protected override int DayNumber => 9;
+        public override int DayNumber => 9;
 
         protected override long ProcessPartOne(string[] input)
         {

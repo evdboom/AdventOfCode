@@ -8,7 +8,7 @@ namespace AdventOfCode2021.Days
         {
         }
 
-        protected override int DayNumber => 12;
+        public override int DayNumber => 12;
 
         protected override long ProcessPartOne(string[] input)
         {

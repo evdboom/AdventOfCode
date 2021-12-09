@@ -7,7 +7,7 @@ namespace AdventOfCode2021.Days
     public abstract class Day : IDay
     {
         private readonly IFileImporter _importer;
-        protected abstract int DayNumber { get; }
+        public abstract int DayNumber { get; }
 
         public Day(IFileImporter importer)
         {

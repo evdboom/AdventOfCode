@@ -7,7 +7,7 @@ namespace AdventOfCode2021.Days
     {
         private const char NumberSplit = ',';
         private const char ValueSplit = ' ';
-        protected override int DayNumber => 4;
+        public override int DayNumber => 4;
 
         public Day04(IFileImporter importer) : base(importer)
         {

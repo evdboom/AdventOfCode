@@ -6,7 +6,7 @@ namespace AdventOfCode2021.Days
     {
         private const char Zero = '0';
         private const char One = '1';
-        protected override int DayNumber => 3;
+        public override int DayNumber => 3;
 
         public Day03(IFileImporter importer) : base(importer)
         {

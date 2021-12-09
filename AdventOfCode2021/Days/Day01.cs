@@ -4,7 +4,7 @@ namespace AdventOfCode2021.Days
 {
     public class Day01 : Day
     {
-        protected override int DayNumber => 1;
+        public override int DayNumber => 1;
         public Day01(IFileImporter importer) : base(importer)
         {
         }
