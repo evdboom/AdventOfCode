@@ -1,4 +1,5 @@
-﻿using AdventOfCode2021.Importers;
+﻿using AdventOfCode2021.Constructs;
+using AdventOfCode2021.Importers;
 
 namespace AdventOfCode2021.Days
 {
@@ -78,27 +79,28 @@ namespace AdventOfCode2021.Days
             return values[values.Count / 2];
         }
 
+        private bool IsCorrupted(string line, out char corrupt)
+        {
+            try
+            {
+                GetOpenChunks(line);
+            }
+            catch (Day10ChunkException ex)
+            {
+                corrupt = ex.CorruptChunk;
+                return true;
+            }
+
+            corrupt = default;
+            return false;
+        }
+
         private long GetCompleteValue(string line)
         {
             long sum = 0;
-            Stack<char> openChunks = new();
-            foreach (var chunkPart in line)
-            {
-                if (_openCharacters.Contains(chunkPart))
-                {
-                    openChunks.Push(chunkPart);
-                }
-                else
-                {
-                    var open = openChunks.Pop();
-                    if (chunkPart != _closeCharacters[open])
-                    {
-                        throw new InvalidOperationException("Forgot to remove corrupted?");
-                    }
-                }
-            }
-            
-            while(openChunks.TryPop(out char open))
+            var openChunks = GetOpenChunks(line);
+
+            while (openChunks.TryPop(out char open))
             {
                 sum *= CompleteMultiplier;
                 sum += _incompleteValues[_closeCharacters[open]];
@@ -107,7 +109,13 @@ namespace AdventOfCode2021.Days
             return sum;
         }
 
-        private bool IsCorrupted(string line, out char corrupt)
+        /// <summary>
+        /// Gets the open chunks for the given line
+        /// </summary>
+        /// <param name="line">Chunk line to process</param>
+        /// <returns>The stack of opened chunks without an closing part</returns>
+        /// <exception cref="Day10ChunkException">Throws and ChunkException if an corrupt closing character is found</exception>
+        private Stack<char> GetOpenChunks(string line)
         {
             Stack<char> openChunks = new();
             foreach (var chunkPart in line)
@@ -121,13 +129,12 @@ namespace AdventOfCode2021.Days
                     var open = openChunks.Pop();
                     if (chunkPart != _closeCharacters[open])
                     {
-                        corrupt = chunkPart;
-                        return true;
+                        throw new Day10ChunkException(chunkPart, open);
                     }
                 }
             }
-            corrupt = default;
-            return false;
+
+            return openChunks;
         }
     }
 }
