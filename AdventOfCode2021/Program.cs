@@ -138,4 +138,8 @@ async Task ProcessPartAsync(IDay day, Part part, int runs)
     {
         Console.WriteLine($"Day {day.DayNumber} part {part} has not yet been solved.");
     }
+    catch (FileNotFoundException ex)
+    {
+        Console.WriteLine($"{ex.Message}");
+    }
 }
