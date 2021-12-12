@@ -1,4 +1,5 @@
-﻿using AdventOfCode2021.Importers;
+﻿using AdventOfCode2021.Extensions;
+using AdventOfCode2021.Importers;
 
 namespace AdventOfCode2021.Days
 {
@@ -43,30 +44,10 @@ namespace AdventOfCode2021.Days
             if (!points.Any(p => p.X == x && p.Y == y))
             {
                 points.Add((x, y));
-                foreach (var point in Adjacent(x, y, grid, MaximumBasinValue))
+                foreach (var point in grid.Adjacent(x, y, MaximumBasinValue))
                 {
                     GetPoints(point.X, point.Y, grid, ref points);
                 }
-            }
-        }
-
-        private IEnumerable<(int X, int Y)> Adjacent(int x, int y, int[,] grid, int compare)
-        {
-            if (y > 0 && grid[x, y - 1] <= compare)
-            {
-                yield return (x, y - 1);
-            }
-            if (y < grid.GetLength(1) - 1 && grid[x, y + 1] <= compare)
-            {
-                yield return (x, y + 1);
-            }
-            if (x > 0 && grid[x - 1, y] <= compare)
-            {
-                yield return (x - 1, y);
-            }
-            if (x < grid.GetLength(0) - 1 && grid[x + 1, y] <= compare)
-            {
-                yield return (x + 1, y);
             }
         }
 
@@ -76,7 +57,7 @@ namespace AdventOfCode2021.Days
             {
                 for (int i = 0; i < grid.GetLength(0); i++)
                 {
-                    if (!Adjacent(i, j, grid, grid[i, j]).Any())
+                    if (!grid.Adjacent(i, j, grid[i, j]).Any())
                     {
                         yield return (i, j, grid[i, j]);
                     }

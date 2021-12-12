@@ -1,4 +1,5 @@
-﻿using AdventOfCode2021.Importers;
+﻿using AdventOfCode2021.Extensions;
+using AdventOfCode2021.Importers;
 
 namespace AdventOfCode2021.Days
 {
@@ -63,7 +64,7 @@ namespace AdventOfCode2021.Days
                             any = true;
                             flashes++;
                             grid[i, j] = 0;
-                            foreach ((int x, int y) in Adjacent(i, j, grid))
+                            foreach ((int x, int y) in grid.Adjacent(i, j, true))
                             {
                                 if (grid[x, y] != 0)
                                 {
@@ -76,44 +77,7 @@ namespace AdventOfCode2021.Days
             }
 
             return flashes;
-        }
-
-        private IEnumerable<(int X, int Y)> Adjacent(int x, int y, int[,] grid)
-        {
-            if (y > 0)
-            {
-                yield return (x, y - 1);
-            }
-            if (y < grid.GetLength(1) - 1)
-            {
-                yield return (x, y + 1);
-            }
-            if (x > 0)
-            {
-                yield return (x - 1, y);
-            }
-            if (x < grid.GetLength(0) - 1)
-            {
-                yield return (x + 1, y);
-            }
-            if (x > 0 && y > 0)
-            {
-                yield return (x - 1, y - 1);
-            }
-            if (x > 0 && y < grid.GetLength(1) - 1)
-            {
-                yield return (x - 1, y + 1);
-            }
-            if (x < grid.GetLength(0) - 1 && y > 0)
-            {
-                yield return (x + 1, y - 1);
-            }
-            if (x < grid.GetLength(0) - 1 && y < grid.GetLength(1) - 1)
-            {
-                yield return (x + 1, y + 1);
-            }
-        }
-
+        }      
 
         private int[,] GetGrid(string[] input)
         {
