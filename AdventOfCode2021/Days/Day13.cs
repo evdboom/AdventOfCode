@@ -1,4 +1,4 @@
-﻿using AdventOfCode2021.Importers;
+﻿using AdventOfCode2021.Services;
 using System.Drawing;
 
 namespace AdventOfCode2021.Days
@@ -11,8 +11,11 @@ namespace AdventOfCode2021.Days
         private const string Horizontal = "x";
         private const string Vertical = "y";
 
-        public Day13(IFileImporter importer) : base(importer)
+        private readonly IScreenWriter _writer;
+
+        public Day13(IFileImporter importer, IScreenWriter writer) : base(importer)
         {
+            _writer = writer;
         }
 
         public override int DayNumber => 13;
@@ -29,7 +32,7 @@ namespace AdventOfCode2021.Days
             {
                 for (int i = 0; i < result.GetLength(0); i++)
                 {
-                    if (result[i,j])
+                    if (result[i, j])
                     {
                         sum++;
                     }
@@ -41,28 +44,74 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartTwo(string[] input)
         {
-            throw new NotImplementedException();
+            var grid = GetGrid(input);
+            var instructions = GetInstructions(input);
+
+            var result = grid;
+            foreach (var instruction in instructions)
+            {
+                result = ProcessInstruction(result, instruction);
+            }
+
+            PrintGrid(result);
+
+            var sum = 0;
+            for (int j = 0; j < result.GetLength(1); j++)
+            {
+                for (int i = 0; i < result.GetLength(0); i++)
+                {
+                    if (result[i, j])
+                    {
+                        sum++;
+                    }
+                }
+            }
+
+            return sum;
+        }
+
+        private void PrintGrid(bool[,] result)
+        {
+            for (int j = 0; j < result.GetLength(1); j++)
+            {
+                for (int i = 0; i < result.GetLength(0); i++)
+                {
+                    if (result[i, j])
+                    {
+                        _writer.WriteBlock(ConsoleColor.White);
+                    }
+                    else
+                    {
+                        _writer.WriteBlock();
+                    }
+                }
+                _writer.NewLine();
+            }
         }
 
         private bool[,] ProcessInstruction(bool[,] grid, (string Direction, int Location) p)
-        {            
+        {
             if (p.Direction == Horizontal)
             {
                 return ProcessHorizontal(grid, p.Location);
             }
-            else
+            else if (p.Direction == Vertical)
             {
                 return ProcessVertical(grid, p.Location);
+            }
+            else
+            {
+                throw new ArgumentException($"Unknown direction {p.Direction}");
             }
         }
 
         private bool[,] ProcessVertical(bool[,] grid, int location)
         {
-            var result = new bool[grid.GetLength(0), grid.GetLength(1) - location];
+            var result = new bool[grid.GetLength(0), location + 1];
 
-            for(int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.GetLength(1); j++)
             {
-                for(int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.GetLength(0); i++)
                 {
                     if (j < result.GetLength(1))
                     {
@@ -73,18 +122,21 @@ namespace AdventOfCode2021.Days
                         var dist = j - location;
                         var newJ = location - dist;
 
-                        result[i, newJ] = result[i, newJ] || grid[i, j];
+                        if (newJ >= 0)
+                        {
+                            result[i, newJ] = result[i, newJ] || grid[i, j];
+                        }
                     }
                 }
             }
 
             return result;
-            
+
         }
 
         private bool[,] ProcessHorizontal(bool[,] grid, int location)
         {
-            var result = new bool[grid.GetLength(0) - location, grid.GetLength(1)];
+            var result = new bool[location + 1, grid.GetLength(1)];
 
             for (int j = 0; j < grid.GetLength(1); j++)
             {
@@ -99,7 +151,10 @@ namespace AdventOfCode2021.Days
                         var dist = i - location;
                         var newI = location - dist;
 
-                        result[newI, j] = result[newI, j] || grid[i, j];
+                        if (newI >= 0)
+                        {
+                            result[newI, j] = result[newI, j] || grid[i, j];
+                        }
                     }
                 }
             }
@@ -119,7 +174,7 @@ namespace AdventOfCode2021.Days
 
             var result = new bool[width, height];
 
-            foreach(var point in coordinates)
+            foreach (var point in coordinates)
             {
                 result[point.X, point.Y] = true;
             }

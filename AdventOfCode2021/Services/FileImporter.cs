@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2021.Importers
+﻿namespace AdventOfCode2021.Services
 {
     public class FileImporter : IFileImporter
     {

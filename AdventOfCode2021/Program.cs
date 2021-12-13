@@ -1,10 +1,11 @@
 ﻿using AdventOfCode2021.Days;
 using AdventOfCode2021.Enums;
-using AdventOfCode2021.Importers;
+using AdventOfCode2021.Services;
 
 const string All = "All";
 
 var importer = new FileImporter();
+var writer = new ScreenWriter();
 var days = new Dictionary<int, IDay>
 {
     { 1, new Day01(importer) },
@@ -19,7 +20,7 @@ var days = new Dictionary<int, IDay>
     { 10, new Day10(importer) },
     { 11, new Day11(importer) },
     { 12, new Day12(importer) },
-    { 13, new Day13(importer) },
+    { 13, new Day13(importer, writer) },
     { 14, new Day14(importer) },
     { 15, new Day15(importer) },
     { 16, new Day16(importer) },

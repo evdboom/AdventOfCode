@@ -15,7 +15,14 @@ namespace AdventOfCode2021.Tests.Base
 
         public TestDay()
         {
-            _day = (Day)Activator.CreateInstance(typeof(Day), new TestData())!;
+            try
+            {
+                _day = (Day)Activator.CreateInstance(typeof(Day), new TestData())!;
+            }
+            catch (MissingMethodException)
+            {
+                _day = (Day)Activator.CreateInstance(typeof(Day), new TestData(), new TestWriter())!;
+            }
         }
 
         [Fact]
