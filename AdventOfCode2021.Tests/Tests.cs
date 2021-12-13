@@ -79,6 +79,9 @@ namespace AdventOfCode2021.Tests
     public class Day13Tests : TestDay<Day13>
     {
         protected override long ExpectedResultPartOne => 17;
+        /// <summary>
+        /// Actual result of day 13 part 2 is a string, but other then building OCR count the number of points found and return this. for the O char found it's 16
+        /// </summary>
         protected override long ExpectedResultPartTwo => 16;
     }
 
