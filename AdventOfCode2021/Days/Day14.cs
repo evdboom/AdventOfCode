@@ -68,10 +68,10 @@ namespace AdventOfCode2021.Days
             var result = new Dictionary<string, Day14Pair>();
             for(int i = 0; i < line.Length -1; i++)
             {
-                var code = $"{line[i]}{line[i + 1]}";
+                var code = line.Substring(i, 2);
                 if (!result.ContainsKey(code))
                 {
-                    result.Add(code, new Day14Pair(code, rules[code]));
+                    result[code] = new Day14Pair(code, rules[code]);
                 }
                 else
                 {
