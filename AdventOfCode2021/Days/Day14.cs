@@ -28,6 +28,9 @@ namespace AdventOfCode2021.Days
             var rules = GetRules(input);
             var template = FillInitialTemplate(input[0], rules);
 
+            var startChar = input[0].First();
+            var endChar = input[0].Last();
+
             for (int i = 0; i < steps; i++)
             {
                 var newPairs = new Dictionary<string, Day14Pair>();
@@ -52,13 +55,15 @@ namespace AdventOfCode2021.Days
             var values = template
                 .SelectMany(t => t.Value.GetCharacterCount())
                 .GroupBy(c => c.Key)
-                .Select(g => g.Sum(c => c.Value))
-                .OrderByDescending(c => c)
-                .ToList();
+                .ToDictionary(g => g.Key, g => g.Sum(c => c.Value));
 
-            // All characters are counted twice.
-            var max = (long)Math.Ceiling(values.Max() / 2d);
-            var min = (long)Math.Ceiling(values.Min() / 2d);
+            // outer characters are only counted once.
+            values[startChar]++;
+            values[endChar]++;            
+
+            // All characters are counted twice
+            var max = values.Max(c => c.Value) / 2;
+            var min = values.Min(c => c.Value) / 2;
 
             return max - min;
         }
