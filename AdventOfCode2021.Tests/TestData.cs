@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace AdventOfCode2021.Tests.Base
+namespace AdventOfCode2021.Tests
 {
     public class TestData : IFileImporter
     {
@@ -214,16 +214,6 @@ namespace AdventOfCode2021.Tests.Base
 
         private string[] Day12()
         {
-            //return new[]
-            //{
-            //    "start-A",
-            //    "start-b",
-            //    "A-c",
-            //    "A-b",
-            //    "b-d",
-            //    "A-end",
-            //    "b-end"
-            //};
             return new[]
             {
                 "fs-end",
@@ -277,7 +267,27 @@ namespace AdventOfCode2021.Tests.Base
 
         private string[] Day14()
         {
-            throw new NotImplementedException();
+            return new[]
+            {
+                "NNCB",
+                "",
+                "CH -> B",
+                "HH -> N",
+                "CB -> H",
+                "NH -> C",
+                "HB -> C",
+                "HC -> B",
+                "HN -> C",
+                "NN -> C",
+                "BH -> H",
+                "NC -> B",
+                "NB -> B",
+                "BN -> B",
+                "BB -> N",
+                "BC -> B",
+                "CC -> N",
+                "CN -> C"
+            };
         }
 
         private string[] Day15()
