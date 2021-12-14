@@ -6,11 +6,16 @@
         private string InsertionCode { get; }
         public long Count { get; set; }
 
-        public Day14Pair(string code, string insertionCode)
+        public Day14Pair(string code, string insertionCode) : this(code, insertionCode, 1)
+        {
+
+        }
+
+        public Day14Pair(string code, string insertionCode, long count)
         {
             Code = code;
             InsertionCode = insertionCode;
-            Count = 1;
+            Count = count;
         }
 
 

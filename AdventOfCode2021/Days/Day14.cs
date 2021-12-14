@@ -33,23 +33,10 @@ namespace AdventOfCode2021.Days
 
             for (int i = 0; i < steps; i++)
             {
-                var newPairs = new Dictionary<string, Day14Pair>();
-                foreach (var pair in template)
-                {
-                    foreach (var step in pair.Value.ProcessStep(rules))
-                    {
-                        if (!newPairs.ContainsKey(step.Code))
-                        {
-                            newPairs[step.Code] = step;
-                        }
-                        else
-                        {
-                            newPairs[step.Code].Count += step.Count;
-                        }
-                    }
-                }
-
-                template = newPairs;
+                template = template
+                    .SelectMany(pair => pair.Value.ProcessStep(rules))
+                    .GroupBy(pair => pair.Code)
+                    .ToDictionary(g => g.Key, g => new Day14Pair(g.Key, rules[g.Key]) { Count = g.Sum(pair => pair.Count) });
             }
 
             var values = template
