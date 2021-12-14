@@ -1,21 +1,42 @@
 ﻿namespace AdventOfCode2021.Services
 {
     public class ScreenWriter : IScreenWriter
-    {
+    {       
         private const string Block = " ";
+
+        private bool _disabled;
+
+        public void Enable()
+        {
+            _disabled = false;
+        }
+
+        public void Disable()
+        {
+            _disabled = true;
+        }
 
         public void NewLine()
         {
+            if (_disabled)
+            {
+                return;
+            }
             Console.WriteLine();
         }
 
         public void Write(object value)
         {
+            if (_disabled)
+            {
+                return;
+            }
             Console.Write(value);
         }
 
         public void Write(object value, ConsoleColor color)
         {
+
             var old = Console.ForegroundColor;
             Console.ForegroundColor = color;
             Write(value);
@@ -38,6 +59,10 @@
 
         public void WriteLine(object value)
         {
+            if (_disabled)
+            {
+                return;
+            }
             Console.WriteLine(value);
         }
 

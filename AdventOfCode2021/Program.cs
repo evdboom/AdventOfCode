@@ -44,7 +44,7 @@ while (running)
     while (selectedDay == 0)
     {
         var input = Console.ReadLine();
-        if (input == All)
+        if (input?.ToLower() == All.ToLower())
         {
             selectedDay = -1;
         }
@@ -121,12 +121,21 @@ async Task ProcessPartAsync(IDay day, Part part, int runs)
     {
         long answered = 0;
         List<long> durations = new();
+        string run = string.Empty;
         for (int i = 0; i < runs; i++)
         {
             var (answer, duration) = await day.ProcessPartAsync(part);
             answered = answer;
             durations.Add(duration);
+            writer.Disable();
+            run = $"Day {day.DayNumber}, part {part}: run {i + 1}/{runs} completed";
+            Console.Write(run);
+            Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
+
         }
+        Console.Write(new string(' ', run.Length));
+        Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
+        writer.Enable();
         Console.WriteLine($"The answer for day {day.DayNumber}, part {part} is: {answered}");
 
         var avg = Math.Round(durations.Average());

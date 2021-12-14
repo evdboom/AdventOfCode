@@ -6,13 +6,33 @@ namespace AdventOfCode2021.Tests.Base
 {
     public class TestWriter : IScreenWriter
     {
+        private bool _disabled;
+
+        public void Enable()
+        {
+            _disabled = false;
+        }
+
+        public void Disable()
+        {
+            _disabled = true;
+        }
+
         public void NewLine()
         {
+            if (_disabled)
+            {
+                return;
+            }
             Debug.WriteLine("");
         }
 
         public void Write(object value)
         {
+            if (_disabled)
+            {
+                return;
+            }
             Debug.Write(value);
         }
 
@@ -23,11 +43,15 @@ namespace AdventOfCode2021.Tests.Base
 
         public void WriteBlock()
         {
-                Write(" ");
+            Write(" ");
         }
 
         public void WriteBlock(ConsoleColor color)
         {
+            if (_disabled)
+            {
+                return;
+            }
             Debug.Write($"{color}"[0]);
         }
 
@@ -38,6 +62,10 @@ namespace AdventOfCode2021.Tests.Base
 
         public void WriteLine(object value)
         {
+            if (_disabled)
+            {
+                return;
+            }
             Debug.WriteLine(value);
         }
     }

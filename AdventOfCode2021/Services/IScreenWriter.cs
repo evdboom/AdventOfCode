@@ -9,6 +9,8 @@
         void NewLine();
         void WriteBlock();
         void WriteBlock(ConsoleColor color);
+        void Disable();
+        void Enable();
         
     }
 }
