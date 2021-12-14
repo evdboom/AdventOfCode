@@ -15,17 +15,34 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartOne(string[] input)
         {
+            return Process(10, input);
+        }
+
+        protected override long ProcessPartTwo(string[] input)
+        {
+            return Process(40, input);
+        }
+
+        private long Process(int steps, string[] input)
+        {
             var rules = GetRules(input);
             var template = FillInitialTemplate(input[0], rules);
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < steps; i++)
             {
-                var newPairs = new List<Day14Pair>();
-                foreach(var pair in template)
+                var newPairs = new Dictionary<string, Day14Pair>();
+                foreach (var pair in template)
                 {
-                    foreach(var step in pair.ProcessStep(rules))
+                    foreach (var step in pair.Value.ProcessStep(rules))
                     {
-                        newPairs.Add(step);
+                        if (!newPairs.ContainsKey(step.Code))
+                        {
+                            newPairs[step.Code] = step;
+                        }
+                        else
+                        {
+                            newPairs[step.Code].Count += step.Count;
+                        }
                     }
                 }
 
@@ -33,21 +50,17 @@ namespace AdventOfCode2021.Days
             }
 
             var values = template
-                .SelectMany(t => t.GetCharacterCount())
+                .SelectMany(t => t.Value.GetCharacterCount())
                 .GroupBy(c => c.Key)
                 .Select(g => g.Sum(c => c.Value))
                 .OrderByDescending(c => c)
                 .ToList();
 
-            var max = (long)(Math.Ceiling(values.Max() / 2d));
-            var min = (long)(Math.Ceiling(values.Min() / 2d));
+            // All characters are counted twice.
+            var max = (long)Math.Ceiling(values.Max() / 2d);
+            var min = (long)Math.Ceiling(values.Min() / 2d);
 
             return max - min;
-        }
-
-        protected override long ProcessPartTwo(string[] input)
-        {
-            throw new NotImplementedException();
         }
 
         private Dictionary<string, string> GetRules(string[] input)
@@ -58,13 +71,20 @@ namespace AdventOfCode2021.Days
                 .ToDictionary(i => i[0], i => i[1]);
         }
 
-        private List<Day14Pair> FillInitialTemplate(string line, Dictionary<string, string> rules)
+        private Dictionary<string, Day14Pair> FillInitialTemplate(string line, Dictionary<string, string> rules)
         {
-            var result = new List<Day14Pair>();
+            var result = new Dictionary<string, Day14Pair>();
             for(int i = 0; i < line.Length -1; i++)
             {
                 var code = $"{line[i]}{line[i + 1]}";
-                result.Add(new Day14Pair(code, rules[code]));
+                if (!result.ContainsKey(code))
+                {
+                    result.Add(code, new Day14Pair(code, rules[code]));
+                }
+                else
+                {
+                    result[code].Count++;
+                }
             }
 
             return result;
