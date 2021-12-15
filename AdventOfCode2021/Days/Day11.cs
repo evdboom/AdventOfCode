@@ -13,7 +13,7 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartOne(string[] input)
         {
-            var grid = GetGrid(input);
+            var grid = input.ToGrid();
 
             long flashes = 0;
             for (int i = 0; i < 100; i ++)
@@ -26,7 +26,7 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartTwo(string[] input)
         {
-            var grid = GetGrid(input);
+            var grid = input.ToGrid();
 
             var size = grid.GetLength(0) * grid.GetLength(1);
             long flashes = 0;
@@ -78,20 +78,5 @@ namespace AdventOfCode2021.Days
 
             return flashes;
         }      
-
-        private int[,] GetGrid(string[] input)
-        {
-            var grid = new int[input[0].Length, input.Length];
-
-            for (int j = 0; j < grid.GetLength(1); j++)
-            {
-                for (int i = 0; i < grid.GetLength(0); i++)
-                {
-                    grid[i, j] = int.Parse($"{input[j][i]}");
-                }
-            }
-
-            return grid;
-        }
     }
 }

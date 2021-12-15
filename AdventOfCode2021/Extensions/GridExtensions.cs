@@ -2,6 +2,21 @@
 {
     public static class GridExtensions
     {
+        public static int[,] ToGrid(this string[] input)
+        {
+            var grid = new int[input[0].Length, input.Length];
+
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                for (int i = 0; i < grid.GetLength(0); i++)
+                {
+                    grid[i, j] = int.Parse($"{input[j][i]}");
+                }
+            }
+
+            return grid;
+        }
+
         public static IEnumerable<(int X, int Y)> Adjacent(this int[,] grid, int x, int y, bool allowDiagonal = false)
         {
             return Adjacent(grid, x, y, int.MaxValue, allowDiagonal);
