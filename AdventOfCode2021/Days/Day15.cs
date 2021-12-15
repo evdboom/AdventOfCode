@@ -1,7 +1,6 @@
 ﻿using AdventOfCode2021.Constructs;
 using AdventOfCode2021.Extensions;
 using AdventOfCode2021.Services;
-using System.Drawing;
 
 namespace AdventOfCode2021.Days
 {
@@ -121,55 +120,6 @@ namespace AdventOfCode2021.Days
                     nodes.Enqueue(connection, connection.Distance);
                 }
             }
-        }
-
-        private void ProjectPoint(Point point, Point wanted, int[,] grid, int[,] gridSum, bool[,] visited)
-        {
-            if (visited[point.X, point.Y] || point == wanted)
-            {
-                return;
-            }
-            visited[point.X, point.Y] = true;
-
-            var min = int.MaxValue;
-            Point next = point;
-            foreach (var p in grid.Adjacent(point.X, point.Y))
-            {
-                if (gridSum[point.X, point.Y] + grid[p.X, p.Y] < gridSum[p.X, p.Y])
-                {
-                    gridSum[p.X, p.Y] = gridSum[point.X, point.Y] + grid[p.X, p.Y];
-                }
-
-                if (gridSum[p.X, p.Y] < min && !visited[p.X, p.Y])
-                {
-                    min = gridSum[p.X, p.Y];
-                    next = new Point(p.X, p.Y);
-                }
-            }
-
-            if (next == point)
-            {
-                next = GetNextPoint(gridSum, visited);
-            }
-
-            ProjectPoint(next, wanted, grid, gridSum, visited);
-        }
-
-        private Point GetNextPoint(int[,] gridSum, bool[,] visited)
-        {
-            Point next = new Point(gridSum.GetLength(0) - 1, gridSum.GetLength(1));
-            for (int j = 0; j < gridSum.GetLength(1); j++)
-            {
-                for (int i = 0; i < gridSum.GetLength(0); i++)
-                {
-                    if (gridSum[i, j] < int.MaxValue && !visited[i, j] && gridSum[i, j] < gridSum[next.X, next.Y])
-                    {
-                        next = new Point(i, j);
-                    }
-                }
-            }
-
-            return next;
         }
     }
 }
