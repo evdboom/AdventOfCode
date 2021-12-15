@@ -64,11 +64,11 @@ namespace AdventOfCode2021.Days
                             any = true;
                             flashes++;
                             grid[i, j] = 0;
-                            foreach ((int x, int y) in grid.Adjacent(i, j, true))
+                            foreach (var point in grid.Adjacent(i, j, true))
                             {
-                                if (grid[x, y] != 0)
+                                if (grid[point.X, point.Y] != 0)
                                 {
-                                    grid[x, y]++;
+                                    grid[point.X, point.Y]++;
                                 }
                             }
                         }
