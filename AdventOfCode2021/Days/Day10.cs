@@ -1,4 +1,5 @@
 ﻿using AdventOfCode2021.Constructs;
+using AdventOfCode2021.Constructs.Day10;
 using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
@@ -85,7 +86,7 @@ namespace AdventOfCode2021.Days
             {
                 GetOpenChunks(line);
             }
-            catch (Day10ChunkException ex)
+            catch (ChunkException ex)
             {
                 corrupt = ex.CorruptChunk;
                 return true;
@@ -114,7 +115,7 @@ namespace AdventOfCode2021.Days
         /// </summary>
         /// <param name="line">Chunk line to process</param>
         /// <returns>The stack of opened chunks without an closing part</returns>
-        /// <exception cref="Day10ChunkException">Throws and ChunkException if an corrupt closing character is found</exception>
+        /// <exception cref="ChunkException">Throws and ChunkException if an corrupt closing character is found</exception>
         private Stack<char> GetOpenChunks(string line)
         {
             Stack<char> openChunks = new();
@@ -129,7 +130,7 @@ namespace AdventOfCode2021.Days
                     var open = openChunks.Pop();
                     if (chunkPart != _closeCharacters[open])
                     {
-                        throw new Day10ChunkException(chunkPart, open);
+                        throw new ChunkException(chunkPart, open);
                     }
                 }
             }

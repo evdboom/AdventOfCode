@@ -1,6 +1,6 @@
-﻿namespace AdventOfCode2021.Enums
+﻿namespace AdventOfCode2021.Enums.Day16
 {
-    public enum Day16PacketType
+    public enum PacketType
     {
         Sum = 0,
         Product = 1,

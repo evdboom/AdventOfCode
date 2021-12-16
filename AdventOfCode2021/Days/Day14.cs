@@ -1,4 +1,5 @@
 ﻿using AdventOfCode2021.Constructs;
+using AdventOfCode2021.Constructs.Day14;
 using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
@@ -36,7 +37,7 @@ namespace AdventOfCode2021.Days
                 template = template
                     .SelectMany(pair => pair.Value.ProcessStep(rules))
                     .GroupBy(pair => pair.Code)
-                    .ToDictionary(g => g.Key, g => new Day14Pair(g.Key, rules[g.Key]) { Count = g.Sum(pair => pair.Count) });
+                    .ToDictionary(g => g.Key, g => new Pair(g.Key, rules[g.Key]) { Count = g.Sum(pair => pair.Count) });
             }
 
             var values = template
@@ -63,15 +64,15 @@ namespace AdventOfCode2021.Days
                 .ToDictionary(i => i[0], i => i[1]);
         }
 
-        private Dictionary<string, Day14Pair> FillInitialTemplate(string line, Dictionary<string, string> rules)
+        private Dictionary<string, Pair> FillInitialTemplate(string line, Dictionary<string, string> rules)
         {
-            var result = new Dictionary<string, Day14Pair>();
+            var result = new Dictionary<string, Pair>();
             for(int i = 0; i < line.Length -1; i++)
             {
                 var code = line.Substring(i, 2);
                 if (!result.ContainsKey(code))
                 {
-                    result[code] = new Day14Pair(code, rules[code]);
+                    result[code] = new Pair(code, rules[code]);
                 }
                 else
                 {

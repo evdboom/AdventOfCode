@@ -1,4 +1,5 @@
 ﻿using AdventOfCode2021.Constructs;
+using AdventOfCode2021.Constructs.Day15;
 using AdventOfCode2021.Extensions;
 using AdventOfCode2021.Services;
 
@@ -60,12 +61,12 @@ namespace AdventOfCode2021.Days
 
         private long Processday(int[,] grid)
         {
-            var nodeGrid = new Day15Node[grid.GetLength(0), grid.GetLength(1)];
+            var nodeGrid = new Node[grid.GetLength(0), grid.GetLength(1)];
             for (int j = 0; j < grid.GetLength(1); j++)
             {
                 for (int i = 0; i < grid.GetLength(0); i++)
                 {
-                    var newNode = new Day15Node { X = i, Y = j, Value = grid[i, j] };
+                    var newNode = new Node { X = i, Y = j, Value = grid[i, j] };
                     nodeGrid[i, j] = newNode;
                 }
             }
@@ -82,11 +83,11 @@ namespace AdventOfCode2021.Days
                 }
             }
 
-            Day15Node wanted = nodeGrid[grid.GetLength(0) - 1, grid.GetLength(1) - 1];
-            Day15Node start = nodeGrid[0, 0];
+            Node wanted = nodeGrid[grid.GetLength(0) - 1, grid.GetLength(1) - 1];
+            Node start = nodeGrid[0, 0];
             start.Distance = 0;
             start.Value = 0;
-            var nodes = new PriorityQueue<Day15Node, int>();
+            var nodes = new PriorityQueue<Node, int>();
 
             nodes.Enqueue(start, start.Value);
             ProcessNodes(nodes, wanted);
@@ -94,9 +95,9 @@ namespace AdventOfCode2021.Days
             return wanted.Distance;
         }
 
-        private void ProcessNodes(PriorityQueue<Day15Node, int> nodes, Day15Node wanted)
+        private void ProcessNodes(PriorityQueue<Node, int> nodes, Node wanted)
         {
-            while (nodes.TryDequeue(out Day15Node node, out _))
+            while (nodes.TryDequeue(out Node? node, out _))
             {
                 if (node.Visited)
                 {

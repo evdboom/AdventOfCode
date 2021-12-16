@@ -1,4 +1,5 @@
 ﻿using AdventOfCode2021.Constructs;
+using AdventOfCode2021.Constructs.Day12;
 using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
@@ -6,8 +7,8 @@ namespace AdventOfCode2021.Days
     public class Day12 : Day
     {
         private const char CaveConnection = '-';
-        private const string startCave = "start";
-        private const string endCave = "end";
+        private const string StartCave = "start";
+        private const string EmdCave = "end";
 
         public Day12(IFileImporter importer) : base(importer)
         {
@@ -17,7 +18,7 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartOne(string[] input)
         {
-            MapCaves(input, out Day12Cave start);
+            MapCaves(input, out Cave start);
             var run = new List<string>();
             long paths = 0;
             GetPaths(start, ref paths, run, false);
@@ -27,19 +28,19 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartTwo(string[] input)
         {
-            MapCaves(input, out Day12Cave start);
+            MapCaves(input, out Cave start);
             var run = new List<string>();
-            long paths = 0;            
+            long paths = 0;
             GetPaths(start, ref paths, run, true);
 
             return paths;
         }
 
-        private void GetPaths(Day12Cave cave, ref long paths, List<string> current, bool allowDoubleSmall)
+        private static void GetPaths(Cave cave, ref long paths, List<string> current, bool allowDoubleSmall)
         {
             current.Add(cave.Code);
 
-            if (cave.Code.Equals(endCave))
+            if (cave.Code.Equals(EmdCave))
             {
                 paths++;
                 return;
@@ -49,7 +50,7 @@ namespace AdventOfCode2021.Days
             var connections = cave.Connections.Values
                 .Where(c =>
                     c.LargeCave || 
-                    (!c.Code.Equals(startCave) && allowDoubleSmall) || 
+                    (!c.Code.Equals(StartCave) && allowDoubleSmall) || 
                     !current.Contains(c.Code))
                 .ToList();
             foreach (var connection in connections)
@@ -58,23 +59,23 @@ namespace AdventOfCode2021.Days
             }
         }
 
-        private void MapCaves(string[] input, out Day12Cave start)
+        private void MapCaves(string[] input, out Cave start)
         {
-            start = null;
-            var caves = new Dictionary<string, Day12Cave>();
+            Cave? startCave = null;
+            var caves = new Dictionary<string, Cave>();
             foreach(var line in input)
             {
                 var caveSet = line
                     .Split(CaveConnection);
                                 
-                if (!caves.TryGetValue(caveSet[0], out Day12Cave caveOne))
+                if (!caves.TryGetValue(caveSet[0], out Cave? caveOne))
                 {
-                    caveOne = new Day12Cave(caveSet[0]);
+                    caveOne = new Cave(caveSet[0]);
                     caves[caveSet[0]] = caveOne;
                 }
-                if (!caves.TryGetValue(caveSet[1], out Day12Cave caveTwo))
+                if (!caves.TryGetValue(caveSet[1], out Cave? caveTwo))
                 {
-                    caveTwo = new Day12Cave(caveSet[1]);
+                    caveTwo = new Cave(caveSet[1]);
                     caves[caveSet[1]] = caveTwo;
                 }
 
@@ -87,15 +88,22 @@ namespace AdventOfCode2021.Days
                     caveTwo.Connections[caveOne.Code] = caveOne;
                 }
 
-                if (caveOne.Code.Equals(startCave))
+                if (caveOne.Code.Equals(StartCave))
                 {
-                    start = caveOne;
+                    startCave = caveOne;
                 }
-                else if (caveTwo.Code.Equals(startCave))
+                else if (caveTwo.Code.Equals(StartCave))
                 {
-                    start = caveTwo;
+                    startCave = caveTwo;
                 }
-            }           
+            }    
+            
+            if (startCave == null)
+            {
+                throw new InvalidOperationException("Could not find start cave");
+            }
+
+            start = startCave;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AdventOfCode2021.Constructs;
+using AdventOfCode2021.Constructs.Day06;
 using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
@@ -29,18 +30,18 @@ namespace AdventOfCode2021.Days
                 .Split(SplitChar)
                 .Select(i => int.Parse(i))
                 .GroupBy(i => i)
-                .Select(g => new Day06FishSchool(g.Key, g.Count()))
+                .Select(g => new School(g.Key, g.Count()))
                 .ToList();
 
             for (int i = 1; i <= counter; i++)
             {
-                Day06FishSchool? newSchool = null;
+                School? newSchool = null;
                 foreach (var school in schools)
                 {
                     school.PassDay(out bool reproduces);
                     if (reproduces)
                     {
-                        newSchool = new Day06FishSchool(school.Size);
+                        newSchool = new School(school.Size);
                     }
                 }
 
@@ -51,7 +52,7 @@ namespace AdventOfCode2021.Days
 
                 schools = schools
                     .GroupBy(s => s.Counter)
-                    .Select(g => new Day06FishSchool(g.Key, g.Sum(s => s.Size)))
+                    .Select(g => new School(g.Key, g.Sum(s => s.Size)))
                     .ToList();
             }
 

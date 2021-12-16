@@ -1,4 +1,5 @@
 ﻿using AdventOfCode2021.Constructs;
+using AdventOfCode2021.Constructs.Day05;
 using AdventOfCode2021.Services;
 using System.Drawing;
 
@@ -39,7 +40,7 @@ namespace AdventOfCode2021.Days
                 .Count(v => v > 1);
         }
 
-        private void FillBoard(int[,] board, List<Day05Line> lines, bool includeDiagonal)
+        private void FillBoard(int[,] board, List<Line> lines, bool includeDiagonal)
         {
             foreach (var line in lines)
             {
@@ -49,7 +50,7 @@ namespace AdventOfCode2021.Days
             }
         }
 
-        private void FillVertical(int[,] board, Day05Line line)
+        private void FillVertical(int[,] board, Line line)
         {
             if (line.Start.X != line.End.X)
             {
@@ -62,7 +63,7 @@ namespace AdventOfCode2021.Days
             }
         }
 
-        private void FillHorizontal(int[,] board, Day05Line line)
+        private void FillHorizontal(int[,] board, Line line)
         {
             if (line.Start.Y != line.End.Y)
             {
@@ -75,7 +76,7 @@ namespace AdventOfCode2021.Days
             }
         }
 
-        private void FillDiagonal(int[,] board, Day05Line line, bool includeDiagonal)
+        private void FillDiagonal(int[,] board, Line line, bool includeDiagonal)
         {
             if (!includeDiagonal || !IsDiagonal(line))
             {
@@ -105,7 +106,7 @@ namespace AdventOfCode2021.Days
             }
         }
 
-        private (int Width, int Heigth) GetSize(List<Day05Line> lines)
+        private (int Width, int Heigth) GetSize(List<Line> lines)
         {
             var width = 0;
             var height = 0;
@@ -119,9 +120,9 @@ namespace AdventOfCode2021.Days
             return (width, height);
         }
 
-        private List<Day05Line> GetLines(string[] input)
+        private List<Line> GetLines(string[] input)
         {
-            List<Day05Line> result = new();
+            List<Line> result = new();
             foreach (var row in input)
             {
                 var line = row
@@ -129,7 +130,7 @@ namespace AdventOfCode2021.Days
                     .Select(c => GetCoordinate(c))
                     .ToArray();
 
-                result.Add(new Day05Line
+                result.Add(new Line
                 {
                     Start = line[0],
                     End = line[1]
@@ -149,7 +150,7 @@ namespace AdventOfCode2021.Days
             return new Point(coordinates[0], coordinates[1]);
         }
 
-        private bool IsDiagonal(Day05Line line)
+        private bool IsDiagonal(Line line)
         {
             return
                 line.Start.X != line.End.X &&

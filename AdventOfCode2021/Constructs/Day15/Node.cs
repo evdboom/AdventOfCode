@@ -1,10 +1,10 @@
-﻿namespace AdventOfCode2021.Constructs
+﻿namespace AdventOfCode2021.Constructs.Day15
 {
-    public class Day15Node
+    public class Node
     {
-        public Day15Node()
+        public Node()
         {
-            Connections = new List<Day15Node>();
+            Connections = new List<Node>();
             Distance = int.MaxValue;
         }
 
@@ -13,7 +13,7 @@
 
         public int Distance { get; set; }
         public int Value { get; set; }
-        public List<Day15Node> Connections { get; set; }
+        public List<Node> Connections { get; set; }
         public bool Visited { get; set; }
     }
 }

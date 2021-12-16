@@ -1,20 +1,20 @@
 ﻿using System.Text;
 
-namespace AdventOfCode2021.Constructs
+namespace AdventOfCode2021.Constructs.Day04
 {
-    public record Day04Board
+    public record Board
     {
         public bool Winning { get; private set; }
-        public List<Day04Cell> Cells { get; }
+        public List<Cell> Cells { get; }
 
-        public Day04Board()
+        public Board()
         {
-            Cells = new List<Day04Cell>();            
+            Cells = new List<Cell>();            
         }
 
         public void ProcessNumber(int number, out bool winning)
         {
-            if (Cells.FirstOrDefault(c => c.Value == number) is Day04Cell cell)
+            if (Cells.FirstOrDefault(c => c.Value == number) is Cell cell)
             {
                 cell.Marked = true;
 

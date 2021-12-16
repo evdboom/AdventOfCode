@@ -1,12 +1,12 @@
-﻿namespace AdventOfCode2021.Constructs
+﻿namespace AdventOfCode2021.Constructs.Day16
 {
-    public class Day16StringStream
+    public class StringStream
     {
         private readonly string _binary;
 
         private int _position;
 
-        public Day16StringStream(string binary)
+        public StringStream(string binary)
         {
             _binary = binary;
         }

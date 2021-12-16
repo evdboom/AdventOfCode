@@ -1,4 +1,4 @@
-﻿using AdventOfCode2021.Constructs;
+﻿using AdventOfCode2021.Constructs.Day04;
 using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
@@ -18,12 +18,12 @@ namespace AdventOfCode2021.Days
             var numbers = GetNumbers(input);
             var boards = GetBoards(input);
 
-            Day04Board? winningBoard = null;
+            Board? winningBoard = null;
             int index = 0;
             int winningNumber = 0;
             while (winningBoard == null)
             {
-                foreach(var board in boards)
+                foreach (var board in boards)
                 {
                     board.ProcessNumber(numbers[index], out bool wins);
                     if (wins)
@@ -44,7 +44,7 @@ namespace AdventOfCode2021.Days
             var numbers = GetNumbers(input);
             var boards = GetBoards(input);
 
-            Day04Board? loosingBoard = null;
+            Board? loosingBoard = null;
             int index = 0;
             int loosingNumber = 0;
             while (loosingBoard == null)
@@ -68,7 +68,7 @@ namespace AdventOfCode2021.Days
             return GetResult(loosingBoard, loosingNumber);
         }
 
-        private long GetResult(Day04Board winningBoard, int winningNumber)
+        private long GetResult(Board winningBoard, int winningNumber)
         {
             var cellValue = winningBoard.Cells
                 .Where(c => !c.Marked)
@@ -85,18 +85,18 @@ namespace AdventOfCode2021.Days
                .ToArray();
         }
 
-        private List<Day04Board> GetBoards(string[] input)
+        private List<Board> GetBoards(string[] input)
         {
-            List<Day04Board> result = new();
-            Day04Board? currentBoard = null;
+            List<Board> result = new();
+            Board? currentBoard = null;
             int currentLine = 1;
             int currentRow = 0;
-            while(currentLine < input.Length)
-            {                                
+            while (currentLine < input.Length)
+            {
                 if (string.IsNullOrEmpty(input[currentLine]))
                 {
                     currentRow = 0;
-                    currentBoard = new Day04Board();
+                    currentBoard = new Board();
                     result.Add(currentBoard);
                     currentLine++;
                     continue;
@@ -104,7 +104,7 @@ namespace AdventOfCode2021.Days
 
                 var row = input[currentLine]
                     .Split(ValueSplit, StringSplitOptions.RemoveEmptyEntries)
-                    .Select((value, column) => new Day04Cell
+                    .Select((value, column) => new Cell
                     {
                         Column = column,
                         Row = currentRow,
@@ -112,7 +112,7 @@ namespace AdventOfCode2021.Days
                     });
 
                 currentBoard!.Cells.AddRange(row);
-                    
+
                 currentLine++;
                 currentRow++;
             }

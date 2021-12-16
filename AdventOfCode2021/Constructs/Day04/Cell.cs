@@ -1,6 +1,6 @@
-﻿namespace AdventOfCode2021.Constructs
+﻿namespace AdventOfCode2021.Constructs.Day04
 {
-    public record Day04Cell
+    public record Cell
     {
         public int Row { get; init; }
         public int Column { get; init; }

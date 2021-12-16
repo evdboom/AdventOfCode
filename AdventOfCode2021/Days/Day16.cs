@@ -1,5 +1,7 @@
 ﻿using AdventOfCode2021.Constructs;
+using AdventOfCode2021.Constructs.Day16;
 using AdventOfCode2021.Enums;
+using AdventOfCode2021.Enums.Day16;
 using AdventOfCode2021.Services;
 using System.Text;
 
@@ -25,21 +27,21 @@ namespace AdventOfCode2021.Days
             return packet.GetValue();
         }
 
-        private Day16Packet GetPacket(string[] input)
+        private Packet GetPacket(string[] input)
         {
             var binary = string.Join(string.Empty, input[0]
                 .Select(c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0')));
 
-            var stream = new Day16StringStream(binary);
+            var stream = new StringStream(binary);
             return ReadPacket(stream);
         }
 
-        private Day16Packet ReadPacket(Day16StringStream stream)
+        private Packet ReadPacket(StringStream stream)
         {            
-            var version = stream.ReadInt(Day16Packet.VersionLength);            
-            var type = (Day16PacketType)stream.ReadInt(Day16Packet.TypeLength);
+            var version = stream.ReadInt(Packet.VersionLength);            
+            var type = (PacketType)stream.ReadInt(Packet.TypeLength);
 
-            var result = new Day16Packet(version, type);
+            var result = new Packet(version, type);
             
             if (result.IsLiteralType)
             {
@@ -53,12 +55,12 @@ namespace AdventOfCode2021.Days
             return result;
         }
 
-        private void ReadOperator(Day16Packet packet, Day16StringStream stream)
+        private void ReadOperator(Packet packet, StringStream stream)
         {
             var type = stream.ReadString(1);           
             var length = GetLength(type, stream);
 
-            if (type == Day16Packet.LengthTypeCount)
+            if (type == Packet.LengthTypeCount)
             {
                 for (int i = 0; i < length; i++)
                 {
@@ -77,14 +79,14 @@ namespace AdventOfCode2021.Days
             }
         }
 
-        private int GetLength(string type, Day16StringStream stream)
+        private int GetLength(string type, StringStream stream)
         {
-            return type == Day16Packet.LengthTypeSize
-                ? stream.ReadInt(Day16Packet.LengthTypeSizeLength)
-                : stream.ReadInt(Day16Packet.LengthTypeCountLength);           
+            return type == Packet.LengthTypeSize
+                ? stream.ReadInt(Packet.LengthTypeSizeLength)
+                : stream.ReadInt(Packet.LengthTypeCountLength);           
         }
 
-        private void ReadLiteral(Day16Packet currentPacket, Day16StringStream stream)
+        private void ReadLiteral(Packet currentPacket, StringStream stream)
         {
             StringBuilder resultBuilder = new();
             var hasNext = true;
@@ -97,11 +99,11 @@ namespace AdventOfCode2021.Days
             currentPacket.LiteralValue = Convert.ToInt64(resultBuilder.ToString(), 2);
         }
 
-        private string ReadNext(Day16StringStream stream, out bool hasNext)
+        private string ReadNext(StringStream stream, out bool hasNext)
         {
-            var next = stream.ReadString(Day16Packet.LiteralGroupLength);
+            var next = stream.ReadString(Packet.LiteralGroupLength);
             
-            hasNext = next[0] != Day16Packet.LastLiteralGroup;
+            hasNext = next[0] != Packet.LastLiteralGroup;
             return next[1..];
         }
     }
