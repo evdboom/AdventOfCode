@@ -97,10 +97,84 @@ namespace AdventOfCode2021.Tests
         protected override long ExpectedResultPartTwo => 315;
     }
 
-    public class Day16Tests : TestDay<Day16>
+    public class Day16ATests : TestDay<Day16>
     {
-        protected override long ExpectedResultPartOne => throw new NotImplementedException();
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        public Day16ATests() : base ("A1", "A2")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 16;
+        protected override long ExpectedResultPartTwo => 3;
+    }
+
+    public class Day16BTests : TestDay<Day16>
+    {
+        public Day16BTests() : base("B1", "B2")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 12;
+        protected override long ExpectedResultPartTwo => 54;
+    }
+
+    public class Day16CTests : TestDay<Day16>
+    {
+        public Day16CTests() : base("C1", "C2")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 23;
+        protected override long ExpectedResultPartTwo => 7;
+    }
+
+    public class Day16DTests : TestDay<Day16>
+    {
+        public Day16DTests() : base("D1", "D2")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 31;
+        protected override long ExpectedResultPartTwo => 9;
+    }
+
+    public class Day16ETests : TestDay<Day16>
+    {
+        public Day16ETests() : base("A1", "E2")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 16;
+        protected override long ExpectedResultPartTwo => 1;
+    }
+
+    public class Day16FTests : TestDay<Day16>
+    {
+        public Day16FTests() : base("B1", "F2")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 12;
+        protected override long ExpectedResultPartTwo => 0;
+    }
+
+    public class Day16GTests : TestDay<Day16>
+    {
+        public Day16GTests() : base("C1", "G2")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 23;
+        protected override long ExpectedResultPartTwo => 0;
+    }
+
+    public class Day16HTests : TestDay<Day16>
+    {
+        public Day16HTests() : base("D1", "H2")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 31;
+        protected override long ExpectedResultPartTwo => 1;
     }
 
     public class Day17Tests : TestDay<Day17>

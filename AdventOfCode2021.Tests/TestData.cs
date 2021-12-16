@@ -6,6 +6,17 @@ namespace AdventOfCode2021.Tests
 {
     public class TestData : IFileImporter
     {
+        private string _testDataPart;
+
+        public TestData()
+        {
+        }
+
+        public void SetTestDataPart(string testDataPart)
+        {
+            _testDataPart = testDataPart;
+        }
+
         public Task<string[]> GetInputAsync(int dayNumber)
         {
             var result = dayNumber switch
@@ -309,7 +320,22 @@ namespace AdventOfCode2021.Tests
 
         private string[] Day16()
         {
-            throw new NotImplementedException();
+            return _testDataPart switch
+            {
+                "A1" => new[] { "8A004A801A8002F478" },
+                "B1" => new[] { "620080001611562C8802118E34" },
+                "C1" => new[] { "C0015000016115A2E0802F182340" },
+                "D1" => new[] { "A0016C880162017C3686B18A3D4780" },
+                "A2" => new[] { "C200B40A82" },
+                "B2" => new[] { "04005AC33890" },
+                "C2" => new[] { "880086C3E88112" },
+                "D2" => new[] { "CE00C43D881120" },
+                "E2" => new[] { "D8005AC2A8F0" },
+                "F2" => new[] { "F600BC2D8F" },
+                "G2" => new[] { "9C005AC2F8F0" },
+                "H2" => new[] { "9C0141080250320F1802104A08" },
+                _ => throw new ArgumentException("Unknown DataPart")
+            };
         }
 
         private string[] Day17()
