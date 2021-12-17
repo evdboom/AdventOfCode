@@ -16,10 +16,11 @@ namespace AdventOfCode2021.Days
             var area = GetArea(input[0]);
             long yMax = 0;
 
-            foreach(var x in PotentialX(area))
+            var minX = GetMinXVelocity(area.X);
+            foreach (var y in PotentialY(area))
             {
-                foreach(var y in PotentialY(area))
-                {             
+                foreach (var x in PotentialX(area, minX))
+                {
                     yMax = Math.Max(yMax, MaxHeight(x, y, area));
                 }
             }
@@ -32,9 +33,10 @@ namespace AdventOfCode2021.Days
             var area = GetArea(input[0]);
             long hits = 0;
 
-            foreach (var x in PotentialX(area))
+            var minX = GetMinXVelocity(area.X);
+            foreach (var y in PotentialY(area))
             {
-                foreach (var y in PotentialY(area))
+                foreach (var x in PotentialX(area, minX))
                 {
                     if (MaxHeight(x, y, area) > long.MinValue)
                     {
@@ -46,6 +48,34 @@ namespace AdventOfCode2021.Days
             return hits;
         }
 
+        private int GetMinXVelocity(int xToReach)
+        {
+            var option = 0;
+            while(option < xToReach)
+            {
+                var max = GetMaxX(option);
+                if (max >= xToReach)
+                {
+                    break;
+                }
+                option++;
+            }
+
+            return option;
+        }
+
+        private int GetMaxX(int option)
+        {
+            var max = 0;
+            while (option > 0)
+            {
+                max += option;
+                option--;
+            }
+
+            return max;
+        }
+
         private IEnumerable<int> PotentialY(Rectangle area)
         {
             var size = Math.Abs(area.Y) - area.Y + 1;
@@ -53,9 +83,10 @@ namespace AdventOfCode2021.Days
            
         }
 
-        private IEnumerable<int> PotentialX(Rectangle area)
+        private IEnumerable<int> PotentialX(Rectangle area, int start)
         {
-            return Enumerable.Range(0, area.X + area.Width + 1);
+            var size = Math.Max(1, area.X + area.Width + 1 - start);
+            return Enumerable.Range(start, size);
         }
 
 
@@ -64,17 +95,20 @@ namespace AdventOfCode2021.Days
             var point = new Point(0, 0);
             var yMax = 0;
             var hit = false;
-            while (CouldBeInArea(point, area))
+            var minStep = 1 + 2 * yVelocity;
+            var step = 0;
+            while (step < minStep || CouldBeInArea(point, area))
             {
                 point = new Point(point.X + xVelocity, point.Y + yVelocity);
                 yMax = Math.Max(yMax, point.Y);
 
-                if (InArea(point, area))
+                if (step >= minStep && InArea(point, area))
                 {
                     hit = true;
                     break;
                 }
 
+                step++;
                 xVelocity += xVelocity < 0 ? 1
                            : xVelocity > 0 ? -1
                            : 0;                
