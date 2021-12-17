@@ -340,7 +340,7 @@ namespace AdventOfCode2021.Tests
 
         private string[] Day17()
         {
-            throw new NotImplementedException();
+            return new[] { "target area: x=20..30, y=-10..-5" };
         }
 
         private string[] Day18()
