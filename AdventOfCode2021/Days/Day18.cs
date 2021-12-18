@@ -1,6 +1,5 @@
 ﻿using AdventOfCode2021.Constructs.Day18;
 using AdventOfCode2021.Services;
-using System.Drawing;
 
 namespace AdventOfCode2021.Days
 {
@@ -25,19 +24,19 @@ namespace AdventOfCode2021.Days
             var numbers = input
                 .Select(i => GetSnailNumber(i))
                 .ToArray();
-            var number = numbers[0];            
+            var number = numbers[0];
             for (int step = 1; step < input.Length; step++)
-            {                
-                number = GetSum(number, numbers[step]);                
-            }            
+            {
+                number = GetSum(number, numbers[step]);
+            }
             return number.GetMagnitude();
-        }        
+        }
 
         protected override long ProcessPartTwo(string[] input)
         {
             long max = 0;
             for (int step = 0; step < input.Length; step++)
-            {                
+            {
                 for (int i = 0; i < input.Length; i++)
                 {
                     if (i == step)
@@ -47,12 +46,12 @@ namespace AdventOfCode2021.Days
 
                     var first = GetSnailNumber(input[step]);
                     var second = GetSnailNumber(input[i]);
-                    var magnitude = GetSum(first, second).GetMagnitude();                    
+                    var magnitude = GetSum(first, second).GetMagnitude();
 
                     max = Math.Max(max, magnitude);
                 }
             }
-            
+
             return max;
         }
 
@@ -75,7 +74,7 @@ namespace AdventOfCode2021.Days
             SnailNumber? current = null;
             var left = true;
             string currentValue = string.Empty;
-            foreach(char c in line)
+            foreach (char c in line)
             {
                 if (c == Open)
                 {
@@ -122,7 +121,7 @@ namespace AdventOfCode2021.Days
                     }
 
                     currentValue = string.Empty;
-                    current = current?.Parent;                    
+                    current = current?.Parent;
                 }
                 else if (c == Split)
                 {
