@@ -82,14 +82,8 @@
         public void AddDepth()
         {
             Depth++;
-            if (Left is not null)
-            {
-                Left.AddDepth();
-            }
-            if (Right is not null)
-            {
-                Right.AddDepth();
-            }
+            Left?.AddDepth();
+            Right?.AddDepth();            
         }
 
         public void Reduce()
@@ -100,12 +94,8 @@
 
         public long GetMagnitude()
         {
-            var left = Left is not null
-                ? Left.GetMagnitude()
-                : LeftValue;
-            var right = Right is not null
-                ? Right.GetMagnitude()
-                : RightValue;
+            var left = Left?.GetMagnitude() ?? LeftValue;
+            var right = Right?.GetMagnitude() ?? RightValue;                
             
             return left * 3 + right * 2;
         }
@@ -120,7 +110,7 @@
             if (Depth < 4)
             {
                 if (Left is not null && Left.TryExplode())
-                {                    
+                {
                     return true;
                 }
                 else if (Right is not null && Right.TryExplode())
@@ -153,14 +143,14 @@
                 {
                     Parent.Right.AddLeftValue(right);
                 }
-                else if (Parent is not null)
+                else
                 {
-                    Parent.RightValue += right;
+                    Parent!.RightValue += right;
                 }
             }
-            else if (Parent is not null)
+            else
             {
-                Parent.ExplodeRight(left, right);
+                Parent?.ExplodeRight(left, right);
             }
            
 
@@ -188,14 +178,14 @@
                 {
                     Parent.Left.AddRightValue(left);
                 }
-                else if (Parent is not null)
+                else
                 {
-                    Parent.LeftValue += left;
+                    Parent!.LeftValue += left;
                 }
             }
-            else if (Parent is not null)
+            else
             {
-                Parent.ExplodeLeft(left, right);
+                Parent?.ExplodeLeft(left, right);
             }
 
             if (initial)
