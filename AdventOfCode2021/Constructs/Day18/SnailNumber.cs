@@ -122,6 +122,10 @@ namespace AdventOfCode2021.Constructs.Day18
                 {
                     return true;
                 }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
@@ -135,9 +139,7 @@ namespace AdventOfCode2021.Constructs.Day18
                 }
 
                 return true;
-            }
-
-            return false;
+            }            
         }
 
         private void ExplodeRight(long left, long right, bool initial = false)
