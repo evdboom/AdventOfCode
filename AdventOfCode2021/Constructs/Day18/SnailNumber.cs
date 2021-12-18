@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode2021.Constructs.Day18
+﻿using AdventOfCode2021.Services;
+
+namespace AdventOfCode2021.Constructs.Day18
 {
     public class SnailNumber
     {
@@ -86,10 +88,13 @@
             Right?.AddDepth();            
         }
 
-        public void Reduce()
+        public void Reduce(IScreenWriter writer)
         {
+            writer.WriteLine(ToString());
             while(TryReduce())
-            { }
+            {
+                writer.WriteLine(ToString());
+            }
         }
 
         public long GetMagnitude()
@@ -241,12 +246,8 @@
 
         public override string ToString()
         {
-            var left = Left is not null
-                ? Left.ToString()
-                : $"{LeftValue}";
-            var right = Right is not null
-                ? Right.ToString()
-                : $"{RightValue}";
+            var left = Left?.ToString() ?? $"{LeftValue}";
+            var right = Right?.ToString() ?? $"{RightValue}";
             return $"[{left},{right}]";
         }
     }

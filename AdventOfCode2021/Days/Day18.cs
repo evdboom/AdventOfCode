@@ -10,8 +10,12 @@ namespace AdventOfCode2021.Days
         private const char Close = ']';
         private const char Split = ',';
 
-        public Day18(IFileImporter importer) : base(importer)
+        private readonly IScreenWriter _writer;
+
+        public Day18(IFileImporter importer, IScreenWriter writer) : base(importer)
         {
+            _writer = writer;
+            _writer.Disable();
         }
 
         public override int DayNumber => 18;
@@ -60,7 +64,7 @@ namespace AdventOfCode2021.Days
                 Right = second
             };
 
-            number.Reduce();
+            number.Reduce(_writer);
 
             return number;
         }
