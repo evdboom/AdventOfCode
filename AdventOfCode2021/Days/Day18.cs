@@ -25,7 +25,7 @@ namespace AdventOfCode2021.Days
                 .Select(i => GetSnailNumber(i))
                 .ToArray();
             var number = numbers[0];
-            for (int step = 1; step < input.Length; step++)
+            foreach (var step in Enumerable.Range(1, input.Length -1))
             {
                 number = GetSum(number, numbers[step]);
             }
