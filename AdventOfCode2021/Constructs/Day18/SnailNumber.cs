@@ -109,9 +109,7 @@ namespace AdventOfCode2021.Constructs.Day18
             
             return left * 3 + right * 2;
         }
-
         
-
         private bool TryExplode()
         {
             if (Depth < 4)
