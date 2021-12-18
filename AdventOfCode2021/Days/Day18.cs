@@ -30,29 +30,25 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartTwo(string[] input)
         {
-            long max = 0;
-            Dictionary<Point, long> values = new();
+            long max = 0;            
             for (int step = 0; step < input.Length; step++)
             {
-                var first = GetSnailNumber(input[step]);
+                
                 for (int i = 0; i < input.Length; i++)
                 {
                     if (i == step)
                     {
                         continue;
                     }
-                    var second = GetSnailNumber(input[i]);
-                    var magnitude = ProcessNumber(first, second).GetMagnitude();
 
-                    values.Add(new Point(step, i), magnitude);
+                    var first = GetSnailNumber(input[step]);
+                    var second = GetSnailNumber(input[i]);
+                    var magnitude = ProcessNumber(first, second).GetMagnitude();                    
 
                     max = Math.Max(max, magnitude);
                 }
             }
-            var v2 = values
-                .OrderByDescending(d => d.Value)
-                .ToDictionary(d => d.Key, d => d.Value);
-
+            
             return max;
         }
 
