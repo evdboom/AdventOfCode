@@ -18,22 +18,22 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartOne(string[] input)
         {
-            var number = GetSnailNumber(input[0]);            
+            var numbers = input
+                .Select(i => GetSnailNumber(i))
+                .ToArray();
+            var number = numbers[0];            
             for (int step = 1; step < input.Length; step++)
-            {
-                var newRight = GetSnailNumber(input[step]);
-
-                number = ProcessNumber(number, newRight);                
+            {                
+                number = GetSum(number, numbers[step]);                
             }            
             return number.GetMagnitude();
         }        
 
         protected override long ProcessPartTwo(string[] input)
         {
-            long max = 0;            
+            long max = 0;
             for (int step = 0; step < input.Length; step++)
-            {
-                
+            {                
                 for (int i = 0; i < input.Length; i++)
                 {
                     if (i == step)
@@ -43,7 +43,7 @@ namespace AdventOfCode2021.Days
 
                     var first = GetSnailNumber(input[step]);
                     var second = GetSnailNumber(input[i]);
-                    var magnitude = ProcessNumber(first, second).GetMagnitude();                    
+                    var magnitude = GetSum(first, second).GetMagnitude();                    
 
                     max = Math.Max(max, magnitude);
                 }
@@ -52,25 +52,17 @@ namespace AdventOfCode2021.Days
             return max;
         }
 
-        private SnailNumber ProcessNumber(SnailNumber first, SnailNumber second)
+        private SnailNumber GetSum(SnailNumber first, SnailNumber second)
         {
-            var newNumber = new SnailNumber
+            var number = new SnailNumber
             {
                 Left = first,
                 Right = second
             };
 
-            first.IsLeft = true;
-            first.Parent = newNumber;
-            first.AddDepth();
+            number.Reduce();
 
-            second.Parent = newNumber;
-            second.IsRight = true;
-            second.AddDepth();
-
-            newNumber.Reduce();
-
-            return newNumber;
+            return number;
         }
 
         private SnailNumber GetSnailNumber(string line)

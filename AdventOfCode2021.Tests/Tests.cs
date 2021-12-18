@@ -256,7 +256,7 @@ namespace AdventOfCode2021.Tests
         }
 
         protected override long ExpectedResultPartOne => 3488;
-        protected override long ExpectedResultPartTwo => 3480;
+        protected override long ExpectedResultPartTwo => 3805;
     }
 
     public class Day18MagnitudeHTests : TestDay<Day18>

@@ -4,11 +4,51 @@
     {
         public SnailNumber? Parent { get; set; }
 
-        public SnailNumber? Left { get; set; }
-        public SnailNumber? Right { get; set; }
+        private SnailNumber? _left;
+        public SnailNumber? Left 
+        {
+            get => _left;
+            set
+            {
+                _left = value;
+                if (_left is not null)
+                {
+                    _left.IsLeft = true;
+                    _left.Parent = this;
+                    _left.Depth = Depth;
+                    _left.AddDepth();
+                }
+            }
+        }
 
-        public bool IsLeft { get; set; }
-        public bool IsRight { get; set; }
+        private SnailNumber? _right;
+        public SnailNumber? Right
+        {
+            get => _right;
+            set
+            {
+                _right = value;
+                if (_right is not null)
+                {
+                    _right.IsRight = true;
+                    _right.Parent = this;
+                    _right.Depth = Depth;
+                    _right.AddDepth();
+                }
+            }
+        }
+
+        private bool _isLeft;
+        public bool IsLeft 
+        { 
+            get => Parent is not null && _isLeft;
+            set => _isLeft = value; 
+        }
+        public bool IsRight 
+        {
+            get => Parent is not null && !_isLeft;
+            set => _isLeft = !value;
+        }
 
         public int Depth { get; set; }
         public long LeftValue { get; set; }
@@ -94,7 +134,7 @@
                 {
                     Parent!.ExplodeLeft(LeftValue, RightValue, true);
                 }
-                else
+                else if (IsRight)
                 {
                     Parent!.ExplodeRight(LeftValue, RightValue, true);
                 }
@@ -185,12 +225,9 @@
             {
                 split = true;
                 Left = new SnailNumber
-                {
-                    Parent = this,
-                    Depth = Depth + 1,
+                {                                        
                     LeftValue = (int)Math.Floor(LeftValue / 2D),
-                    RightValue = (int)Math.Ceiling(LeftValue / 2D),
-                    IsLeft = true
+                    RightValue = (int)Math.Ceiling(LeftValue / 2D),                 
                 };
                 LeftValue = 0;
             }
@@ -202,12 +239,9 @@
             {
                 split = true;
                 Right = new SnailNumber
-                {
-                    Parent = this,
-                    Depth = Depth + 1,
+                {                                       
                     LeftValue = (int)Math.Floor(RightValue / 2D),
-                    RightValue = (int)Math.Ceiling(RightValue / 2D),
-                    IsRight = true
+                    RightValue = (int)Math.Ceiling(RightValue / 2D),                    
                 };
                 RightValue = 0;
             }
