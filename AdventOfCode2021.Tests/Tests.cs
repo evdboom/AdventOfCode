@@ -186,7 +186,7 @@ namespace AdventOfCode2021.Tests
     public class Day18Tests : TestDay<Day18>
     {
         protected override long ExpectedResultPartOne => 4140;
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        protected override long ExpectedResultPartTwo => 3993;
     }
 
     public class Day18MagnitudeATests : TestDay<Day18>
@@ -196,7 +196,7 @@ namespace AdventOfCode2021.Tests
         }
 
         protected override long ExpectedResultPartOne => 143;
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        protected override long ExpectedResultPartTwo => 0;
     }
 
     public class Day18MagnitudeBTests : TestDay<Day18>
@@ -206,7 +206,7 @@ namespace AdventOfCode2021.Tests
         }
 
         protected override long ExpectedResultPartOne => 1384;
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        protected override long ExpectedResultPartTwo => 0;
     }
 
     public class Day18MagnitudeCTests : TestDay<Day18>
@@ -216,7 +216,7 @@ namespace AdventOfCode2021.Tests
         }
 
         protected override long ExpectedResultPartOne => 445;
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        protected override long ExpectedResultPartTwo => 0;
     }
 
     public class Day18MagnitudeDTests : TestDay<Day18>
@@ -226,7 +226,7 @@ namespace AdventOfCode2021.Tests
         }
 
         protected override long ExpectedResultPartOne => 791;
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        protected override long ExpectedResultPartTwo => 0;
     }
 
     public class Day18MagnitudeETests : TestDay<Day18>
@@ -236,7 +236,7 @@ namespace AdventOfCode2021.Tests
         }
 
         protected override long ExpectedResultPartOne => 1137;
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        protected override long ExpectedResultPartTwo => 0;
     }
 
     public class Day18MagnitudeFTests : TestDay<Day18>
@@ -246,7 +246,7 @@ namespace AdventOfCode2021.Tests
         }
 
         protected override long ExpectedResultPartOne => 3488;
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        protected override long ExpectedResultPartTwo => 0;
     }
 
     public class Day18MagnitudeGTests : TestDay<Day18>
@@ -256,7 +256,17 @@ namespace AdventOfCode2021.Tests
         }
 
         protected override long ExpectedResultPartOne => 3488;
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        protected override long ExpectedResultPartTwo => 3480;
+    }
+
+    public class Day18MagnitudeHTests : TestDay<Day18>
+    {
+        public Day18MagnitudeHTests() : base("H")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 3993;
+        protected override long ExpectedResultPartTwo => 3993;
     }
 
     public class Day19Tests : TestDay<Day19>
