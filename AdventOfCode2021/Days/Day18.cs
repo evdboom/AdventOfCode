@@ -35,17 +35,13 @@ namespace AdventOfCode2021.Days
         protected override long ProcessPartTwo(string[] input)
         {
             long max = 0;
-            for (int step = 0; step < input.Length; step++)
+            var range = Enumerable.Range(0, input.Length);
+            foreach (var i in range)
             {
-                for (int i = 0; i < input.Length; i++)
+                foreach (var j in range.Where(j => i != j))
                 {
-                    if (i == step)
-                    {
-                        continue;
-                    }
-
-                    var first = GetSnailNumber(input[step]);
-                    var second = GetSnailNumber(input[i]);
+                    var first = GetSnailNumber(input[i]);
+                    var second = GetSnailNumber(input[j]);
                     var magnitude = GetSum(first, second).GetMagnitude();
 
                     max = Math.Max(max, magnitude);
@@ -84,40 +80,26 @@ namespace AdventOfCode2021.Days
                         current = result;
                     }
                     else
-                    {
-                        var newNumber = new SnailNumber
-                        {
-                            Parent = current,
-                            IsLeft = left,
-                            IsRight = !left,
-                            Depth = current!.Depth + 1
-                        };
-
+                    {                       
                         if (left)
                         {
-                            current.Left = newNumber;
+                            current!.Left = new SnailNumber();
+                            current = current.Left;
                         }
                         else
                         {
-                            current.Right = newNumber;
+                            current!.Right = new SnailNumber();
+                            current = current.Right;
                         }
 
-                        left = true;
-                        current = newNumber;
+                        left = true;                        
                     }
                 }
                 else if (c == Close)
                 {
                     if (!string.IsNullOrEmpty(currentValue))
                     {
-                        if (left)
-                        {
-                            current!.LeftValue = long.Parse(currentValue);
-                        }
-                        else
-                        {
-                            current!.RightValue = long.Parse(currentValue);
-                        }
+                        current!.RightValue = long.Parse(currentValue);                        
                     }
 
                     currentValue = string.Empty;
@@ -127,18 +109,9 @@ namespace AdventOfCode2021.Days
                 {
                     if (!string.IsNullOrEmpty(currentValue))
                     {
-                        if (left)
-                        {
-                            current!.LeftValue = long.Parse(currentValue);
-                        }
-                        else
-                        {
-                            current!.RightValue = long.Parse(currentValue);
-                        }
+                        current!.LeftValue = long.Parse(currentValue);                                                 
                     }
-
                     currentValue = string.Empty;
-
                     left = false;
                 }
                 else

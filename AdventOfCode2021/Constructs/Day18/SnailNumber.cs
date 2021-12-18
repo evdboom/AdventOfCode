@@ -97,6 +97,11 @@ namespace AdventOfCode2021.Constructs.Day18
             }
         }
 
+        private bool TryReduce()
+        {
+            return TryExplode() || TrySplit();
+        }
+
         public long GetMagnitude()
         {
             var left = Left?.GetMagnitude() ?? LeftValue;
@@ -105,10 +110,7 @@ namespace AdventOfCode2021.Constructs.Day18
             return left * 3 + right * 2;
         }
 
-        private bool TryReduce()
-        {
-            return TryExplode() || TrySplit();            
-        }
+        
 
         private bool TryExplode()
         {
