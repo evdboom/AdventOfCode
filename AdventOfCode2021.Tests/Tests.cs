@@ -185,7 +185,77 @@ namespace AdventOfCode2021.Tests
 
     public class Day18Tests : TestDay<Day18>
     {
-        protected override long ExpectedResultPartOne => throw new NotImplementedException();
+        protected override long ExpectedResultPartOne => 4140;
+        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+    }
+
+    public class Day18MagnitudeATests : TestDay<Day18>
+    {
+        public Day18MagnitudeATests() : base("A")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 143;
+        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+    }
+
+    public class Day18MagnitudeBTests : TestDay<Day18>
+    {
+        public Day18MagnitudeBTests() : base("B")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 1384;
+        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+    }
+
+    public class Day18MagnitudeCTests : TestDay<Day18>
+    {
+        public Day18MagnitudeCTests() : base("C")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 445;
+        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+    }
+
+    public class Day18MagnitudeDTests : TestDay<Day18>
+    {
+        public Day18MagnitudeDTests() : base("D")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 791;
+        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+    }
+
+    public class Day18MagnitudeETests : TestDay<Day18>
+    {
+        public Day18MagnitudeETests() : base("E")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 1137;
+        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+    }
+
+    public class Day18MagnitudeFTests : TestDay<Day18>
+    {
+        public Day18MagnitudeFTests() : base("F")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 3488;
+        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+    }
+
+    public class Day18MagnitudeGTests : TestDay<Day18>
+    {
+        public Day18MagnitudeGTests() : base("G")
+        {
+        }
+
+        protected override long ExpectedResultPartOne => 3488;
         protected override long ExpectedResultPartTwo => throw new NotImplementedException();
     }
 
