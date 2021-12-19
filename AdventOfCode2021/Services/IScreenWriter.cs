@@ -11,6 +11,8 @@
         void WriteBlock(ConsoleColor color);
         void Disable();
         void Enable();
-        
+        void WriteTime();
+
+
     }
 }

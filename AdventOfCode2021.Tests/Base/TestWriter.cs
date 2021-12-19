@@ -68,5 +68,10 @@ namespace AdventOfCode2021.Tests.Base
             }
             Debug.WriteLine(value);
         }
+
+        public void WriteTime()
+        {
+            Write($"{DateTime.Now:G} | ");
+        }
     }
 }

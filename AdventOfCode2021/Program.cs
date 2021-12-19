@@ -26,7 +26,7 @@ var days = new Dictionary<int, IDay>
     { 16, new Day16(importer) },
     { 17, new Day17(importer) },
     { 18, new Day18(importer, writer) },
-    { 19, new Day19(importer) },
+    { 19, new Day19(importer, writer) },
     { 20, new Day20(importer) },
     { 21, new Day21(importer) },
     { 22, new Day22(importer) },

@@ -73,5 +73,10 @@
             WriteLine(value);
             Console.ForegroundColor = old;
         }
+
+        public void WriteTime()
+        {
+            Write($"{DateTime.Now:G} | ");
+        }
     }
 }
