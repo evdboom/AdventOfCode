@@ -80,7 +80,7 @@ namespace AdventOfCode2021.Days
 
         private int GetPixel(int[,] grid, int column, int row, int unknowns, string algorithm)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             for (int j = row - 1; j <= row + 1; j++)
             {
                 for (int i = column - 1; i <= column + 1; i++)
