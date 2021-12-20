@@ -12,19 +12,20 @@ namespace AdventOfCode2021.Days
 
         public Day20(IFileImporter importer, IScreenWriter writer) : base(importer)
         {
-            _writer = writer;
-            _writer.Disable();
+            _writer = writer;            
         }
 
         public override int DayNumber => 20;
 
         protected override long ProcessPartOne(string[] input)
         {
+            _writer.Disable();
             return Process(input, 2);
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
+            _writer.Disable();
             return Process(input, 50);
         }
 

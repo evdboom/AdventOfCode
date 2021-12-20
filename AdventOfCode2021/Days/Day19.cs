@@ -13,25 +13,26 @@ namespace AdventOfCode2021.Days
         public Day19(IFileImporter importer, IScreenWriter writer) : base(importer)
         {
             _writer = writer;
-            _writer.Enable();
         }
 
         public override int DayNumber => 19;
 
         protected override long ProcessPartOne(string[] input)
         {
+            _writer.Enable();
             var scanners = GetScanners(input);
             scanners[0].SetCoord(0, 0, 0);
-
+            CreateBeaconMap(scanners[0].Beacons);
             FindScanners(scanners, out List<Beacon> beacons);
             return beacons.Count;
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
+            _writer.Enable();
             var scanners = GetScanners(input);
             scanners[0].SetCoord(0, 0, 0);
-
+            CreateBeaconMap(scanners[0].Beacons);
             FindScanners(scanners, out _);
 
             return scanners
@@ -43,25 +44,39 @@ namespace AdventOfCode2021.Days
 
         private void FindScanners(List<Scanner> scanners, out List<Beacon> beacons)
         {
-            beacons = scanners[0].Beacons
-                .ToList();
-            CreateBeaconMap(beacons);
             while (scanners.Any(s => s.Unknown))
             {
-                foreach (var unknown in scanners.Where(s => s.Unknown))
+                var unknowns = scanners
+                    .Where(s => s.Unknown)
+                    .ToList();
+
+                var knowns = scanners
+                    .Where(s => !s.Unknown)
+                    .ToList();
+
+                foreach (var unknown in unknowns)
                 {
-                    if (FindScanner(unknown, beacons))
+                    foreach (var known in knowns.Where(known => !unknown.NoMatch.Contains(known)))
                     {
-                        beacons = beacons
-                            .Union(TranslateBeaconsToOrigin(unknown))
-                            .ToList();
-                        CreateBeaconMap(beacons);
-                        _writer.WriteTime();
-                        _writer.WriteLine($"Found {unknown}, {scanners.Count(s => s.Unknown)} remaining");
-                        break;
-                    }
+                        if (FindScanner(unknown, known))
+                        {
+                            knowns.Add(unknown);
+                            _writer.WriteTime();
+                            _writer.WriteLine($"Found {unknown}, {scanners.Count(s => s.Unknown)} remaining");
+                            break;
+                        }
+                        else
+                        {
+                            unknown.NoMatch.Add(known);
+                        }
+                    }                    
                 }
             }
+
+            beacons = scanners
+                .SelectMany(TranslateBeaconsToOrigin)
+                .Distinct()
+                .ToList();            
         }
 
         private IEnumerable<Beacon> TranslateBeaconsToOrigin(Scanner scanner)
@@ -75,22 +90,25 @@ namespace AdventOfCode2021.Days
                 });
         }
 
-        private bool FindScanner(Scanner unknown, List<Beacon> knownBeacons)
+        private bool FindScanner(Scanner unknown, Scanner known)
         {
-            for (int rotation = 0; rotation < 24; rotation++)
+            for (int direction = 0; direction < 6; direction++)
             {
-                var rotated = Rotate(unknown.Beacons, rotation);
-
-                foreach (var beacon in rotated)
+                for (int rotation = 0; rotation < 4; rotation++)
                 {
-                    foreach (var knownBeacon in knownBeacons)
-                    {
-                        if (beacon.Map.Intersect(knownBeacon.Map).Count() >= 12)
-                        {
-                            unknown.Beacons = rotated;
-                            unknown.SetCoord(knownBeacon.X - beacon.X, knownBeacon.Y - beacon.Y, knownBeacon.Z - beacon.Z);
+                    var rotated = Rotate(unknown.Beacons, direction, rotation);
 
-                            return true;
+                    foreach (var beacon in rotated)
+                    {
+                        foreach (var knownBeacon in known.Beacons)
+                        {
+                            if (beacon.Map.Intersect(knownBeacon.Map).Count() >= 12)
+                            {
+                                unknown.Beacons = rotated;
+                                unknown.SetCoord(known.X + knownBeacon.X - beacon.X, known.Y + knownBeacon.Y - beacon.Y, known.Z + knownBeacon.Z - beacon.Z);
+
+                                return true;
+                            }
                         }
                     }
                 }
@@ -99,8 +117,42 @@ namespace AdventOfCode2021.Days
             return false;
         }
 
-        private List<Beacon> Rotate(List<Beacon> beacons, int rotation)
+        private List<Beacon> Rotate(List<Beacon> beacons, int direction, int rotation)
         {
+            switch (direction) 
+            {
+                case 0:
+                    beacons = beacons
+                        .Select(b => new Beacon(b.X, b.Y, b.Z))
+                        .ToList();
+                    break;
+                case 1:
+                    beacons = beacons
+                        .Select(b => new Beacon(-b.X, b.Y, -b.Z))
+                        .ToList();
+                    break;
+                case 2:
+                    beacons = beacons
+                        .Select(b => new Beacon(b.Y, -b.X, b.Z))
+                        .ToList();
+                    break;
+                case 3:
+                    beacons = beacons
+                        .Select(b => new Beacon(-b.Y, b.X, b.Z))
+                        .ToList();
+                    break;
+                case 4:
+                    beacons = beacons
+                        .Select(b => new Beacon(b.Z, b.Y, -b.X))
+                        .ToList();
+                    break;
+                case 5:
+                    beacons = beacons
+                        .Select(b => new Beacon(-b.Z, b.Y, b.X))
+                        .ToList();
+                    break;
+            }
+
             switch (rotation)
             {
                 case 0:
@@ -122,107 +174,7 @@ namespace AdventOfCode2021.Days
                     beacons = beacons
                         .Select(b => new Beacon(b.X, b.Z, -b.Y))
                         .ToList();
-                    break;
-                case 4:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.Y, b.X, b.Z))
-                        .ToList();
-                    break;
-                case 5:
-                    beacons = beacons
-                        .Select(b => new Beacon(b.Z, b.X, b.Y))
-                        .ToList();
-                    break;
-                case 6:
-                    beacons = beacons
-                        .Select(b => new Beacon(b.Y, b.X, -b.Z))
-                        .ToList();
-                    break;
-                case 7:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.Z, b.X, -b.Y))
-                        .ToList();
-                    break;
-                case 8:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.X, -b.Y, b.Z))
-                        .ToList();
-                    break;
-                case 9:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.X, -b.Z, -b.Z))
-                        .ToList();
-                    break;
-                case 10:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.X, b.Y, -b.Z))
-                        .ToList();
-                    break;
-                case 11:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.X, b.Z, b.Y))
-                        .ToList();
-                    break;
-                case 12:
-                    beacons = beacons
-                        .Select(b => new Beacon(b.Y, -b.X, b.Z))
-                        .ToList();
-                    break;
-                case 13:
-                    beacons = beacons
-                        .Select(b => new Beacon(b.Z, -b.X, -b.Y))
-                        .ToList();
-                    break;
-                case 14:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.Y, -b.X, -b.Z))
-                        .ToList();
-                    break;
-                case 15:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.Z, -b.X, b.Y))
-                        .ToList();
-                    break;
-                case 16:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.Z, b.Y, b.X))
-                        .ToList();
-                    break;
-                case 17:
-                    beacons = beacons
-                        .Select(b => new Beacon(b.Y, b.Z, b.X))
-                        .ToList();
-                    break;
-                case 18:
-                    beacons = beacons
-                        .Select(b => new Beacon(b.Z, -b.Y, b.X))
-                        .ToList();
-                    break;
-                case 19:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.Y, -b.Z, b.X))
-                        .ToList();
-                    break;
-                case 20:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.Z, -b.Y, -b.X))
-                        .ToList();
-                    break;
-                case 21:
-                    beacons = beacons
-                        .Select(b => new Beacon(-b.Y, b.Z, -b.X))
-                        .ToList();
-                    break;
-                case 22:
-                    beacons = beacons
-                        .Select(b => new Beacon(b.Z, b.Y, -b.X))
-                        .ToList();
-                    break;
-                case 23:
-                    beacons = beacons
-                        .Select(b => new Beacon(b.Y, -b.Z, -b.X))
-                        .ToList();
-                    break;
+                    break;             
             }
 
             CreateBeaconMap(beacons);
