@@ -122,32 +122,32 @@ namespace AdventOfCode2021.Days
             switch (direction) 
             {
                 case 0:
-                    beacons = beacons
+                    beacons = beacons // starting pos (nothing)
                         .Select(b => new Beacon(b.X, b.Y, b.Z))
                         .ToList();
                     break;
                 case 1:
-                    beacons = beacons
+                    beacons = beacons // x backward (180 degrees over Y)
                         .Select(b => new Beacon(-b.X, b.Y, -b.Z))
                         .ToList();
                     break;
                 case 2:
-                    beacons = beacons
+                    beacons = beacons // x to the left (90 degrees over Z)
                         .Select(b => new Beacon(b.Y, -b.X, b.Z))
                         .ToList();
                     break;
                 case 3:
-                    beacons = beacons
+                    beacons = beacons // x to the right (270 degrees over Z)
                         .Select(b => new Beacon(-b.Y, b.X, b.Z))
                         .ToList();
                     break;
                 case 4:
-                    beacons = beacons
+                    beacons = beacons // x up (90 degrees over Y)
                         .Select(b => new Beacon(b.Z, b.Y, -b.X))
                         .ToList();
                     break;
                 case 5:
-                    beacons = beacons
+                    beacons = beacons // x down (270 degrees over Y)
                         .Select(b => new Beacon(-b.Z, b.Y, b.X))
                         .ToList();
                     break;
@@ -156,22 +156,22 @@ namespace AdventOfCode2021.Days
             switch (rotation)
             {
                 case 0:
-                    beacons = beacons
+                    beacons = beacons // starting pos (nothing)
                         .Select(b => new Beacon(b.X, b.Y, b.Z))
                         .ToList();
                     break;
                 case 1:
-                    beacons = beacons
+                    beacons = beacons // rol 90 degrees over X
                         .Select(b => new Beacon(b.X, -b.Z, b.Y))
                         .ToList();
                     break;
                 case 2:
-                    beacons = beacons
+                    beacons = beacons // roll 180 degrees over X
                         .Select(b => new Beacon(b.X, -b.Y, -b.Z))
                         .ToList();
                     break;
                 case 3:
-                    beacons = beacons
+                    beacons = beacons // roll 270 degrees over X
                         .Select(b => new Beacon(b.X, b.Z, -b.Y))
                         .ToList();
                     break;             
