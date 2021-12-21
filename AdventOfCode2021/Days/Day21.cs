@@ -25,29 +25,30 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartOne(string[] input)
         {
-            var (players1, players2) = GetPlayers(input);
+            var (player1, player2) = GetPlayers(input);
 
             int count = 0;
 
-            while (players1.Any() && players2.Any())
+            while (player1.Any() && player2.Any())
             {             
                 count += 3;
                 var next = count % 1000;
                 var turn = (next == 0 ? 1000 : next) * 3 - 3;
 
-                players1 = GetNextRound(players1, out List<long> winningWeights, new Dictionary<int, int> { { turn, 1 } }, 1000);                
-                if (winningWeights.Any())
+                player1 = GetNextRound(player1, out long winningWeight, new Dictionary<int, int> { { turn, 1 } }, 1000);                
+                if (winningWeight > 0)
                 {
-                    return players2.Single().Value.Scores.Single().Key * count;
+                    return player2.Single().Value.Single().Key * count;
                 }
 
                 count += 3;
-                turn = (count % 1000) * 3 - 3;
+                next = count % 1000;
+                turn = (next == 0 ? 1000 : next) * 3 - 3;
 
-                players2 = GetNextRound(players2, out winningWeights, new Dictionary<int, int> { { turn, 1 } }, 1000);
-                if (winningWeights.Any())
+                player2 = GetNextRound(player2, out winningWeight, new Dictionary<int, int> { { turn, 1 } }, 1000);
+                if (winningWeight > 0)
                 {
-                    return players1.Single().Value.Scores.Single().Key * count;
+                    return player1.Single().Value.Single().Key * count;
                 }
             }
 
@@ -56,23 +57,23 @@ namespace AdventOfCode2021.Days
       
         protected override long ProcessPartTwo(string[] input)
         {
-            var (players1, players2) = GetPlayers(input);
+            var (player1, player2) = GetPlayers(input);
 
             long player1Wins = 0;
             long player2Wins = 0;
 
-            while (players1.Any() && players2.Any())
+            while (player1.Any() && player2.Any())
             {
-                players1 = GetNextRound(players1, out List<long> winningWeights, _options, 21);
-                player1Wins += winningWeights.Sum(w => w * players2.Select(p => p.Value.GetWeight()).Sum());
-                players2 = GetNextRound(players2, out winningWeights, _options, 21);
-                player2Wins += winningWeights.Sum(w => w * players1.Select(p => p.Value.GetWeight()).Sum());
+                player1 = GetNextRound(player1, out long winningWeight, _options, 21);
+                player1Wins += winningWeight * player2.GetWeight();
+                player2 = GetNextRound(player2, out winningWeight, _options, 21);
+                player2Wins += winningWeight * player1.GetWeight();
             }
 
             return Math.Max(player1Wins, player2Wins);
         }
 
-        private (Dictionary<int,Player> Players1, Dictionary<int,Player> Players2) GetPlayers(string[] input)
+        private (Player Player1, Player Player2) GetPlayers(string[] input)
         {
             
             var playerPositions = input
@@ -80,48 +81,42 @@ namespace AdventOfCode2021.Days
                 .Select(p => int.Parse(p[1]))
                 .ToArray();
 
-            var players1 = new Dictionary<int, Player>();            
-            players1[playerPositions[0]] = new Player(addScore: true);
-            var players2 = new Dictionary<int, Player>();            
-            players2[playerPositions[1]] = new Player(addScore: true);
+            var player1 = new Player();
+            player1[playerPositions[0]][0] = 1;
+            var player2 = new Player();
+            player2[playerPositions[1]][0] = 1;
 
-            return (players1, players2);
+            return (player1, player2);
         }
 
-        private Dictionary<int, Player> GetNextRound(Dictionary<int, Player> players, out List<long> winningWeights, Dictionary<int, int> options, int target)
+        private Player GetNextRound(Player player, out long winningWeights, Dictionary<int, int> options, int target)
         {
-            var nextRound = new Dictionary<int, Player>();
-            winningWeights = new();
-            foreach (var player in players)
+            var nextRound = new Player();
+            winningWeights = 0;
+            foreach (var scores in player)
             {
-                foreach (var score in player.Value.Scores)
+                foreach (var score in scores.Value)
                 {
                     foreach (var option in options)
                     {
-                        var nextPosition = (player.Key + option.Key) % 10;
+                        var nextPosition = (scores.Key + option.Key) % 10;
                         nextPosition = nextPosition == 0 ? 10 : nextPosition;
                         var newScore = score.Key + nextPosition;
-                        var newWeight = score.Value.Weight * option.Value;
+                        var newWeight = score.Value * option.Value;
 
                         if (newScore >= target)
                         {
-                            winningWeights.Add(newWeight);
+                            winningWeights += newWeight;
                         }
                         else
                         {
-                            if (!nextRound.TryGetValue(nextPosition, out Player? next))
+                            if (!nextRound[nextPosition].ContainsKey(newScore))
                             {
-                                next = new Player();
-                                nextRound[nextPosition] = next;
-                            }
-                            if (!next.Scores.TryGetValue(newScore, out Score? nextScore))
-                            {
-                                nextScore = new Score { Weight = newWeight };
-                                next.Scores[newScore] = nextScore;
+                                nextRound[nextPosition][newScore] = newWeight;
                             }
                             else
                             {
-                                nextScore.Weight += newWeight;
+                                nextRound[nextPosition][newScore] += newWeight;
                             }
                         }
                     }
