@@ -546,7 +546,11 @@ namespace AdventOfCode2021.Tests
 
         private string[] Day21()
         {
-            throw new NotImplementedException();
+            return new[]
+            {
+                "Player 1 starting position: 4",
+                "Player 2 starting position: 8"
+            };
         }
 
         private string[] Day22()
