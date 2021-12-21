@@ -30,13 +30,13 @@ namespace AdventOfCode2021.Days
             int count = 0;
 
             while (player1.Any() && player2.Any())
-            {             
+            {
                 count += 3;
                 var next = count % 1000;
                 var turn = (next == 0 ? 1000 : next) * 3 - 3;
 
-                player1 = GetNextRound(player1, out long winningWeight, new Dictionary<int, int> { { turn, 1 } }, 1000);                
-                if (winningWeight > 0)
+                player1 = GetNextRound(player1, turn, 1000);
+                if (!player1.Any())
                 {
                     return player2.Single().Value.Single().Key * count;
                 }
@@ -45,8 +45,8 @@ namespace AdventOfCode2021.Days
                 next = count % 1000;
                 turn = (next == 0 ? 1000 : next) * 3 - 3;
 
-                player2 = GetNextRound(player2, out winningWeight, new Dictionary<int, int> { { turn, 1 } }, 1000);
-                if (winningWeight > 0)
+                player2 = GetNextRound(player2, turn, 1000);
+                if (!player2.Any())
                 {
                     return player1.Single().Value.Single().Key * count;
                 }
@@ -54,7 +54,7 @@ namespace AdventOfCode2021.Days
 
             throw new InvalidOperationException("No winner found");
         }
-      
+
         protected override long ProcessPartTwo(string[] input)
         {
             var (player1, player2) = GetPlayers(input);
@@ -64,9 +64,9 @@ namespace AdventOfCode2021.Days
 
             while (player1.Any() && player2.Any())
             {
-                player1 = GetNextRound(player1, out long winningWeight, _options, 21);
+                player1 = GetNextRound(player1, _options, 21, out long winningWeight);
                 player1Wins += winningWeight * player2.GetWeight();
-                player2 = GetNextRound(player2, out winningWeight, _options, 21);
+                player2 = GetNextRound(player2, _options, 21, out winningWeight);
                 player2Wins += winningWeight * player1.GetWeight();
             }
 
@@ -75,7 +75,6 @@ namespace AdventOfCode2021.Days
 
         private (Player Player1, Player Player2) GetPlayers(string[] input)
         {
-            
             var playerPositions = input
                 .Select(i => i.Split(PlayerSplit))
                 .Select(p => int.Parse(p[1]))
@@ -89,10 +88,15 @@ namespace AdventOfCode2021.Days
             return (player1, player2);
         }
 
-        private Player GetNextRound(Player player, out long winningWeights, Dictionary<int, int> options, int target)
+        private Player GetNextRound(Player player, int turn, int target)
+        {
+            return GetNextRound(player, new Dictionary<int, int> { { turn, 1 } }, target, out _);
+        }
+
+        private Player GetNextRound(Player player, Dictionary<int, int> options, int target, out long winningWeight)
         {
             var nextRound = new Player();
-            winningWeights = 0;
+            winningWeight = 0;
             foreach (var scores in player)
             {
                 foreach (var score in scores.Value)
@@ -106,7 +110,7 @@ namespace AdventOfCode2021.Days
 
                         if (newScore >= target)
                         {
-                            winningWeights += newWeight;
+                            winningWeight += newWeight;
                         }
                         else
                         {
