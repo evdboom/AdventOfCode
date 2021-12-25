@@ -32,7 +32,7 @@ var days = new Dictionary<int, IDay>
     { 22, new Day22(importer) },
     { 23, new Day23(importer) },
     { 24, new Day24(importer) },
-    { 25, new Day25(importer) },
+    { 25, new Day25(importer, writer) },
 };
 
 Console.WriteLine("Hello, Santa!");

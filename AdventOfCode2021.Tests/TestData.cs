@@ -667,7 +667,18 @@ namespace AdventOfCode2021.Tests
 
         private string[] Day25()
         {
-            throw new NotImplementedException();
+            return new[]
+            {
+                "v...>>.vv>",
+                ".vv>>.vv..",
+                ">>.>v>...v",
+                ">>v>>.>.v.",
+                "v>v.vv.v..",
+                ">.>>..v...",
+                ".vv..>.>v.",
+                "v.v..>>v.v",
+                "....v..v.>",
+            };
         }
     }
 }
