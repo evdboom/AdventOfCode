@@ -8,7 +8,7 @@ namespace AdventOfCode2021.Days
     {
         private const char CaveConnection = '-';
         private const string StartCave = "start";
-        private const string EmdCave = "end";
+        private const string EndCave = "end";
 
         public Day12(IFileImporter importer) : base(importer)
         {
@@ -40,7 +40,7 @@ namespace AdventOfCode2021.Days
         {
             current.Add(cave.Code);
 
-            if (cave.Code.Equals(EmdCave))
+            if (cave.Code.Equals(EndCave))
             {
                 paths++;
                 return;
