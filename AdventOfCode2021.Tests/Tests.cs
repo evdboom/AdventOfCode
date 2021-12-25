@@ -305,8 +305,8 @@ namespace AdventOfCode2021.Tests
 
     public class Day23Tests : TestDay<Day23>
     {
-        protected override long ExpectedResultPartOne => throw new NotImplementedException();
-        protected override long ExpectedResultPartTwo => throw new NotImplementedException();
+        protected override long ExpectedResultPartOne => 12521;
+        protected override long ExpectedResultPartTwo => 44169;
     }
 
     public class Day24Tests : TestDay<Day24>

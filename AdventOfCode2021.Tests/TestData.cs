@@ -649,18 +649,25 @@ namespace AdventOfCode2021.Tests
         }
 
         private string[] Day23()
+        {
+            return new[]
             {
-                throw new NotImplementedException();
-            }
+                "#############",
+                "#...........#",
+                "###B#C#B#D###",
+                "  #A#D#C#A#",
+                "  #########",
+            };
+        }
 
-            private string[] Day24()
-            {
-                throw new NotImplementedException();
-            }
+        private string[] Day24()
+        {
+            throw new NotImplementedException();
+        }
 
-            private string[] Day25()
-            {
-                throw new NotImplementedException();
-            }
+        private string[] Day25()
+        {
+            throw new NotImplementedException();
         }
     }
+}
