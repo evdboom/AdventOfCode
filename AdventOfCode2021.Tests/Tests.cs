@@ -1,6 +1,8 @@
+using AdventOfCode2021.Constructs.Day23;
 using AdventOfCode2021.Days;
 using AdventOfCode2021.Tests.Base;
 using System;
+using Xunit;
 
 namespace AdventOfCode2021.Tests
 {
@@ -302,11 +304,38 @@ namespace AdventOfCode2021.Tests
         protected override long ExpectedResultPartTwo => 2758514936282235;
     }
 
-
     public class Day23Tests : TestDay<Day23>
     {
         protected override long ExpectedResultPartOne => 12521;
         protected override long ExpectedResultPartTwo => 44169;
+
+        [Fact]
+        public void SmallWinIsValid()
+        {
+            var board = new Board("...........", "AA", "BB", "CC", "DD");
+            Assert.True(board.Wins());                
+        }
+
+        [Fact]
+        public void LargeWinIsValid()
+        {
+            var board = new Board("...........", "AAAA", "BBBB", "CCCC", "DDDD");
+            Assert.True(board.Wins());
+        }
+
+        [Fact]
+        public void InHallwayIsInvalid()
+        {
+            var board = new Board("A..........", ".AAA", "BBBB", "CCCC", "DDDD");
+            Assert.False(board.Wins());
+        }
+
+        [Fact]
+        public void InWrongWroomIsInvalid()
+        {
+            var board = new Board("...........", "AAAB", "BBBA", "CCCC", "DDDD");
+            Assert.False(board.Wins());
+        }
     }
 
     public class Day25Tests : TestDay<Day25>
