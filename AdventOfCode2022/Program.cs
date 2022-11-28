@@ -1,7 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Services;
 
-
 var importer = new FileImporter();
 var writer = new ScreenWriter();
 var days = new Dictionary<int, IDay>();
