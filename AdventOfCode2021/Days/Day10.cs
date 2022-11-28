@@ -99,7 +99,7 @@ namespace AdventOfCode2021.Days
         private long GetCompleteValue(string line)
         {
             long sum = 0;
-            var openChunks = nGetOpenChunks(line);
+            var openChunks = GetOpenChunks(line);
 
             while (openChunks.TryPop(out char open))
             {
