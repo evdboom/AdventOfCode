@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace AdventOfCode2021.Extensions
+namespace AdventOfCode.Shared.Extensions
 {
     public static class GridExtensions
     {

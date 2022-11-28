@@ -1,4 +1,5 @@
-﻿using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode2021.Days
 {

@@ -1,5 +1,6 @@
-﻿using AdventOfCode2021.Extensions;
-using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode2021.Days
 {
@@ -52,7 +53,7 @@ namespace AdventOfCode2021.Days
         }
 
         private IEnumerable<(int X, int Y, int Value)> GetLowPoints(int[,] grid)
-        {           
+        {
             for (int j = 0; j < grid.GetLength(1); j++)
             {
                 for (int i = 0; i < grid.GetLength(0); i++)

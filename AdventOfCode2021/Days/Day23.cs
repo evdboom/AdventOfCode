@@ -1,5 +1,6 @@
-﻿using AdventOfCode2021.Constructs.Day23;
-using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
+using AdventOfCode2021.Constructs.Day23;
 
 namespace AdventOfCode2021.Days
 {
@@ -41,7 +42,7 @@ namespace AdventOfCode2021.Days
             HashSet<int> visited = new();
             queue.Enqueue(initial, initial.Cost);
 
-            while(queue.TryDequeue(out Board? board, out _))
+            while (queue.TryDequeue(out Board? board, out _))
             {
                 PrintBoard(board);
                 if (!visited.Add(board.GetHashCode()))
@@ -53,10 +54,10 @@ namespace AdventOfCode2021.Days
                     return board.Cost;
                 }
 
-                foreach(var move in board.ValidMoves())
+                foreach (var move in board.ValidMoves())
                 {
                     queue.Enqueue(move, move.Cost + move.Estimate);
-                }                
+                }
             }
 
             throw new InvalidOperationException("Could not find solution");
@@ -72,9 +73,9 @@ namespace AdventOfCode2021.Days
                 if (line.Any(l => l == Board.Empty))
                 {
                     hallWay = line.Replace("#", "");
-                        
+
                 }
-                else 
+                else
                 {
                     var convientLine = line.Trim().Replace("#", "");
                     if (string.IsNullOrEmpty(convientLine))
@@ -88,7 +89,7 @@ namespace AdventOfCode2021.Days
                             ProcessLine(add, rooms);
                         }
                     }
-                    ProcessLine(convientLine, rooms);                    
+                    ProcessLine(convientLine, rooms);
                     linesProcessed++;
                 }
             }

@@ -1,6 +1,6 @@
-﻿using AdventOfCode2021.Constructs;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 using AdventOfCode2021.Constructs.Day12;
-using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
 {
@@ -46,11 +46,11 @@ namespace AdventOfCode2021.Days
                 return;
             }
 
-            allowDoubleSmall = allowDoubleSmall && (cave.LargeCave || current.Count(c => c.Equals(cave.Code)) == 1);            
+            allowDoubleSmall = allowDoubleSmall && (cave.LargeCave || current.Count(c => c.Equals(cave.Code)) == 1);
             var connections = cave.Connections.Values
                 .Where(c =>
-                    c.LargeCave || 
-                    (!c.Code.Equals(StartCave) && allowDoubleSmall) || 
+                    c.LargeCave ||
+                    (!c.Code.Equals(StartCave) && allowDoubleSmall) ||
                     !current.Contains(c.Code))
                 .ToList();
             foreach (var connection in connections)
@@ -63,11 +63,11 @@ namespace AdventOfCode2021.Days
         {
             Cave? startCave = null;
             var caves = new Dictionary<string, Cave>();
-            foreach(var line in input)
+            foreach (var line in input)
             {
                 var caveSet = line
                     .Split(CaveConnection);
-                                
+
                 if (!caves.TryGetValue(caveSet[0], out Cave? caveOne))
                 {
                     caveOne = new Cave(caveSet[0]);
@@ -96,8 +96,8 @@ namespace AdventOfCode2021.Days
                 {
                     startCave = caveTwo;
                 }
-            }    
-            
+            }
+
             if (startCave == null)
             {
                 throw new InvalidOperationException("Could not find start cave");

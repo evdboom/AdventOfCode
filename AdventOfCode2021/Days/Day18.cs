@@ -1,5 +1,6 @@
-﻿using AdventOfCode2021.Constructs.Day18;
-using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
+using AdventOfCode2021.Constructs.Day18;
 
 namespace AdventOfCode2021.Days
 {
@@ -25,7 +26,7 @@ namespace AdventOfCode2021.Days
                 .Select(i => GetSnailNumber(i))
                 .ToArray();
             var number = numbers[0];
-            foreach (var step in Enumerable.Range(1, input.Length -1))
+            foreach (var step in Enumerable.Range(1, input.Length - 1))
             {
                 number = GetSum(number, numbers[step]);
             }
@@ -80,7 +81,7 @@ namespace AdventOfCode2021.Days
                         current = result;
                     }
                     else
-                    {                       
+                    {
                         if (left)
                         {
                             current!.Left = new SnailNumber();
@@ -92,14 +93,14 @@ namespace AdventOfCode2021.Days
                             current = current.Right;
                         }
 
-                        left = true;                        
+                        left = true;
                     }
                 }
                 else if (c == Close)
                 {
                     if (!string.IsNullOrEmpty(currentValue))
                     {
-                        current!.RightValue = long.Parse(currentValue);                        
+                        current!.RightValue = long.Parse(currentValue);
                     }
 
                     currentValue = string.Empty;
@@ -109,7 +110,7 @@ namespace AdventOfCode2021.Days
                 {
                     if (!string.IsNullOrEmpty(currentValue))
                     {
-                        current!.LeftValue = long.Parse(currentValue);                                                 
+                        current!.LeftValue = long.Parse(currentValue);
                     }
                     currentValue = string.Empty;
                     left = false;

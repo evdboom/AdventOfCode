@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
@@ -21,8 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AdventOfCode.Shared.Testing\AdventOfCode.Shared.Testing.csproj" />
-    <ProjectReference Include="..\AdventOfCode2021\AdventOfCode2021.csproj" />
+    <ProjectReference Include="..\AdventOfCode.Shared\AdventOfCode.Shared.csproj" />
   </ItemGroup>
 
 </Project>

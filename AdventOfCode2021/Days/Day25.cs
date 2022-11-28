@@ -1,4 +1,5 @@
-﻿using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode2021.Days
 {
@@ -7,7 +8,7 @@ namespace AdventOfCode2021.Days
         private const char Empty = '.';
         private const char East = '>';
         private const char South = 'v';
-     
+
         private readonly IScreenWriter _writer;
 
         public Day25(IFileImporter importer, IScreenWriter writer) : base(importer)
@@ -30,7 +31,7 @@ namespace AdventOfCode2021.Days
                 steps++;
                 var eastMoved = ProcessStep(grid, East);
                 var southMoved = ProcessStep(grid, South);
-                hasMoved = eastMoved || southMoved;               
+                hasMoved = eastMoved || southMoved;
                 PrintGrid(grid);
             }
             while (hasMoved);
@@ -68,7 +69,7 @@ namespace AdventOfCode2021.Days
                     }
                 }
             }
-                    
+
             foreach (var move in moves)
             {
                 grid[move.Key.x, move.Key.y] = Empty;
@@ -80,7 +81,7 @@ namespace AdventOfCode2021.Days
 
         private (int x, int y) GetTarget(int x, int y, char[,] grid)
         {
-            return grid[x,y] switch
+            return grid[x, y] switch
             {
                 East => (x == grid.GetLength(0) - 1 ? 0 : x + 1, y),
                 South => (x, y == grid.GetLength(1) - 1 ? 0 : y + 1),

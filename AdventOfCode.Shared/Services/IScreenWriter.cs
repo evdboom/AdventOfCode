@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2021.Services
+﻿namespace AdventOfCode.Shared.Services
 {
     public interface IScreenWriter
     {

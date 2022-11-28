@@ -1,58 +1,11 @@
-﻿using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Testing;
 using System;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2021.Tests
 {
-    public class TestData : IFileImporter
+    public class TestData : TestDataBase<TestData>
     {
-        private string? _testDataPart;
-
-        public TestData()
-        {
-        }
-
-        public void SetTestDataPart(string testDataPart)
-        {
-            _testDataPart = testDataPart;
-        }
-
-        public Task<string[]> GetInputAsync(int dayNumber)
-        {
-            var result = dayNumber switch
-            {
-                1 => Day01(),
-                2 => Day02(),
-                3 => Day03(),
-                4 => Day04(),
-                5 => Day05(),
-                6 => Day06(),
-                7 => Day07(),
-                8 => Day08(),
-                9 => Day09(),
-                10 => Day10(),
-                11 => Day11(),
-                12 => Day12(),
-                13 => Day13(),
-                14 => Day14(),
-                15 => Day15(),
-                16 => Day16(),
-                17 => Day17(),
-                18 => Day18(),
-                19 => Day19(),
-                20 => Day20(),
-                21 => Day21(),
-                22 => Day22(),
-                23 => Day23(),
-                24 => Day24(),
-                25 => Day25(),
-                _ => throw new ArgumentException(nameof(dayNumber))
-            };
-
-            return Task.FromResult(result);
-        }
-
-        private string[] Day01()
+        protected override string[] Day01()
         {
             return new[]
             {
@@ -69,7 +22,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day02()
+        protected override string[] Day02()
         {
             return new[]
             {
@@ -82,7 +35,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day03()
+        protected override string[] Day03()
         {
             return new[]
             {
@@ -101,7 +54,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day04()
+        protected override string[] Day04()
         {
             return new[]
             {
@@ -127,7 +80,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day05()
+        protected override string[] Day05()
         {
             return new[]
             {
@@ -144,7 +97,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day06()
+        protected override string[] Day06()
         {
             return new[]
             {
@@ -152,7 +105,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day07()
+        protected override string[] Day07()
         {
             return new[]
             {
@@ -160,7 +113,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day08()
+        protected override string[] Day08()
         {
             return new[]
             {
@@ -177,7 +130,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day09()
+        protected override string[] Day09()
         {
             return new[]
             {
@@ -189,7 +142,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day10()
+        protected override string[] Day10()
         {
             return new[]
             {
@@ -206,7 +159,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day11()
+        protected override string[] Day11()
         {
             return new[]
             {
@@ -223,7 +176,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day12()
+        protected override string[] Day12()
         {
             return new[]
             {
@@ -248,7 +201,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day13()
+        protected override string[] Day13()
         {
             return new[]
             {
@@ -276,7 +229,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day14()
+        protected override string[] Day14()
         {
             return new[]
             {
@@ -301,7 +254,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day15()
+        protected override string[] Day15()
         {
             return new[]
             {
@@ -318,7 +271,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day16()
+        protected override string[] Day16()
         {
             return _testDataPart switch
             {
@@ -338,12 +291,12 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day17()
+        protected override string[] Day17()
         {
             return new[] { "target area: x=20..30, y=-10..-5" };
         }
 
-        private string[] Day18()
+        protected override string[] Day18()
         {
             return _testDataPart switch
             {
@@ -387,7 +340,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day19()
+        protected override string[] Day19()
         {
             return new[]
             {
@@ -530,7 +483,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day20()
+        protected override string[] Day20()
         {
             return new[]
             {
@@ -544,7 +497,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day21()
+        protected override string[] Day21()
         {
             return new[]
             {
@@ -553,7 +506,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day22()
+        protected override string[] Day22()
         {
             return _testDataPart switch
             {
@@ -648,7 +601,7 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day23()
+        protected override string[] Day23()
         {
             return new[]
             {
@@ -660,12 +613,12 @@ namespace AdventOfCode2021.Tests
             };
         }
 
-        private string[] Day24()
+        protected override string[] Day24()
         {
             throw new NotImplementedException();
         }
 
-        private string[] Day25()
+        protected override string[] Day25()
         {
             return new[]
             {

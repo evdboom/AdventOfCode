@@ -1,5 +1,6 @@
-﻿using AdventOfCode2021.Constructs.Day24;
-using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
+using AdventOfCode2021.Constructs.Day24;
 
 namespace AdventOfCode2021.Days
 {
@@ -11,13 +12,13 @@ namespace AdventOfCode2021.Days
         public Day24(IFileImporter importer) : base(importer)
         {
         }
-        
+
         public override int DayNumber => 24;
 
         protected override long ProcessPartOne(string[] input)
-        {        
+        {
             var instructions = GetInstructions(input);
-            ProcessInstructions(instructions);           
+            ProcessInstructions(instructions);
             return long.Parse(string.Join("", instructions.Select(i => i.High)));
         }
 
@@ -68,7 +69,7 @@ namespace AdventOfCode2021.Days
                     };
 
                     current = newCurrent;
-                    
+
                     result.Add(current);
                     current.Instructions.Add(all[i]);
                 }

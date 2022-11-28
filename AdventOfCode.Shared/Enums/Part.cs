@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2021.Enums
+﻿namespace AdventOfCode.Shared.Enums
 {
     public enum Part
     {

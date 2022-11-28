@@ -1,12 +1,12 @@
-﻿using AdventOfCode2021.Constructs;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 using AdventOfCode2021.Constructs.Day14;
-using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
 {
     public class Day14 : Day
     {
-        private const string InsertionSplit = " -> ";        
+        private const string InsertionSplit = " -> ";
 
         public Day14(IFileImporter importer) : base(importer)
         {
@@ -47,7 +47,7 @@ namespace AdventOfCode2021.Days
 
             // outer characters are only counted once.
             values[startChar]++;
-            values[endChar]++;            
+            values[endChar]++;
 
             // All characters are counted twice
             var max = values.Max(c => c.Value) / 2;
@@ -67,7 +67,7 @@ namespace AdventOfCode2021.Days
         private Dictionary<string, Pair> FillInitialTemplate(string line, Dictionary<string, string> rules)
         {
             var result = new Dictionary<string, Pair>();
-            for(int i = 0; i < line.Length -1; i++)
+            for (int i = 0; i < line.Length - 1; i++)
             {
                 var code = line.Substring(i, 2);
                 if (!result.ContainsKey(code))

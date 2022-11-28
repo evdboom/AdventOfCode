@@ -1,4 +1,5 @@
-﻿using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 using System.Drawing;
 
 namespace AdventOfCode2021.Days
@@ -24,7 +25,7 @@ namespace AdventOfCode2021.Days
                     yMax = Math.Max(yMax, MaxHeight(x, y, area));
                 }
             }
-            
+
             return yMax;
         }
 
@@ -44,14 +45,14 @@ namespace AdventOfCode2021.Days
                     }
                 }
             }
-            
+
             return hits;
         }
 
         private int GetMinXVelocity(int xToReach)
         {
             var option = 0;
-            while(option < xToReach)
+            while (option < xToReach)
             {
                 var max = GetMaxX(option);
                 if (max >= xToReach)
@@ -80,7 +81,7 @@ namespace AdventOfCode2021.Days
         {
             var size = Math.Abs(area.Y) - area.Y + 1;
             return Enumerable.Range(area.Y, size);
-           
+
         }
 
         private IEnumerable<int> PotentialX(Rectangle area, int start)
@@ -111,18 +112,18 @@ namespace AdventOfCode2021.Days
                 step++;
                 xVelocity += xVelocity < 0 ? 1
                            : xVelocity > 0 ? -1
-                           : 0;                
+                           : 0;
                 yVelocity--;
             }
 
             return hit
                 ? yMax
-                : long.MinValue;            
+                : long.MinValue;
         }
 
         private bool InArea(Point point, Rectangle area)
         {
-            return 
+            return
                 point.X >= area.X &&
                 point.X <= area.X + area.Width &&
                 point.Y >= area.Y &&
@@ -131,7 +132,7 @@ namespace AdventOfCode2021.Days
 
         private bool CouldBeInArea(Point point, Rectangle area)
         {
-            return 
+            return
                 point.X <= area.X + area.Width &&
                 point.Y >= area.Y;
         }

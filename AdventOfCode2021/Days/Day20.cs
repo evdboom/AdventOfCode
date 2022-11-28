@@ -1,4 +1,5 @@
-﻿using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 using System.Text;
 
 namespace AdventOfCode2021.Days
@@ -12,7 +13,7 @@ namespace AdventOfCode2021.Days
 
         public Day20(IFileImporter importer, IScreenWriter writer) : base(importer)
         {
-            _writer = writer;            
+            _writer = writer;
         }
 
         public override int DayNumber => 20;
@@ -36,7 +37,7 @@ namespace AdventOfCode2021.Days
             var step = 0;
             DrawGrid(grid);
             while (step < runs)
-            {                
+            {
                 grid = PrepareGrid(grid, step == 0);
                 grid = ProcessGrid(grid, algorithm);
                 DrawGrid(grid);
@@ -112,7 +113,7 @@ namespace AdventOfCode2021.Days
 
             var value = grid[0, 0];
             if (!first && value == 1)
-            {               
+            {
                 for (int j = 0; j < factor; j++)
                 {
                     for (int i = 0; i < result.GetLength(0); i++)
@@ -139,12 +140,12 @@ namespace AdventOfCode2021.Days
             var width = input[2].Length;
             var height = input.Length - 2;
             var result = new int[width, height];
-            
+
             for (int j = 0; j < height; j++)
-            {                
+            {
                 for (int i = 0; i < width; i++)
                 {
-                    result[i, j] = input[j + 2][i] == LightPixel ? 1 : 0;                        
+                    result[i, j] = input[j + 2][i] == LightPixel ? 1 : 0;
                 }
             }
 

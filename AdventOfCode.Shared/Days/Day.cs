@@ -1,8 +1,8 @@
-﻿using AdventOfCode2021.Enums;
-using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Enums;
+using AdventOfCode.Shared.Services;
 using System.Diagnostics;
 
-namespace AdventOfCode2021.Days
+namespace AdventOfCode.Shared.Days
 {
     public abstract class Day : IDay
     {
@@ -36,6 +36,6 @@ namespace AdventOfCode2021.Days
 
         protected abstract long ProcessPartOne(string[] input);
 
-        protected abstract long ProcessPartTwo(string[] input);        
+        protected abstract long ProcessPartTwo(string[] input);
     }
 }

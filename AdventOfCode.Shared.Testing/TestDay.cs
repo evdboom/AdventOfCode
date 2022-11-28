@@ -1,33 +1,33 @@
-﻿using AdventOfCode2021.Days;
-using AdventOfCode2021.Enums;
-using System;
-using System.Threading.Tasks;
-using Xunit;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Enums;
 
-namespace AdventOfCode2021.Tests.Base
+namespace AdventOfCode.Shared.Testing
 {
-    public abstract class TestDay<Day> where Day : IDay
+    public abstract class TestDay<Day, Data> 
+        where Day : IDay
+        where Data : ITestData<Data>, new()
     {
         private readonly Day _day;
         private readonly string _testDataPartOne;
         private readonly string _testDataPartTwo;
 
-        private readonly TestData _testData;
+        private readonly Data _testData;
 
         protected abstract long ExpectedResultPartOne { get; }
         protected abstract long ExpectedResultPartTwo { get; }
 
         public TestDay() : this(string.Empty)
         {
+
         }
 
-        public TestDay(string testDataPart) : this (testDataPart, testDataPart)
+        public TestDay(string testDataPart) : this(testDataPart, testDataPart)
         {
         }
 
         public TestDay(string testDataPartOne, string testDataPartTwo)
         {
-            _testData = new TestData();
+            _testData = new();
             _testDataPartOne = testDataPartOne;
             _testDataPartTwo = testDataPartTwo;
 
@@ -46,9 +46,9 @@ namespace AdventOfCode2021.Tests.Base
         {
             _testData.SetTestDataPart(_testDataPartOne);
 
-            var result = await _day.ProcessPartAsync(Part.One);
+            var (answer, _) = await _day.ProcessPartAsync(Part.One);
 
-            Assert.Equal(ExpectedResultPartOne, result.answer);
+            Assert.Equal(ExpectedResultPartOne, answer);
         }
 
         [Fact]
@@ -56,9 +56,9 @@ namespace AdventOfCode2021.Tests.Base
         {
             _testData.SetTestDataPart(_testDataPartTwo);
 
-            var result = await _day.ProcessPartAsync(Part.Two);
+            var (answer, _) = await _day.ProcessPartAsync(Part.Two);
 
-            Assert.Equal(ExpectedResultPartTwo, result.answer);
+            Assert.Equal(ExpectedResultPartTwo, answer);
         }
     }
 }

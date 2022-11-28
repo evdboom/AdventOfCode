@@ -1,8 +1,7 @@
-﻿using AdventOfCode2021.Constructs;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 using AdventOfCode2021.Constructs.Day16;
-using AdventOfCode2021.Enums;
 using AdventOfCode2021.Enums.Day16;
-using AdventOfCode2021.Services;
 using System.Text;
 
 namespace AdventOfCode2021.Days
@@ -37,12 +36,12 @@ namespace AdventOfCode2021.Days
         }
 
         private Packet ReadPacket(StringStream stream)
-        {            
-            var version = stream.ReadInt(Packet.VersionLength);            
+        {
+            var version = stream.ReadInt(Packet.VersionLength);
             var type = (PacketType)stream.ReadInt(Packet.TypeLength);
 
             var result = new Packet(version, type);
-            
+
             if (result.IsLiteralType)
             {
                 ReadLiteral(result, stream);
@@ -50,14 +49,14 @@ namespace AdventOfCode2021.Days
             else
             {
                 ReadOperator(result, stream);
-            }            
+            }
 
             return result;
         }
 
         private void ReadOperator(Packet packet, StringStream stream)
         {
-            var type = stream.ReadString(1);           
+            var type = stream.ReadString(1);
             var length = GetLength(type, stream);
 
             if (type == Packet.LengthTypeCount)
@@ -83,7 +82,7 @@ namespace AdventOfCode2021.Days
         {
             return type == Packet.LengthTypeSize
                 ? stream.ReadInt(Packet.LengthTypeSizeLength)
-                : stream.ReadInt(Packet.LengthTypeCountLength);           
+                : stream.ReadInt(Packet.LengthTypeCountLength);
         }
 
         private void ReadLiteral(Packet currentPacket, StringStream stream)
@@ -102,7 +101,7 @@ namespace AdventOfCode2021.Days
         private string ReadNext(StringStream stream, out bool hasNext)
         {
             var next = stream.ReadString(Packet.LiteralGroupLength);
-            
+
             hasNext = next[0] != Packet.LastLiteralGroup;
             return next[1..];
         }

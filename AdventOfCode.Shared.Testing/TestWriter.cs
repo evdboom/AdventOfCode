@@ -1,8 +1,7 @@
-﻿using AdventOfCode2021.Services;
-using System;
+﻿using AdventOfCode.Shared.Services;
 using System.Diagnostics;
 
-namespace AdventOfCode2021.Tests.Base
+namespace AdventOfCode.Shared.Testing
 {
     public class TestWriter : IScreenWriter
     {

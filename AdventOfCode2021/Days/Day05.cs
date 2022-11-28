@@ -1,6 +1,6 @@
-﻿using AdventOfCode2021.Constructs;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 using AdventOfCode2021.Constructs.Day05;
-using AdventOfCode2021.Services;
 using System.Drawing;
 
 namespace AdventOfCode2021.Days
@@ -46,7 +46,7 @@ namespace AdventOfCode2021.Days
             {
                 FillDiagonal(board, line, includeDiagonal);
                 FillHorizontal(board, line);
-                FillVertical(board, line);                
+                FillVertical(board, line);
             }
         }
 
@@ -97,12 +97,12 @@ namespace AdventOfCode2021.Days
         {
             bool up = start.Y < end.Y;
             int y = start.Y;
-            for(int i = start.X; i <= end.X; i++)
+            for (int i = start.X; i <= end.X; i++)
             {
                 board[i, y]++;
                 y = up
                     ? y + 1
-                    : y - 1;                
+                    : y - 1;
             }
         }
 

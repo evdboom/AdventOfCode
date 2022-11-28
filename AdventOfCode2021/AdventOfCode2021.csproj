@@ -12,4 +12,8 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\AdventOfCode.Shared\AdventOfCode.Shared.csproj" />
+	</ItemGroup>
 </Project>

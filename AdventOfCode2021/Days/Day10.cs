@@ -1,6 +1,6 @@
-﻿using AdventOfCode2021.Constructs;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 using AdventOfCode2021.Constructs.Day10;
-using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
 {
@@ -22,7 +22,7 @@ namespace AdventOfCode2021.Days
             Open1, Open2, Open3, Open4
         };
 
-        private readonly Dictionary<char,char> _closeCharacters = new Dictionary<char, char>
+        private readonly Dictionary<char, char> _closeCharacters = new Dictionary<char, char>
         {
             { Open1, Close1 },
             { Open2, Close2 },
@@ -50,7 +50,7 @@ namespace AdventOfCode2021.Days
 
         public Day10(IFileImporter importer) : base(importer)
         {
-        }        
+        }
 
         protected override long ProcessPartOne(string[] input)
         {
@@ -99,7 +99,7 @@ namespace AdventOfCode2021.Days
         private long GetCompleteValue(string line)
         {
             long sum = 0;
-            var openChunks = GetOpenChunks(line);
+            var openChunks = nGetOpenChunks(line);
 
             while (openChunks.TryPop(out char open))
             {

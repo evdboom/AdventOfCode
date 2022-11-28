@@ -1,5 +1,6 @@
-﻿using AdventOfCode2021.Constructs.Day19;
-using AdventOfCode2021.Services;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
+using AdventOfCode2021.Constructs.Day19;
 
 namespace AdventOfCode2021.Days
 {
@@ -69,14 +70,14 @@ namespace AdventOfCode2021.Days
                         {
                             unknown.NoMatch.Add(known);
                         }
-                    }                    
+                    }
                 }
             }
 
             beacons = scanners
                 .SelectMany(TranslateBeaconsToOrigin)
                 .Distinct()
-                .ToList();            
+                .ToList();
         }
 
         private IEnumerable<Beacon> TranslateBeaconsToOrigin(Scanner scanner)
@@ -119,7 +120,7 @@ namespace AdventOfCode2021.Days
 
         private List<Beacon> Rotate(List<Beacon> beacons, int direction, int rotation)
         {
-            switch (direction) 
+            switch (direction)
             {
                 case 0:
                     beacons = beacons // starting pos (nothing)
@@ -174,7 +175,7 @@ namespace AdventOfCode2021.Days
                     beacons = beacons // roll 270 degrees over X
                         .Select(b => new Beacon(b.X, b.Z, -b.Y))
                         .ToList();
-                    break;             
+                    break;
             }
 
             CreateBeaconMap(beacons);

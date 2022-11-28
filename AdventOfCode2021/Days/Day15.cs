@@ -1,7 +1,7 @@
-﻿using AdventOfCode2021.Constructs;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Services;
 using AdventOfCode2021.Constructs.Day15;
-using AdventOfCode2021.Extensions;
-using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
 {

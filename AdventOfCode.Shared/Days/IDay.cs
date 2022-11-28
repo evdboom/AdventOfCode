@@ -1,6 +1,6 @@
-﻿using AdventOfCode2021.Enums;
+﻿using AdventOfCode.Shared.Enums;
 
-namespace AdventOfCode2021.Days
+namespace AdventOfCode.Shared.Days
 {
     public interface IDay
     {

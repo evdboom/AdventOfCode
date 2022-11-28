@@ -1,6 +1,6 @@
-﻿using AdventOfCode2021.Constructs;
+﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Services;
 using AdventOfCode2021.Constructs.Day06;
-using AdventOfCode2021.Services;
 
 namespace AdventOfCode2021.Days
 {
@@ -48,7 +48,7 @@ namespace AdventOfCode2021.Days
                 if (newSchool is not null)
                 {
                     schools.Add(newSchool);
-                }                
+                }
 
                 schools = schools
                     .GroupBy(s => s.Counter)
