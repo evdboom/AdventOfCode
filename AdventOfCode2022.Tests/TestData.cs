@@ -24,5 +24,15 @@ namespace AdventOfCode2022.Tests
                 "10000",
             };
         }
+
+        protected override string[] Day02()
+        {            
+            return new[]
+            {
+                "A Y",
+                "B X",
+                "C Z"
+            };
+        }
     }
 }

@@ -6,7 +6,9 @@ var importer = new FileImporter();
 var writer = new ScreenWriter();
 var days = new Dictionary<int, IDay>()
 {
-    { 1, new Day01(importer) }
+    { 1, new Day01(importer) },
+    { 2, new Day02(importer) },
+
 };
 var runner = new DayRunner(days, writer);
 Console.WriteLine("Hello, Santa!");
