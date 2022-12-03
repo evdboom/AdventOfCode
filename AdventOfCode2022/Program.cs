@@ -8,6 +8,7 @@ var days = new Dictionary<int, IDay>()
 {
     { 1, new Day01(importer) },
     { 2, new Day02(importer) },
+    { 3, new Day03(importer) },
 
 };
 var runner = new DayRunner(days, writer);

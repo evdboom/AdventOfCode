@@ -31,7 +31,22 @@ namespace AdventOfCode2022.Tests
             {
                 "A Y",
                 "B X",
-                "C Z"
+                "C Z",
+                "A Z",
+                "C X"
+            };
+        }
+
+        protected override string[] Day03()
+        {
+            return new[]
+            {
+                "vJrwpWtwJgWrhcsFMMfFFhFp",
+                "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL",
+                "PmmdzqPrVvPwwTWBwg",
+                "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn",
+                "ttgJtRGJQctTZtZT",
+                "CrZsJsPPZsGzwwsLwLmpwMDw",
             };
         }
     }

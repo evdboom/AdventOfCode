@@ -11,52 +11,32 @@ namespace AdventOfCode2022.Days
 
         public override int DayNumber => 1;
 
+        private List<int> Aggragate(string[] input)
+        {
+            return input
+                .Aggregate(new List<int>() { 0 }, (current, next) =>
+                {
+                    if (string.IsNullOrEmpty(next))
+                    {
+                        current.Insert(0, 0);
+                    }
+                    else
+                    {
+                        current[0] += int.Parse(next);
+                    }
+                    return current;
+                });
+        }
+
         protected override long ProcessPartOne(string[] input)
         {
-            var max = 0;
-            var current = 0;
-            foreach (var item in input)
-            {
-                if (string.IsNullOrEmpty(item))
-                {
-                    if (current > max)
-                    {
-                        max = current;                        
-                    }
-                    current = 0;
-                }
-                else
-                {                    
-                    current += int.Parse(item);
-                }                
-            }
-            if (current > max) 
-            {
-                max = current;
-            }
-
-            return max;
+            return Aggragate(input)
+                .Max();
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
-            var elves = new List<int>();
-            var current = 0;
-            foreach (var item in input)
-            {
-                if (string.IsNullOrEmpty(item))
-                {
-                    elves.Add(current);
-                    current = 0;
-                }
-                else
-                {
-                    current += int.Parse(item);
-                }
-            }
-            elves.Add(current);
-
-            return elves
+            return Aggragate(input)
                 .OrderByDescending(e => e)
                 .Take(3)
                 .Sum();
