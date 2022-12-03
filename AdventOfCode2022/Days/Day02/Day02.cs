@@ -34,12 +34,11 @@ namespace AdventOfCode2022.Days
             return input
                 .Select(line => line
                     .Split(' ')
-                    .Select((item, index) => item[0] - (index == 0 ? 'A' -1 : 'X' + 1))
+                    .Select((item, index) => item[0] - (index == 0 ? 'A' : 'X' + 1))
                     .ToArray())
                 .Aggregate(0, (value, values) =>
             {
-                var result = (values[0] + values[1]) % 3;
-                result = result == 0 ? 3 : result;
+                var result = 1 + (values[0] + values[1] + 3) % 3;
                 return value + result + (values[1] + 1) * 3;
 
             });       
