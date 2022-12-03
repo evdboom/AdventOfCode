@@ -41,9 +41,7 @@ namespace AdventOfCode2022.Days
 
         private int CharValue(char c)
         {
-            return char.IsUpper(c)
-                ? 27 + c - 'A'
-                : 1 + c - 'a';
+            return (c % 32) + (char.IsUpper(c) ? 26 : 0);                
         }
     }
 }
