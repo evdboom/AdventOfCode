@@ -31,9 +31,7 @@ namespace AdventOfCode2022.Tests
             {
                 "A Y",
                 "B X",
-                "C Z",
-                "A Z",
-                "C X"
+                "C Z"
             };
         }
 

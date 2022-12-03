@@ -5,27 +5,6 @@ namespace AdventOfCode2022.Days
 {
     public class Day02 : Day
     {
-        private readonly Dictionary<string, int> _scores = new()
-        {
-            { "A", 1 },
-            { "B", 2 },
-            { "C", 3 }
-        };
-
-        private readonly Dictionary<string, string> _translations = new()
-        {
-            { "X", "A" },
-            { "Y", "B" },
-            { "Z", "C" }
-        };
-
-        private readonly Dictionary<string, string> _wins = new()
-        {
-            { "A", "B" },
-            { "B", "C" },
-            { "C", "A" }
-        };
-
         public Day02(IFileImporter importer) : base(importer)
         {
         }
@@ -34,49 +13,35 @@ namespace AdventOfCode2022.Days
 
         protected override long ProcessPartOne(string[] input)
         {
-            long score = 0;
-            foreach (var line in input)
+            return input.Aggregate(0, (value, line) =>
             {
-                var plays = line.Split(' ');
+                var values = line
+                    .Split(' ')
+                    .Select((item, index) => 1 + item[0] - (index == 0 ? 'A' : 'X'))
+                    .ToArray();
 
-                var played = _translations[plays[1]];
-                score += _scores[played];
-                if (_wins[plays[0]] == played)
-                {
-                    score += 6;
-                }
-                else if (plays[0] == played)
-                {
-                    score += 3;
-                }
-            }
+                values[1] = values[0] == 1 ? values[1] % 3 : values[1];                
+                values[0] = values[1] == 1 ? values[0] % 3 : values[0];
 
-            return score;
+                return value + values[1] + (values[1] - values[0] + 1) * 3;
+            });
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
-            long score = 0;
-            foreach (var line in input)
+            return input.Aggregate(0, (value, line) =>
             {
-                var plays = line.Split(' ');
+                var values = line
+                    .Split(' ')
+                    .Select((item, index) => item[0] - (index == 0
+                        ? 'A' - 1
+                        : 'X' + 1))
+                    .ToArray();
+                var result = (values[0] + values[1]) % 3;
+                result = result == 0 ? 3 : result;
+                return value + result + (values[1] + 1) * 3;
 
-                switch (plays[1])
-                {
-                    case "X":
-                        var played = _wins.First(p => plays[0] == p.Value).Key;
-                        score += _scores[played];
-                        break;
-                    case "Y":
-                        score += _scores[plays[0]] + 3;
-                        break;
-                    case "Z":
-                        score += _scores[_wins[plays[0]]] + 6;
-                        break;
-                }
-            }
-
-            return score;
+            });       
         }
     }
 }
