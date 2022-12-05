@@ -59,18 +59,17 @@ namespace AdventOfCode2022.Days
             var first = pair.First();
             var second = pair.Last();
 
-            var one = first[0] - second[0];
-            var two = second[1] - first[1];
-
-            var result = partial
-                ? first[0] <= second[1] && first[1] >= second[0]
-                : (one <= 0 && two <= 0) ||
-                  (one >= 0 && two >= 0);
-
-            return result;
-                
+            if (partial)
+            {
+                return first[0] <= second[1] && first[1] >= second[0];
+            }
+            else
+            {
+                var one = first[0] - second[0];
+                var two = second[1] - first[1];
+                return (one <= 0 && two <= 0) 
+                    || (one >= 0 && two >= 0);
+            }               
         }
-
-
     }
 }
