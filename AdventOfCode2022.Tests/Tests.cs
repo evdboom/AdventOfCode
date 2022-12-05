@@ -26,4 +26,24 @@ namespace AdventOfCode2022.Tests
         protected override long ExpectedResultPartOne => 2;
         protected override long ExpectedResultPartTwo => 4;
     }
+
+    public class Day05Tests : TestDay<Day05, TestData>
+    {
+        protected override long ExpectedResultPartOne => -1;
+        protected override long ExpectedResultPartTwo => -1;
+
+        [Fact]
+        public async Task OwnTestPartOne()
+        {
+            await RunPartOne();
+            Assert.Equal("CMZ", _day.PartOneResult());
+        }
+
+        [Fact]
+        public async Task OwnTestPartTwo()
+        {
+            await RunPartTwo();
+            Assert.Equal("MCD", _day.PartTwoResult());
+        }
+    }
 }

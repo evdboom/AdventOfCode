@@ -7,7 +7,7 @@ namespace AdventOfCode.Shared.Testing
         where Day : IDay
         where Data : ITestData<Data>, new()
     {
-        private readonly Day _day;
+        protected readonly Day _day;
         private readonly string _testDataPartOne;
         private readonly string _testDataPartTwo;
 
@@ -41,12 +41,26 @@ namespace AdventOfCode.Shared.Testing
             }
         }
 
+        protected async Task<long> RunPartOne()
+        {
+            _testData.SetTestDataPart(_testDataPartOne);
+            var (answer, _) = await _day.ProcessPartAsync(Part.One);
+
+            return answer;
+        }
+
+        protected async Task<long> RunPartTwo()
+        {
+            _testData.SetTestDataPart(_testDataPartTwo);
+            var (answer, _) = await _day.ProcessPartAsync(Part.Two);
+
+            return answer;
+        }
+
         [Fact]
         public async Task TestPartOne()
         {
-            _testData.SetTestDataPart(_testDataPartOne);
-
-            var (answer, _) = await _day.ProcessPartAsync(Part.One);
+            var answer = await RunPartOne();
 
             Assert.Equal(ExpectedResultPartOne, answer);
         }
@@ -54,9 +68,7 @@ namespace AdventOfCode.Shared.Testing
         [Fact]
         public async Task TestPartTwo()
         {
-            _testData.SetTestDataPart(_testDataPartTwo);
-
-            var (answer, _) = await _day.ProcessPartAsync(Part.Two);
+            var answer = await RunPartTwo();
 
             Assert.Equal(ExpectedResultPartTwo, answer);
         }

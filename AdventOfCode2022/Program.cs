@@ -10,6 +10,7 @@ var days = new Dictionary<int, IDay>()
     { 2, new Day02(importer) },
     { 3, new Day03(importer) },
     { 4, new Day04(importer) },
+    { 5, new Day05(importer, writer) },
 
 };
 var runner = new DayRunner(days, writer);
