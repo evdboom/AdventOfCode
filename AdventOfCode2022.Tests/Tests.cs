@@ -46,4 +46,10 @@ namespace AdventOfCode2022.Tests
             Assert.Equal("MCD", _day.PartTwoResult());
         }
     }
+
+    public class Day06Tests : TestDay<Day06, TestData>
+    {
+        protected override long ExpectedResultPartOne => 0;
+        protected override long ExpectedResultPartTwo => 0;
+    }
 }

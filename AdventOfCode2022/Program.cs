@@ -1,21 +1,33 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Services;
 using AdventOfCode2022.Days;
+using System.Reflection;
 
 var importer = new FileImporter();
 var writer = new ScreenWriter();
-var days = new Dictionary<int, IDay>()
-{
-    { 1, new Day01(importer) },
-    { 2, new Day02(importer) },
-    { 3, new Day03(importer) },
-    { 4, new Day04(importer) },
-    { 5, new Day05(importer, writer) },
+var days = Assembly
+    .GetEntryAssembly()?
+    .GetTypes()
+    .Where(p => typeof(IDay).IsAssignableFrom(p) && string.Equals(p.Namespace, "AdventOfCode2022.Days"))
+    .Select(CreateDay)
+    .Where(p => p is not null)
+    .ToDictionary(day => day!.DayNumber, day => day);
 
-};
 var runner = new DayRunner(days, writer);
 Console.WriteLine("Hello, Santa!");
 await runner.Run();
 
 Console.WriteLine("Press any key to close");
 Console.ReadKey();
+
+IDay? CreateDay(Type p)
+{
+    try
+    {
+        return Activator.CreateInstance(p, importer) as IDay;
+    }
+    catch
+    {
+        return Activator.CreateInstance(p, importer, writer) as IDay;
+    }
+}
