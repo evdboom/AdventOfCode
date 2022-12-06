@@ -47,9 +47,58 @@ namespace AdventOfCode2022.Tests
         }
     }
 
-    public class Day06Tests : TestDay<Day06, TestData>
+    public class Day06ATests : TestDay<Day06, TestData>
     {
-        protected override long ExpectedResultPartOne => 0;
-        protected override long ExpectedResultPartTwo => 0;
+        public Day06ATests() : base("A")
+        {
+
+        }
+
+        protected override long ExpectedResultPartOne => 7;
+        protected override long ExpectedResultPartTwo => 19;
+    }
+
+    public class Day06BTests : TestDay<Day06, TestData>
+    {
+        public Day06BTests() : base("B")
+        {
+
+        }
+
+        protected override long ExpectedResultPartOne => 5;
+        protected override long ExpectedResultPartTwo => 23;
+    }
+
+    public class Day06CTests : TestDay<Day06, TestData>
+    {
+        public Day06CTests() : base("C")
+        {
+
+        }
+
+        protected override long ExpectedResultPartOne => 6;
+        protected override long ExpectedResultPartTwo => 23;
+    }
+
+    public class Day06DTests : TestDay<Day06, TestData>
+    {
+        public Day06DTests() : base("D")
+        {
+
+        }
+
+        protected override long ExpectedResultPartOne => 10;
+        protected override long ExpectedResultPartTwo => 29;
+    }
+
+    public class Day06ETests : TestDay<Day06, TestData>
+    {
+        public Day06ETests() : base("E")
+        {
+
+        }
+
+        protected override long ExpectedResultPartOne => 11;
+        protected override long ExpectedResultPartTwo => 26;
     }
 }

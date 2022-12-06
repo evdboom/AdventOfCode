@@ -76,5 +76,18 @@ namespace AdventOfCode2022.Tests
                "move 1 from 1 to 2"
             };
         }
+
+        protected override string[] Day06()
+        {
+            return _testDataPart switch
+            {
+                "A" => new[] { "mjqjpqmgbljsphdztnvjfqwrcgsmlb" },
+                "B" => new[] { "bvwbjplbgvbhsrlpgdmjqwftvncz" },
+                "C" => new[] { "nppdvjthqldpwncqszvftbrmjlhg" },
+                "D" => new[] { "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg" },
+                "E" => new[] { "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw" },
+                _ => throw new InvalidOperationException("Not a valid testdata")
+            };
+        }
     }
 }
