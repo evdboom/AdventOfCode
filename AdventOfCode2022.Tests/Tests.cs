@@ -101,4 +101,10 @@ namespace AdventOfCode2022.Tests
         protected override long ExpectedResultPartOne => 11;
         protected override long ExpectedResultPartTwo => 26;
     }
+
+    public class Day07Tests : TestDay<Day07, TestData>
+    {
+        protected override long ExpectedResultPartOne => 95437;
+        protected override long ExpectedResultPartTwo => 24933642;
+    }
 }
