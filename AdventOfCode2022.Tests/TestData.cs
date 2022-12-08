@@ -119,5 +119,17 @@ namespace AdventOfCode2022.Tests
                 "7214296 k",
             };
         }
+
+        protected override string[] Day08()
+        {
+            return new[]
+            {
+                "30373",
+                "25512",
+                "65332",
+                "33549",
+                "35390",
+            };
+        }
     }
 }
