@@ -1,104 +1,151 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
 using AdventOfCode.Shared.Services;
+using AdventOfCode2022.Days.Day11Group;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 
 namespace AdventOfCode2022.Days
 {
     public class Day11 : Day
-    {
-        private readonly IScreenWriter _writer;
-
-        public Day11(IFileImporter importer, IScreenWriter writer) : base(importer)
+    {        
+        public Day11(IFileImporter importer) : base(importer)
         {
-            _writer = writer;
+     
         }
 
         public override int DayNumber => 11;
         protected override long ProcessPartOne(string[] input)
         {
-            var wantedCycles = new[] { 20, 60, 100, 140, 180, 220 };
-            var x = 1;
-            var cycle = 0;
-            var value = 0;
-
-            foreach(var line in input)
-            {                
-                switch(line) 
+            var monkeys = GetMonkeys(input);
+            for (int i = 0; i < 20; i++)
+            {
+                foreach(var monkey in monkeys.Values)
                 {
-                    case "noop":
-                        cycle++;
-                        if (wantedCycles.Contains(cycle))
+                    while(monkey.Items.TryDequeue(out long item))
+                    {
+                        monkey.ItemsTested++;
+                        item = monkey.WorryFactor(item) / 3;
+                        if (item % monkey.DivisionTest == 0)
                         {
-                            value += x * cycle;
+                            monkeys[monkey.TargetTrue].Items.Enqueue(item);
                         }
-                        break;
-                    default:
-                        var parts = line.Split(' ');
-                        var addx = int.Parse(parts[1]);
-                        cycle++;
-                        if (wantedCycles.Contains(cycle))
+                        else
                         {
-                            value += x * cycle;
+                            monkeys[monkey.TargetFalse].Items.Enqueue(item);
                         }
-                        cycle++;
-                        if (wantedCycles.Contains(cycle))
-                        {
-                            value += x * cycle;
-                        }
-                        x += addx;
-                        break;
-                }
+                    }
+                }    
             }
 
-            return value;
+            return monkeys.Values
+                .Select(monkey => monkey.ItemsTested)
+                .OrderDescending()
+                .Take(2)
+                .Aggregate((a, b) => a * b);            
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
-            var x = 1;
-            var cycle = 0;
-            
-
-            foreach (var line in input)
+            var monkeys = GetMonkeys(input);
+            var factor = monkeys.Values
+                .Aggregate(1, (a, b) => a * b.DivisionTest);
+            for (int i = 0; i < 10000; i++)
             {
-                switch (line)
+                foreach (var monkey in monkeys.Values)
                 {
-                    case "noop":
-                        Write(cycle, x);
-                        cycle++;                        
-                        break;
-                    default:
-                        var parts = line.Split(' ');
-                        var addx = int.Parse(parts[1]);
-                        Write(cycle, x);
-                        cycle++;
-                        Write(cycle, x);
-                        cycle++;                        
-                        x += addx;
-                        break;
+                    while (monkey.Items.TryDequeue(out long item))
+                    {
+                        monkey.ItemsTested++;
+                        item = monkey.WorryFactor(item) % factor;
+                        if (item % monkey.DivisionTest == 0)
+                        {
+                            monkeys[monkey.TargetTrue].Items.Enqueue(item);
+                        }
+                        else
+                        {
+                            monkeys[monkey.TargetFalse].Items.Enqueue(item);
+                        }
+                    }
                 }
             }
 
-            return -1;
+            return monkeys.Values
+                .Select(monkey => monkey.ItemsTested)
+                .OrderDescending()
+                .Take(2)
+                .Aggregate((a, b) => a * b);
         }
 
-        private void Write(int cycle, int x)
+        private Dictionary<int, Monkey> GetMonkeys(string[] input)
         {
-            if (cycle % 40 == 0)
+            var result = new Dictionary<int, Monkey>();
+            int currentMonkey = -1;
+            foreach(var line in input)
             {
-                _writer.NewLine();
+                if (line.StartsWith("Monkey"))
+                {
+                    var parts = line.Split(' ');
+                    currentMonkey = int.Parse(parts[1].Replace(":", string.Empty));
+                    result[currentMonkey] = new Monkey { Number = currentMonkey };
+                }
+                else if (line.StartsWith("  Starting items"))
+                {
+                    var parts = line.Split(": ");
+                    var items = parts[1].Split(", ").Select(int.Parse);
+                    foreach(var item in items)
+                    {
+                        result[currentMonkey].Items.Enqueue(item);
+                    }
+                }
+                else if (line.StartsWith("  Operation"))
+                {
+                    var parts = line.Split(" = ");
+                    var operation = parts[1];
+                    var addition = operation.Split(" + ");
+                    if (addition.Length == 2)
+                    {
+                        if (int.TryParse(addition[1], out int value))
+                        {
+                            result[currentMonkey].WorryFactor = (i) => i + value;
+                        }
+                        else
+                        {
+                            result[currentMonkey].WorryFactor = (i) => i + i;
+                        }
+                    }
+                    else
+                    {
+                        var multiply = operation.Split(" * ");
+                        if (int.TryParse(multiply[1], out int multiplyValue))
+                        {
+                            result[currentMonkey].WorryFactor = (i) => i * multiplyValue;
+                        }
+                        else
+                        {
+                            result[currentMonkey].WorryFactor = (i) => i * i;
+                        }
+                    }
+                }
+                else if (line.StartsWith("  Test"))
+                {
+                    var parts = line.Split(" by ");
+                    result[currentMonkey].DivisionTest = int.Parse(parts[1]);
+                }
+                else if (line.StartsWith("    If true"))
+                {
+                    var parts = line.Split("monkey ");
+                    result[currentMonkey].TargetTrue = int.Parse(parts[1]);
+                }
+                else if (line.StartsWith("    If false"))
+                {
+                    var parts = line.Split("monkey ");
+                    result[currentMonkey].TargetFalse = int.Parse(parts[1]);
+                }
             }
-
-            if (Math.Abs((cycle % 40) - x) <= 1)
-            {
-                _writer.Write("#");
-            }
-            else
-            {
-                _writer.Write(".");
-            }
+            return result;
         }
+
+
     }
 }
