@@ -348,5 +348,17 @@ namespace AdventOfCode2022.Tests
                 "    If false: throw to monkey 1",
             };
         }
+
+        protected override string[] Day12()
+        {
+            return new[]
+            {
+                "Sabqponm",
+                "abcryxxl",
+                "accszExk",
+                "acctuvwj",
+                "abdefghi",
+            };
+        }
     }
 }
