@@ -8,8 +8,8 @@ namespace AdventOfCode2022.Days
     {
         public int HighestCoordinates { get; set; } = 4000000;
         public int RequestedRow { get; set; } = 2000000;
-        private readonly IScreenWriter _writer;
-        public Day15(IFileImporter importer, IScreenWriter writer) : base(importer)
+
+        public Day15(IFileImporter importer) : base(importer)
         {
             _writer = writer;
         }
