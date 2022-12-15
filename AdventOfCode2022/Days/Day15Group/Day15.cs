@@ -113,14 +113,6 @@ namespace AdventOfCode2022.Days
             throw new InvalidOperationException("No point found");
         }
 
-        private bool NoHit(long i, long j, Point sensor, Point beacon)
-        {
-            var distance = Math.Abs(sensor.X - beacon.X) + Math.Abs(sensor.Y - beacon.Y);
-            var distanceToPoint = Math.Abs(sensor.X - i) + Math.Abs(sensor.Y - j);
-
-            return distanceToPoint > distance;
-        }
-
         private Dictionary<Point, Point> GetSensors(string[] input)
         {
             var sensors = new Dictionary<Point, Point>();
