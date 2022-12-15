@@ -160,4 +160,16 @@ namespace AdventOfCode2022.Tests
         protected override long ExpectedResultPartOne => 24;
         protected override long ExpectedResultPartTwo => 93;
     }
+
+    public class Day15Tests : TestDay<Day15, TestData>
+    {
+        public Day15Tests() :base()
+        {
+            _day.RequestedRow = 10;
+            _day.HighestCoordinates = 20;
+        }
+
+        protected override long ExpectedResultPartOne => 26;
+        protected override long ExpectedResultPartTwo => 56000011;
+    }
 }

@@ -1,7 +1,5 @@
 ﻿using AdventOfCode.Shared.Days;
-using AdventOfCode.Shared.Extensions;
 using AdventOfCode.Shared.Services;
-using AdventOfCode2022.Days.Day12Group;
 using AdventOfCode2022.Days.Day13Group;
 
 namespace AdventOfCode2022.Days
@@ -21,7 +19,7 @@ namespace AdventOfCode2022.Days
                 .Where(p => p.IsValid())
                 .Select(p => p.Index)
                 .Sum();
-        }        
+        }
 
         protected override long ProcessPartTwo(string[] input)
         {
@@ -58,7 +56,7 @@ namespace AdventOfCode2022.Days
             int index = 1;
             Packet? left = null;
             Packet? right = null;
-            
+
             foreach (var line in input)
             {
                 if (string.IsNullOrEmpty(line))
@@ -89,7 +87,7 @@ namespace AdventOfCode2022.Days
             for (int i = 0; i < line.Length; i++)
             {
                 var c = line[i];
-                switch(c) 
+                switch (c)
                 {
                     case '[':
                         var inner = new Packet { Parent = current };
@@ -100,7 +98,7 @@ namespace AdventOfCode2022.Days
                         if (current is not null)
                         {
                             current.InnerPackets.Add(inner);
-                        }                        
+                        }
                         current = inner;
                         break;
                     case ']':
@@ -114,7 +112,7 @@ namespace AdventOfCode2022.Days
                         {
                             current!.InnerPackets.Add(new Packet { Parent = current, Value = int.Parse($"{c}{next}") });
                             i++;
-                            
+
                         }
                         else
                         {

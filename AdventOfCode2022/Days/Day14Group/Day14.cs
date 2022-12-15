@@ -5,10 +5,8 @@ namespace AdventOfCode2022.Days
 {
     public class Day14 : Day
     {
-        private readonly IScreenWriter _writer;
-        public Day14(IFileImporter importer, IScreenWriter writer) : base(importer)
+        public Day14(IFileImporter importer) : base(importer)
         {
-            _writer = writer;
         }
 
         public override int DayNumber => 14;

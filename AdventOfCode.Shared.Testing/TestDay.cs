@@ -16,6 +16,8 @@ namespace AdventOfCode.Shared.Testing
         protected abstract long ExpectedResultPartOne { get; }
         protected abstract long ExpectedResultPartTwo { get; }
 
+        public Day GetDay() => _day;
+
         public TestDay() : this(string.Empty)
         {
 
