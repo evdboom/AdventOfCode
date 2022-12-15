@@ -11,7 +11,6 @@ namespace AdventOfCode2022.Days
 
         public Day15(IFileImporter importer) : base(importer)
         {
-            _writer = writer;
         }
 
         public override int DayNumber => 15;
