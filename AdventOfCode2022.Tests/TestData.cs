@@ -420,5 +420,73 @@ namespace AdventOfCode2022.Tests
                 "Sensor at x=20, y=1: closest beacon is at x=15, y=3",
             };
         }
+
+        protected override string[] Day16()
+        {
+            return new[]
+            {              
+                "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB",
+                "Valve BB has flow rate=13; tunnels lead to valves CC, AA",
+                "Valve CC has flow rate=2; tunnels lead to valves DD, BB",
+                "Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE",
+                "Valve EE has flow rate=3; tunnels lead to valves FF, DD",
+                "Valve FF has flow rate=0; tunnels lead to valves EE, GG",
+                "Valve GG has flow rate=0; tunnels lead to valves FF, HH",
+                "Valve HH has flow rate=22; tunnel leads to valve GG",
+                "Valve II has flow rate=0; tunnels lead to valves AA, JJ",
+                "Valve JJ has flow rate=21; tunnel leads to valve II",                
+            };
+        }
+
+        protected override string[] Day17()
+        {
+            return new[]
+            {
+                ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>"
+            };
+        }
+
+        protected override string[] Day18() 
+        {
+            return new[]
+            {
+                "2,2,2",
+                "1,2,2",
+                "3,2,2",
+                "2,1,2",
+                "2,3,2",
+                "2,2,1",
+                "2,2,3",
+                "2,2,4",
+                "2,2,6",
+                "1,2,5",
+                "3,2,5",
+                "2,1,5",
+                "2,3,5",
+            };
+        }
+
+        protected override string[] Day19()
+        {
+            return new[]
+            {
+                "Blueprint 1: Each ore robot costs 4 ore. Each clay robot costs 2 ore. Each obsidian robot costs 3 ore and 14 clay. Each geode robot costs 2 ore and 7 obsidian.",
+                "Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsidian robot costs 3 ore and 8 clay. Each geode robot costs 3 ore and 12 obsidian.",
+            };
+        }
+
+        protected override string[] Day20()
+        {
+            return new[]
+            {
+                "1",
+                "2",
+                "-3",
+                "3",
+                "-2",
+                "0",
+                "4",
+            };
+        }
     }
 }

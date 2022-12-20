@@ -168,8 +168,38 @@ namespace AdventOfCode2022.Tests
             _day.RequestedRow = 10;
             _day.HighestCoordinates = 20;
         }
-
+        
         protected override long ExpectedResultPartOne => 26;
         protected override long ExpectedResultPartTwo => 56000011;
+    }
+
+    public class Day16Tests : TestDay<Day16, TestData>
+    {
+        protected override long ExpectedResultPartOne => 1651;
+        protected override long ExpectedResultPartTwo => 93;
+    }
+
+    public class Day17Tests : TestDay<Day17, TestData>
+    {
+        protected override long ExpectedResultPartOne => 3068;
+        protected override long ExpectedResultPartTwo => 1514285714288;
+    }
+
+    public class Day18Tests : TestDay<Day18, TestData>
+    {
+        protected override long ExpectedResultPartOne => 64;
+        protected override long ExpectedResultPartTwo => 58;
+    }
+
+    public class Day19Tests : TestDay<Day19, TestData>
+    {
+        protected override long ExpectedResultPartOne => 33;
+        protected override long ExpectedResultPartTwo => 3472;
+    }
+
+    public class Day20Tests : TestDay<Day20, TestData>
+    {
+        protected override long ExpectedResultPartOne => 3;
+        protected override long ExpectedResultPartTwo => 1623178306;
     }
 }
