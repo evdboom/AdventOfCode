@@ -176,7 +176,7 @@ namespace AdventOfCode2022.Tests
     public class Day16Tests : TestDay<Day16, TestData>
     {
         protected override long ExpectedResultPartOne => 1651;
-        protected override long ExpectedResultPartTwo => 93;
+        protected override long ExpectedResultPartTwo => 1707; 
     }
 
     public class Day17Tests : TestDay<Day17, TestData>

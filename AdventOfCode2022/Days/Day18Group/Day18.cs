@@ -2,6 +2,7 @@
 using AdventOfCode.Shared.Services;
 using AdventOfCode2022.Days.Day17Group;
 using System.Drawing;
+using System.Reflection.Emit;
 
 namespace AdventOfCode2022.Days
 {
@@ -22,11 +23,100 @@ namespace AdventOfCode2022.Days
         protected override long ProcessPartTwo(string[] input)
         {
             var lavaGrid = BuildGrid(input);
-            var freeSides = GetFreeSides(lavaGrid);
-            var pockets = new List<List<int[]>>();
+            var freeSides = GetWithoutPockets(lavaGrid);
             return freeSides;
         }
 
+        private int GetWithoutPockets(bool[,,] lavaGrid)
+        {
+            var visited = new Dictionary<(int x, int y, int z), bool>();
+            var touched = new Dictionary<(int x, int y, int z, int side), bool>();
+            var point1 = (0, 0, 0);
+            var queue = new Queue<(int x,int y,int z)>();
+            queue.Enqueue(point1);
+
+            while(queue.TryDequeue(out var result))
+            {
+                if (visited.ContainsKey(result))
+                {
+                    continue;
+                }
+
+                visited[result] = true;
+
+                if (result.x > 0)
+                {
+                    if (lavaGrid[result.x - 1, result.y, result.z])
+                    {
+                        touched[(result.x - 1, result.y, result.z, 1)] = true;
+                    }
+                    else if (!visited.ContainsKey((result.x - 1, result.y, result.z)))
+                    {
+                        queue.Enqueue((result.x - 1, result.y, result.z));
+                    }
+                }
+                if (result.x < lavaGrid.GetLength(0) - 1)
+                {
+                    if (lavaGrid[result.x + 1, result.y, result.z])
+                    {
+                        touched[(result.x + 1, result.y, result.z, 2)] = true;
+                    }
+                    else if (!visited.ContainsKey((result.x + 1, result.y, result.z)))
+                    {
+                        queue.Enqueue((result.x + 1, result.y, result.z));
+                    }
+                }
+
+                if (result.y > 0)
+                {
+                    if (lavaGrid[result.x, result.y - 1, result.z])
+                    {
+                        touched[(result.x, result.y - 1, result.z, 3)] = true;
+                    }
+                    else if (!visited.ContainsKey((result.x, result.y - 1, result.z)))
+                    {
+                        queue.Enqueue((result.x, result.y - 1, result.z));
+                    }
+                }
+                if (result.y < lavaGrid.GetLength(1) - 1)
+                {
+                    if (lavaGrid[result.x, result.y + 1, result.z])
+                    {
+                        touched[(result.x, result.y + 1, result.z, 4)] = true;
+                    }
+                    else if (!visited.ContainsKey((result.x, result.y + 1, result.z)))
+                    {
+                        queue.Enqueue((result.x, result.y + 1, result.z));
+                    }
+                }
+
+                if (result.z > 0)
+                {
+                    if (lavaGrid[result.x, result.y, result.z - 1])
+                    {
+                        touched[(result.x, result.y, result.z - 1, 5)] = true;
+                    }
+                    else if (!visited.ContainsKey((result.x, result.y, result.z - 1)))
+                    {
+                        queue.Enqueue((result.x, result.y, result.z - 1));
+                    }
+                }
+                if (result.z < lavaGrid.GetLength(2) - 1)
+                {
+                    if (lavaGrid[result.x, result.y, result.z + 1])
+                    {
+                        touched[(result.x, result.y, result.z + 1, 6)] = true;
+                    }
+                    else if (!visited.ContainsKey((result.x, result.y, result.z + 1)))
+                    {
+                        queue.Enqueue((result.x, result.y, result.z + 1));
+                    }
+                }
+            }
+
+            return touched.Count;           
+        }
+    
         private int GetFreeSides(bool[,,] lavaGrid)
         {
             var freeSides = 0;
@@ -93,10 +183,10 @@ namespace AdventOfCode2022.Days
                 return maxes;
             });
 
-            var result = new bool[max[0] + 1, max[1] + 1, max[2] + 1];
+            var result = new bool[max[0] + 3, max[1] + 3, max[2] + 3];
             foreach(var value in values)
             {
-                result[value[0], value[1], value[2]] = true;
+                result[value[0] + 1, value[1] + 1, value[2] + 1] = true;
             }
 
             return result;
