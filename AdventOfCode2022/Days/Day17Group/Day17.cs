@@ -7,10 +7,8 @@ namespace AdventOfCode2022.Days
 {
     public class Day17 : Day
     {
-        private readonly IScreenWriter _writer;
-        public Day17(IFileImporter importer, IScreenWriter writer) : base(importer)
+        public Day17(IFileImporter importer) : base(importer)
         {
-            _writer = writer;
         }
 
         private readonly Dictionary<int, Func<Rock>> _rocks = new()
@@ -22,20 +20,10 @@ namespace AdventOfCode2022.Days
             { 4, () => new Rock(new Point(0, 0), new Point(1, 0), new Point(0, 1), new Point(1, 1)) }
         };
 
-
-
         public override int DayNumber => 17;
         protected override long ProcessPartOne(string[] input)
         {
-            //var rocks = new List<Rock>() { new Rock(new Point(0, 0), new Point(1, 0), new Point(2, 0), new Point(3, 0), new Point(4, 0), new Point(5, 0), new Point(6, 0)) { StopsAt = -1 } };
-            //int actionCounter = 0;
-            //for (int i = 0; i < 2022; i++)
-            //{
-            //    DropRock(input[0], i, rocks, ref actionCounter);
-            //}
-
-            //return rocks
-            //    .Max(r => r.StopsAt + r.Height);            
+            var actions = input[0].Trim();
             var columns = new Dictionary<int, long>()
             {
                 { 0, 0 },
@@ -49,7 +37,8 @@ namespace AdventOfCode2022.Days
             int actionCounter = 0;
             for (long i = 0; i < 2022; i++)
             {
-                DropRock(input[0], i, columns, ref actionCounter);
+                var rock = i % 5;
+                DropRock(actions, (int)rock, columns, ref actionCounter);
             }
 
             return columns
@@ -58,6 +47,9 @@ namespace AdventOfCode2022.Days
 
         protected override long ProcessPartTwo(string[] input)
         {
+            //return new Tunnel(input[0], 100).AddRocks(1000000000000).Height;
+
+            var actions = input[0].Trim();
             var columns = new Dictionary<int, long>()
             {
                 { 0, 0 },
@@ -68,65 +60,77 @@ namespace AdventOfCode2022.Days
                 { 5, 0 },
                 { 6, 0 },
             };
-            var checks = new Dictionary<int, int>();            
-            var last = 0L;
             int actionCounter = 0;
-            var max = 1000000000000;
-            var i = 0L;            
-            while(i < max)            
+            var add = 1000000000000L;
+            var max = 1000000000000L;
+            var states = new Dictionary<State, (long Counter,long Height)>();
+            var foundRepetition = false;
+            while(add > 0)
             {
-                if (i > 2022 && i % 5 == 0)
-                {
-                    var current = columns.Max(c => c.Value);
-                    var delta = (int)(current - last);
-                    if (!checks.Any() && last == 0L)
+                var rock = (max - add) % 5;
+                if (!foundRepetition)
+                {                    
+                    var action = actionCounter;
+                    var minHeight = columns.Min(c => c.Value);
+                    var maxHeight = columns.Max(c => c.Value);
+                    var state = new State
                     {
-                        last = current;
-                    }
-                    else if (checks.TryGetValue(delta, out int value))
+                        Action = action,
+                        Rock = (int)rock,
+                        C0 = columns[0] - minHeight,
+                        C1 = columns[1] - minHeight,
+                        C2 = columns[2] - minHeight,
+                        C3 = columns[3] - minHeight,
+                        C4 = columns[4] - minHeight,
+                        C5 = columns[5] - minHeight,
+                        C6 = columns[6] - minHeight,
+                    };
+                    if (states.TryGetValue(state, out (long Add, long Height) values))
                     {
-                        checks[delta] = value + 1;
+                        foundRepetition = true;
+                        long difTicks = values.Add - add;
+                        long difHeight = maxHeight - values.Height;
+   
+                        long addedHeight = difHeight * (add / difTicks);
+                        add %= difTicks;
+                        columns[0] += addedHeight;
+                        columns[1] += addedHeight;
+                        columns[2] += addedHeight;
+                        columns[3] += addedHeight;
+                        columns[4] += addedHeight;
+                        columns[5] += addedHeight;
+                        columns[6] += addedHeight;
+
                     }
                     else
                     {
-                        checks[delta] = 1;
+                        states[state] = (add, maxHeight);
                     }
-
-                    if (checks.Any() && checks.All(c => c.Value % 2 == 0))
-                    {
-                        var todo = max - i;
-                        var times = checks.Sum(c => c.Value / 2) * 5;
-                        var increase = checks.Sum(c => c.Key * (c.Value / 2));
-
-                        var steps = todo / times;
-                        for (int j = 0; j < 7; j++)
-                        {
-                            columns[j] = steps * increase;
-                        }
-                        i += steps * times;
-                    }
-                    last = current;
                 }
-                
-                DropRock(input[0], i, columns, ref actionCounter);
-                                
-                i++;
+
+                DropRock(actions, (int)rock, columns, ref actionCounter);
+                add--;
             }
 
-            return columns
+            var result = columns
                 .Max(c => c.Value);
+            var dif = 1564705882327 - result;
+            // works for test set...
+            return result;
         }
 
-        private void DropRock(string actions, long i, Dictionary<int, long> columns, ref int actionCounter)
+
+
+        private void DropRock(string actions, int rockId, Dictionary<int, long> columns, ref int actionCounter)
         {
-            var rock = _rocks[(int)(i % 5)].Invoke();
+            var rock = _rocks[rockId].Invoke();
             rock.Left = 2;
             var height = 3 + columns.Max(c => c.Value);
 
             var canFall = true;
             while (canFall)
             {
-                switch (actions[actionCounter % actions.Length])
+                switch (actions[actionCounter])
                 {
                     case '<':
                         if (!columns.Any(c => HitRock(c, rock, height, -1, 0)))
@@ -157,9 +161,9 @@ namespace AdventOfCode2022.Days
 
         private void SetColumns(Dictionary<int, long> columns, Rock rock, long height)
         {
-            foreach(var point in rock.Points)
+            foreach(var point in rock.Absolute)
             {
-                columns[rock.Left + point.X] = Math.Max(columns[rock.Left + point.X], height + point.Y + 1);
+                columns[point.X] = Math.Max(columns[point.X], height + point.Y + 1);
             }
         }
 
@@ -173,51 +177,6 @@ namespace AdventOfCode2022.Days
                 }
             }
             return false;           
-        }
-
-        private void DropRock(string actions, long i, List<Rock> rocks, ref int actionCounter)
-        {
-            var rock = _rocks[(int)(i % 5)].Invoke();
-            rock.Left = 2;
-            rock.StopsAt = 3 + rocks.Max(r => r.StopsAt + r.Height);
-
-            var canFall = true;
-            while (canFall)
-            {
-                switch (actions[actionCounter % actions.Length])
-                {
-                    case '<':
-                        if (!rocks.Any(r => HitRock(r, rock, -1, 0)))
-                        {
-                            rock.Left = Math.Max(0, rock.Left - 1);
-                        }                        
-                        break;
-                    case '>':
-                        if (!rocks.Any(r => HitRock(r, rock, 1, 0)))
-                        {
-                            rock.Left = Math.Min(7 - rock.Width, rock.Left + 1);
-                        }                        
-                        break;
-                }
-                actionCounter++;
-                if (rocks.Any(r => HitRock(r, rock, 0, -1)))
-                {
-                    canFall = false;
-                    rocks.Add(rock);
-                }
-                else
-                {
-                    rock.StopsAt--;
-                }
-            }
-        }
-
-        private bool HitRock(Rock dropped, Rock rock, int difX, int difY)
-        {
-            var afterMove = rock.Absolute
-                .Select(point => new Point(point.X + difX, point.Y + difY));
-            return dropped.Absolute
-                .Any(point => afterMove.Contains(point));
         }
     }
 }

@@ -5,7 +5,6 @@ namespace AdventOfCode2022.Days.Day17Group
     public record Rock
     {
         public List<Point> Points { get; } = new();
-        public int StopsAt { get; set; }
         public int Left { get; set; }
         public int Height => Points
             .Select(p => p.Y + 1)
@@ -15,7 +14,7 @@ namespace AdventOfCode2022.Days.Day17Group
             .Max();
 
         public IEnumerable<Point> Absolute => Points
-            .Select(point => new Point(point.X + Left, point.Y + StopsAt));
+            .Select(point => new Point(point.X + Left, point.Y));
 
         public Rock(params Point[] points)
         {
