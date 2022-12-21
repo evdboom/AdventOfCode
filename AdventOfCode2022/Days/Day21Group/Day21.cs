@@ -1,6 +1,5 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Services;
-using AdventOfCode2022.Days.Day20Group;
 
 namespace AdventOfCode2022.Days
 {
@@ -16,7 +15,7 @@ namespace AdventOfCode2022.Days
             var monkeys = input
                 .ToDictionary(line => line.Split(":")[0], line => line.Split(":")[1].Trim());
 
-            return GetReturn("root", monkeys);            
+            return GetReturn("root", monkeys);
         }
 
         protected override long ProcessPartTwo(string[] input)
@@ -33,7 +32,7 @@ namespace AdventOfCode2022.Days
             else
             {
                 return DecodeFormula(parts[0], long.Parse(parts[1]));
-            }            
+            }
         }
 
         private long DecodeFormula(string formula, long value)
@@ -43,7 +42,6 @@ namespace AdventOfCode2022.Days
                 formula = formula[1..^1];
             }
 
-
             if (formula.Contains("("))
             {
                 var inner = formula.StartsWith("(")
@@ -51,81 +49,46 @@ namespace AdventOfCode2022.Days
                 : formula[formula.IndexOf("(")..];
 
                 var other = formula.Replace(inner, string.Empty).Trim();
-                if (other.StartsWith("+"))
-                {
-                    value -= long.Parse(other.Replace("+ ", string.Empty));
-                }
-                else if (other.StartsWith("-"))
-                {
-                    value += long.Parse(other.Replace("- ", string.Empty));
-                }
-                else if (other.StartsWith("*"))
-                {
-                    value /= long.Parse(other.Replace("* ", string.Empty));
-                }
-                else if (other.StartsWith("/"))
-                {
-                    value *= long.Parse(other.Replace("/ ", string.Empty));
-                }
-                else if (other.EndsWith("+"))
-                {
-                    value -= long.Parse(other.Replace(" +", string.Empty));
-                }
-                else if (other.EndsWith("-"))
-                {
-                    value -= long.Parse(other.Replace(" -", string.Empty));
-                    value *= -1; 
-                }
-                else if (other.EndsWith("*"))
-                {
-                    value /= long.Parse(other.Replace(" *", string.Empty));
-                }
-                else if (other.EndsWith("/"))
-                {
-                    throw new InvalidOperationException("Dont know what to do");
-                }
+                value = GetNewValue(other, value);
 
                 return DecodeFormula(inner, value);
             }
             else
             {
                 var other = formula.Replace("humn", string.Empty).Trim();
-                if (other.StartsWith("+"))
-                {
-                    value -= long.Parse(other.Replace("+ ", string.Empty));
-                }
-                else if (other.StartsWith("-"))
-                {
-                    value += long.Parse(other.Replace("- ", string.Empty));
-                }
-                else if (other.StartsWith("*"))
-                {
-                    value /= long.Parse(other.Replace("* ", string.Empty));
-                }
-                else if (other.StartsWith("/"))
-                {
-                    value *= long.Parse(other.Replace("/ ", string.Empty));
-                }
-                else if (other.EndsWith("+"))
-                {
-                    value -= long.Parse(other.Replace(" +", string.Empty));
-                }
-                else if (other.EndsWith("-"))
-                {
-                    value -= long.Parse(other.Replace(" -", string.Empty));
-                    value *= -1;
-                }
-                else if (other.EndsWith("*"))
-                {
-                    value /= long.Parse(other.Replace(" *", string.Empty));
-                }
-                else if (other.EndsWith("/"))
-                {
-                    throw new InvalidOperationException("Dont know what to do");
-                }
-
-                return value;
+                return GetNewValue(other, value);
             }
+        }
+
+        private long GetNewValue(string other, long value)
+        {
+            if (other.StartsWith("+") || other.EndsWith("+"))
+            {
+                value -= long.Parse(other.Replace("+", string.Empty).Trim());
+            }
+            else if (other.StartsWith("*") || other.EndsWith("*"))
+            {
+                value /= long.Parse(other.Replace("*", string.Empty).Trim());
+            }
+            else if (other.StartsWith("-"))
+            {
+                value += long.Parse(other.Replace("- ", string.Empty));
+            }
+            else if (other.EndsWith("-"))
+            {
+                value -= long.Parse(other.Replace(" -", string.Empty));
+                value *= -1;
+            }
+            else if (other.StartsWith("/"))
+            {
+                value *= long.Parse(other.Replace("/ ", string.Empty));
+            }
+            else if (other.EndsWith("/"))
+            {
+                value = long.Parse(other.Replace(" /", string.Empty)) / value;
+            }
+
+            return value;
         }
 
         private string GetFormula(string monkey, Dictionary<string, string> monkeys)
@@ -135,7 +98,7 @@ namespace AdventOfCode2022.Days
             {
                 return monkey;
             }
-            if (long.TryParse(action, out long result))
+            if (long.TryParse(action, out _))
             {
                 return action;
             }
@@ -158,7 +121,7 @@ namespace AdventOfCode2022.Days
                     "/" => $"{result1 / result2}",
                     _ => throw new InvalidOperationException("unknown operator")
                 };
-            }           
+            }
 
             return parts[1] switch
             {
