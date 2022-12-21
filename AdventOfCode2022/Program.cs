@@ -13,7 +13,7 @@ var days = Assembly
     .Where(p => p is not null)
     .ToDictionary(day => day!.DayNumber, day => day);
 
-var runner = new DayRunner(days, writer);
+var runner = new DayRunner(days!, writer);
 Console.WriteLine("Hello, Santa!");
 await runner.Run();
 
