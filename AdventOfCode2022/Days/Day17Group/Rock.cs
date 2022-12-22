@@ -13,9 +13,6 @@ namespace AdventOfCode2022.Days.Day17Group
             .Select(p => p.X + 1)
             .Max();
 
-        public IEnumerable<Point> Absolute => Points
-            .Select(point => new Point(point.X + Left, point.Y));
-
         public Rock(params Point[] points)
         {
             Points.AddRange(points);
