@@ -1,43 +1,45 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Services;
 using System.Drawing;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace AdventOfCode2022.Days
 {
     public class Day22 : Day
     {
         public int CubeSize { get; set; } = 50;
-        public Dictionary<(int Face, int Facing), (int Face, int Facing, Func<Point,Point> Translation)> FaceMappings { get; set; } = new()
+        public Dictionary<(int Face, int Facing), (int Face, int Facing, Func<int, Point,Point> Translation)> FaceMappings { get; set; } = new()
         {
-            { (1, 0), (2, 0, (p) => p with { X = 0 }) },
-            { (1, 1), (3, 1, (p) => p with { Y = 0 }) },
-            { (1, 2), (4, 0, (p) => p with { Y = CubeSize - p.Y - 1 }) },
-            { (1, 3), (6, 0, (p) => p with { X = 0, Y = p.X }) },
+            { (1, 0), (2, 0, (c, p) => p with { X = 0}) },
+            { (1, 1), (3, 1, (c, p) => p with { Y = 0 }) },
+            { (1, 2), (4, 0, (c, p) => p with { Y = c - p.Y - 1 }) },
+            { (1, 3), (6, 0, (c, p) => p with { X = 0, Y = p.X }) },
 
-            { (2, 0), (5, 2, (p) => p with { X = CubeSize - 1, Y = CubeSize - p.Y - 1 }) },
-            { (2, 1), (3, 2, (p) => p with { X = CubeSize - 1, Y = p.X }) },
-            { (2, 2), (1, 2, (p) => p with { X = CubeSize - 1 } )},
-            { (2, 3), (6, 3, (p) => p with { Y = CubeSize -1 }) },
+            { (2, 0), (5, 2, (c, p) => p with { X = c - 1, Y = c - p.Y - 1 }) },
+            { (2, 1), (3, 2, (c, p) => p with { X = c - 1, Y = p.X }) },
+            { (2, 2), (1, 2, (c, p) => p with { X = c - 1 } )},
+            { (2, 3), (6, 3, (c, p) => p with { Y = c - 1 }) },
 
-            { (3, 0), (2, 3, (p) => p with {  }) },
-            { (3, 1), (5, 1, (p) => p with { }) },
-            { (3, 2), (4, 1, (p) => p with { }) },
-            { (3, 3), (1, 3, (p) => p with { }) },
+            { (3, 0), (2, 3, (c, p) => p with { X = p.Y, Y = c - 1 }) },
+            { (3, 1), (5, 1, (c, p) => p with { Y = 0 }) },
+            { (3, 2), (4, 1, (c, p) => p with { X = p.Y, Y = 0 }) },
+            { (3, 3), (1, 3, (c, p) => p with { Y = c - 1 }) },
 
-            { (4, 0), (5, 0, (p) => p with { }) },
-            { (4, 1), (6, 1, (p) => p with { }) },
-            { (4, 2), (1, 0, (p) => p with { }) },
-            { (4, 3), (3, 0, (p) => p with { }) },
+            { (4, 0), (5, 0, (c, p) => p with { X = 0 }) },
+            { (4, 1), (6, 1, (c, p) => p with { Y = 0 }) },
+            { (4, 2), (1, 0, (c, p) => p with { X = 0, Y = c - 1 - p.Y }) },
+            { (4, 3), (3, 0, (c, p) => p with { X = 0, Y = p.X }) },
 
-            { (5, 0), (2, 2, (p) => p with { }) },
-            { (5, 1), (6, 2, (p) => p with { }) },
-            { (5, 2), (4, 2, (p) => p with { }) },
-            { (5, 3), (3, 3, (p) => p with { }) },
+            { (5, 0), (2, 2, (c, p) => p with { X = c - 1, Y = c - 1 - p.Y }) },
+            { (5, 1), (6, 2, (c, p) => p with { X = c - 1, Y = p.X }) },
+            { (5, 2), (4, 2, (c, p) => p with { X = c - 1 }) },
+            { (5, 3), (3, 3, (c, p) => p with { Y = c - 1 }) },
 
-            { (6, 0), (5, 3, (p) => p with { }) },
-            { (6, 1), (2, 1, (p) => p with { }) },
-            { (6, 2), (1, 1, (p) => p with { }) },
-            { (6, 3), (4, 3, (p) => p with { }) },
+            { (6, 0), (5, 3, (c, p) => p with { Y = c - 1, X = p.Y }) },
+            { (6, 1), (2, 1, (c, p) => p with { Y = 0 }) },
+            { (6, 2), (1, 1, (c, p) => p with { X = p.Y, Y = 0 }) },
+            { (6, 3), (4, 3, (c, p) => p with { Y = c - 1 }) },
         };
 
         public Day22(IFileImporter importer) : base(importer)
@@ -105,9 +107,11 @@ namespace AdventOfCode2022.Days
                     for (int i = 0; i < steps; i++)
                     {
                         var nextPosition = GetNextPosition(currentPosition, faces);
-                        if (grid[nextPosition.X, nextPosition.Y] == '.')
+                        if (faces[nextPosition.Face].Grid[nextPosition.Point.X, nextPosition.Point.Y] == '.')
                         {
-                            currentPosition.position = nextPosition;
+                            currentPosition.position = nextPosition.Point;
+                            currentPosition.facing = nextPosition.Facing;
+                            currentPosition.face = nextPosition.Face;
                         }
                         else
                         {
@@ -127,23 +131,25 @@ namespace AdventOfCode2022.Days
 
             }
 
-            return (currentPosition.position.Y + 1) * 1000 + (currentPosition.position.X + 1) * 4 + currentPosition.facing;
+            return (currentPosition.position.Y + 1 + faces[currentPosition.face].StartPoint.Y) * 1000 + (currentPosition.position.X + 1 + faces[currentPosition.face].StartPoint.X) * 4 + currentPosition.facing;
         }
 
         private int GetFirstValidColumn((char[,] Grid, Point StartPoint) value)
         {
-            for (int i = 0; < value.Grid.GetLength(0); i++)
+            for (int i = 0; i < value.Grid.GetLength(0); i++)
             {
-                if (value.Grid == '.')
+                if (value.Grid[i, 0] == '.')
                 {
                     return i;
                 }
             }
+
+            throw new InvalidOperationException("No valid column found");
         }
 
         private Dictionary<int, (char[,] Grid, Point StartPoint)> GetFaces(char[,] grid)
         {
-            var result = new Dictionary<int, char[,]>();
+            var result = new Dictionary<int, (char[,] Grid, Point StartPoint)>();
             for (int faceNumber = 1; faceNumber < 7; faceNumber++)
             {
                 var startPoint = GetStartPoint(grid, faceNumber);
@@ -197,82 +203,54 @@ namespace AdventOfCode2022.Days
                     }
                     else
                     {
-                        var (Face, Facing) = FaceMappings[(currentPosition.face, currentPosition.facing)];
-
-
-
+                        var (Face, Facing, Func) = FaceMappings[(currentPosition.face, currentPosition.facing)];
+                        var newPoint = Func(CubeSize, currentPosition.position with { X = currentPosition.position.X + 1 });
+                        return (newPoint, Face, Facing);
                     }
                 case 1:
-                    if (currentPosition.position.Y + 1 < grid.GetLength(1) && grid[currentPosition.position.X, currentPosition.position.Y + 1] != ' ')
+                    if (currentPosition.position.Y + 1 < grid.GetLength(1))
                     {
-                        return currentPosition.position with
+                        var newPoint = currentPosition.position with
                         {
                             Y = currentPosition.position.Y + 1
                         };
+                        return (newPoint, currentPosition.face, currentPosition.facing);
                     }
                     else
                     {
-                        int index = 0;
-                        while (index < currentPosition.position.Y)
-                        {
-                            if (grid[currentPosition.position.X, index] != ' ')
-                            {
-                                return currentPosition.position with
-                                {
-                                    Y = index
-                                };
-                            }
-                            index++;
-                        }
-                        throw new InvalidOperationException("no valid point found");
+                        var (Face, Facing, Func) = FaceMappings[(currentPosition.face, currentPosition.facing)];
+                        var newPoint = Func(CubeSize, currentPosition.position with { Y = currentPosition.position.Y + 1 });
+                        return (newPoint, Face, Facing);
                     }
                 case 2:
-                    if (currentPosition.position.X - 1 >= 0 && grid[currentPosition.position.X - 1, currentPosition.position.Y] != ' ')
+                    if (currentPosition.position.X - 1 >= 0)
                     {
-                        return currentPosition.position with
+                        var newPoint = currentPosition.position with
                         {
                             X = currentPosition.position.X - 1
                         };
+                        return (newPoint, currentPosition.face, currentPosition.facing);
                     }
                     else
                     {
-                        int index = grid.GetLength(0) - 1;
-                        while (index > currentPosition.position.X)
-                        {
-                            if (grid[index, currentPosition.position.Y] != ' ')
-                            {
-                                return currentPosition.position with
-                                {
-                                    X = index
-                                };
-                            }
-                            index--;
-                        }
-                        throw new InvalidOperationException("no valid point found");
+                        var (Face, Facing, Func) = FaceMappings[(currentPosition.face, currentPosition.facing)];
+                        var newPoint = Func(CubeSize, currentPosition.position with { X = 0 });
+                        return (newPoint, Face, Facing);
                     }
                 case 3:
-                    if (currentPosition.position.Y - 1 >= 0 && grid[currentPosition.position.X, currentPosition.position.Y - 1] != ' ')
+                    if (currentPosition.position.Y - 1 >= 0)
                     {
-                        return currentPosition.position with
+                        var newPoint = currentPosition.position with
                         {
                             Y = currentPosition.position.Y - 1
                         };
+                        return (newPoint, currentPosition.face, currentPosition.facing);
                     }
                     else
                     {
-                        int index = grid.GetLength(1) - 1;
-                        while (index > currentPosition.position.Y)
-                        {
-                            if (grid[currentPosition.position.X, index] != ' ')
-                            {
-                                return currentPosition.position with
-                                {
-                                    Y = index
-                                };
-                            }
-                            index--;
-                        }
-                        throw new InvalidOperationException("no valid point found");
+                        var (Face, Facing, Func) = FaceMappings[(currentPosition.face, currentPosition.facing)];
+                        var newPoint = Func(CubeSize,currentPosition.position with { Y = 0 });
+                        return (newPoint, Face, Facing);
                     }
                 default:
                     throw new InvalidOperationException("no known facing");

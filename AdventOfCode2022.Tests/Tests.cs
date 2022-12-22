@@ -163,12 +163,12 @@ namespace AdventOfCode2022.Tests
 
     public class Day15Tests : TestDay<Day15, TestData>
     {
-        public Day15Tests() :base()
+        public Day15Tests() : base()
         {
             _day.RequestedRow = 10;
             _day.HighestCoordinates = 20;
         }
-        
+
         protected override long ExpectedResultPartOne => 26;
         protected override long ExpectedResultPartTwo => 56000011;
     }
@@ -176,7 +176,7 @@ namespace AdventOfCode2022.Tests
     public class Day16Tests : TestDay<Day16, TestData>
     {
         protected override long ExpectedResultPartOne => 1651;
-        protected override long ExpectedResultPartTwo => 1707; 
+        protected override long ExpectedResultPartTwo => 1707;
     }
 
     public class Day17Tests : TestDay<Day17, TestData>
@@ -214,6 +214,38 @@ namespace AdventOfCode2022.Tests
         public Day22Tests() : base()
         {
             _day.CubeSize = 4;
+            _day.FaceMappings = new()
+            {
+                { (1, 0), (6, 2, (c, p) => p with { }) },
+                { (1, 1), (4, 1, (c, p) => p with { }) },
+                { (1, 2), (3, 1, (c, p) => p with { }) },
+                { (1, 3), (2, 1, (c, p) => p with { }) },
+
+                { (2, 0), (3, 0, (c, p) => p with { }) },
+                { (2, 1), (5, 3, (c, p) => p with { }) },
+                { (2, 2), (6, 3, (c, p) => p with { }) },
+                { (2, 3), (1, 1, (c, p) => p with { }) },
+
+                { (3, 0), (4, 0, (c, p) => p with { }) },
+                { (3, 1), (5, 0, (c, p) => p with { }) },
+                { (3, 2), (2, 2, (c, p) => p with { }) },
+                { (3, 3), (1, 0, (c, p) => p with { }) },
+
+                { (4, 0), (6, 1, (c, p) => p with { }) },
+                { (4, 1), (5, 1, (c, p) => p with { }) },
+                { (4, 2), (3, 2, (c, p) => p with { }) },
+                { (4, 3), (1, 3, (c, p) => p with { }) },
+
+                { (5, 0), (6, 0, (c, p) => p with { }) },
+                { (5, 1), (2, 3, (c, p) => p with { }) },
+                { (5, 2), (3, 3, (c, p) => p with { }) },
+                { (5, 3), (4, 3, (c, p) => p with { }) },
+
+                { (6, 0), (1, 2, (c, p) => p with { }) },
+                { (6, 1), (2, 0, (c, p) => p with { }) },
+                { (6, 2), (5, 2, (c, p) => p with { }) },
+                { (6, 3), (4, 2, (c, p) => p with { }) },
+            };
         }
 
         protected override long ExpectedResultPartOne => 6032;
