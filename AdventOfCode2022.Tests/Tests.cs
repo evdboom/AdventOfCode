@@ -208,4 +208,15 @@ namespace AdventOfCode2022.Tests
         protected override long ExpectedResultPartOne => 152;
         protected override long ExpectedResultPartTwo => 301;
     }
+
+    public class Day22Tests : TestDay<Day22, TestData>
+    {
+        public Day22Tests() : base()
+        {
+            _day.CubeSize = 4;
+        }
+
+        protected override long ExpectedResultPartOne => 6032;
+        protected override long ExpectedResultPartTwo => 5031;
+    }
 }
