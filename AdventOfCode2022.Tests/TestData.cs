@@ -531,5 +531,19 @@ namespace AdventOfCode2022.Tests
                 "10R5L5R10L4R5L5",
             };
         }
+
+        protected override string[] Day23()
+        {
+            return new[]
+            {
+                "....#..",
+                "..###.#",
+                "#...#.#",
+                ".#...##",
+                "#.###..",
+                "##.#.##",
+                ".#..#..",
+            };
+        }
     }
 }

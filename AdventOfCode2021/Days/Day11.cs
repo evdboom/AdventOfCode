@@ -14,7 +14,7 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartOne(string[] input)
         {
-            var grid = input.ToGrid();
+            var grid = input.ToIntGrid();
 
             long flashes = 0;
             for (int i = 0; i < 100; i++)
@@ -27,7 +27,7 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartTwo(string[] input)
         {
-            var grid = input.ToGrid();
+            var grid = input.ToIntGrid();
 
             var size = grid.GetLength(0) * grid.GetLength(1);
             long flashes = 0;

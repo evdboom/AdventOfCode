@@ -16,13 +16,13 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartOne(string[] input)
         {
-            var grid = input.ToGrid();
+            var grid = input.ToIntGrid();
             return Processday(grid);
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
-            var grid = input.ToGrid();
+            var grid = input.ToIntGrid();
             var largeGrid = EnlargeGrid(grid, 5);
             return Processday(largeGrid);
         }
