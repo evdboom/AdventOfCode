@@ -9,10 +9,8 @@ namespace AdventOfCode2022.Days
     public class Day23 : Day
     {
         private const string Directions = "NSWE";
-        private readonly IScreenWriter _writer;
-        public Day23(IFileImporter importer, IScreenWriter writer) : base(importer)
+        public Day23(IFileImporter importer) : base(importer)
         {
-            _writer = writer;
         }
 
         public override int DayNumber => 23;
@@ -166,7 +164,6 @@ namespace AdventOfCode2022.Days
             newGrid = grid;
             return moves.Count;
         }
-
 
         private bool[,] ShrinkGrid(bool[,] grid)
         {
