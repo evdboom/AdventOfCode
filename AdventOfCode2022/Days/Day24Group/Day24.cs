@@ -132,11 +132,11 @@ namespace AdventOfCode2022.Days
 
         private int GetMinStep(Point start, Point finish, Dictionary<int, List<Blizzard>> blizzardCache, int width, int height, int startStep)
         {
-            var queue = new PriorityQueue<(Point Point, int Step), int>();
-            queue.Enqueue((start, startStep), 0);            
+            var queue = new PriorityQueue<(Point Point, int Step), State>(new StateComparer());
+            queue.Enqueue((start, startStep), new State { Distance = 0, Steps = 0 });            
             var pointCache = new Dictionary<Point, List<int>> { { start, new List<int> { startStep } } };
             var minStep = int.MaxValue;
-            while (queue.TryDequeue(out (Point Point, int Step) item, out _))
+            while (queue.TryDequeue(out (Point Point, int Step) item, out State state))
             {
                 if (item.Point == finish)
                 {
@@ -169,7 +169,7 @@ namespace AdventOfCode2022.Days
                         if (!pointCache[move].Contains(step))
                         {
                             pointCache[move].Add(step);
-                            queue.Enqueue((move, step), distance);
+                            queue.Enqueue((move, step), state with { Distance = distance, Steps = step });
                         }
                     }
                 }
