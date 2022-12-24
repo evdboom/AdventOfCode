@@ -545,5 +545,18 @@ namespace AdventOfCode2022.Tests
                 ".#..#..",
             };
         }
+
+        protected override string[] Day24()
+        {
+            return new[]
+            {                
+                "#.######",
+                "#>>.<^<#",
+                "#.<..<<#",
+                "#>v.><>#",
+                "#<^v^^>#",
+                "######.#",                
+            };
+        }
     }
 }
