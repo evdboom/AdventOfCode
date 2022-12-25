@@ -263,4 +263,17 @@ namespace AdventOfCode2022.Tests
         protected override long ExpectedResultPartOne => 18;
         protected override long ExpectedResultPartTwo => 54;
     }
+
+    public class Day25Tests : TestDay<Day25, TestData>
+    {
+        protected override long ExpectedResultPartOne => 4890;
+        protected override long ExpectedResultPartTwo => -1;
+
+        [Fact]
+        public async Task TestBobPartOne()
+        {
+            await RunPartOne();
+            Assert.Equal("2=-1=0", _day.BobCommand);
+        }
+    }
 }

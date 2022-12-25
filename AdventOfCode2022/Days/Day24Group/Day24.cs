@@ -2,82 +2,13 @@
 using AdventOfCode.Shared.Services;
 using AdventOfCode2022.Days.Day24Group;
 using System.Drawing;
-using System.Security.Cryptography;
 
 namespace AdventOfCode2022.Days
 {
     public class Day24 : Day
     {
-        private readonly IScreenWriter _writer;
-        public Day24(IFileImporter importer, IScreenWriter writer) : base(importer)
+        public Day24(IFileImporter importer) : base(importer)
         {
-            _writer = writer;
-        }
-
-        private void DrawGrid(Point start, Point finish, Point player, List<Blizzard> blizzards, int width, int height)
-        {
-            _writer.NewLine();
-            _writer.Write('#');
-            for (int i = 0; i < width; i++)
-            {
-                if (i == start.X && player.Y > -1)
-                {
-                    _writer.Write('.');
-                }
-                else if (player.Y == -1 && player.X == i)
-                {
-                    _writer.Write('E');
-                }
-                else
-                {
-                    _writer.Write('#');
-                }
-            }
-            _writer.Write('#');
-            _writer.NewLine();
-            for (int j = 0; j < height; j++) 
-            {
-                _writer.Write('#');
-                for (int i = 0; i < width; i++) 
-                {
-                    if (player.X == i && player.Y == j)
-                    {
-                        _writer.Write('E');
-                    }
-                    else
-                    {
-                        var blizzardsOnPoint = blizzards.Where(b => b.Location.X == i && b.Location.Y == j).ToList();
-                        if (blizzardsOnPoint.Count > 1)
-                        {
-                            _writer.Write(blizzardsOnPoint.Count);
-                        }
-                        else if (blizzardsOnPoint.Count == 1)
-                        {
-                            _writer.Write(blizzardsOnPoint[0].Direction);
-                        }
-                        else
-                        {
-                            _writer.Write('.');
-                        }
-                    }
-                }
-                _writer.Write('#');
-                _writer.NewLine();
-            }
-            _writer.Write('#');
-            for (int i = 0; i < width; i++)
-            {
-                if (i == finish.X)
-                {
-                    _writer.Write('.');
-                }
-                else
-                {
-                    _writer.Write('#');
-                }
-            }
-            _writer.Write('#');
-            _writer.NewLine();
         }
 
         private Point GetInitial(string[] input, out Point finish, out int width, out int height, out List<Blizzard> blizzards)
@@ -107,7 +38,7 @@ namespace AdventOfCode2022.Days
 
             return start;
 
-         
+
         }
 
         public override int DayNumber => 24;
@@ -133,7 +64,7 @@ namespace AdventOfCode2022.Days
         private int GetMinStep(Point start, Point finish, Dictionary<int, List<Blizzard>> blizzardCache, int width, int height, int startStep)
         {
             var queue = new PriorityQueue<(Point Point, int Step), State>(new StateComparer());
-            queue.Enqueue((start, startStep), new State { Distance = 0, Steps = 0 });            
+            queue.Enqueue((start, startStep), new State { Distance = 0, Steps = 0 });
             var pointCache = new Dictionary<Point, List<int>> { { start, new List<int> { startStep } } };
             var minStep = int.MaxValue;
             while (queue.TryDequeue(out (Point Point, int Step) item, out State state))
@@ -179,17 +110,14 @@ namespace AdventOfCode2022.Days
 
         private IEnumerable<Point> GetMoves(Point origin, Point finish, List<Blizzard> blizzards, int width, int height)
         {
-            bool hasMoved = false;
             var down = origin with { Y = origin.Y + 1 };
             if ((down.Y < height || down == finish) && !blizzards.Any(b => b.Location == down))
             {
-                hasMoved = true;
                 yield return down;
             }
             var up = origin with { Y = origin.Y - 1 };
             if ((up.Y >= 0 || up == finish) && !blizzards.Any(b => b.Location == up))
             {
-                hasMoved = true;
                 yield return up;
             }
             var right = origin with { X = origin.X + 1 };
@@ -206,6 +134,6 @@ namespace AdventOfCode2022.Days
             {
                 yield return origin;
             }
-        }      
+        }
     }
 }
