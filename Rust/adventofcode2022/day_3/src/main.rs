@@ -25,7 +25,7 @@ fn part_one(input: &String) -> i32 {
                 value = v;
                 break;
             }
-            i = i + 1;
+            i += 1;
         }
 
         sum + value
@@ -38,7 +38,7 @@ fn part_two(input: &String) -> i32 {
     let mut elves = Vec::new();
     for line in input.lines() {
         elves.push((index / 3, line));
-        index = index + 1;
+        index += 1;
     }
     for mut group in &elves.iter().group_by(|elf| elf.0) {
         let elf_one: Vec<i32> = group.1.next().unwrap().1.bytes().map(|b| char_value(b)).collect();
@@ -46,7 +46,7 @@ fn part_two(input: &String) -> i32 {
         let elf_three: Vec<i32> = group.1.next().unwrap().1.bytes().map(|b| char_value(b)).collect();        
         for item in elf_one {
             if elf_two.contains(&item) && elf_three.contains(&item) {
-                sum = sum + item;
+                sum += item;
                 break;
             }
         }
