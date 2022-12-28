@@ -1,11 +1,15 @@
 use std::fs;
-
+use std::time::Instant;
 fn main() {
     let input = fs::read_to_string("./input.txt").expect("Could not read file");
+    
+    let start = Instant::now();
     let part_one = part_one(&input);
-    println!("{part_one}");
-    let part_two = part_two(&input);
-    println!("{part_two}");
+    let duration_one = start.elapsed();    
+    let part_two = part_two(&input);    
+    let duration_two = start.elapsed() - duration_one;
+    println!("Part one: {}, took: {:?}", part_one, duration_one);
+    println!("Part two: {}, took: {:?}", part_two, duration_two);
 }
 
 fn part_one(input: &String) -> i32 {
