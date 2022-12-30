@@ -8,15 +8,14 @@ fn main() {
     let start = Instant::now();
     let part_one = part_one(&input);
     let duration_one = start.elapsed();
-    println!("Part one: {}, took: {:?}", part_one, duration_one);
-
     let part_two = part_two(&input);
     let duration_two = start.elapsed() - duration_one;
+    println!("Part one: {}, took: {:?}", part_one, duration_one);
     println!("Part two: {}, took: {:?}", part_two, duration_two);
 }
 
 fn part_one(input: &String) -> i32 {
-    let nodes = get_nodes(input, false);    
+    let nodes = get_nodes(input, false);
     distance(&nodes.1[0], &nodes.2, &nodes.0).0.unwrap()
 }
 
@@ -31,7 +30,7 @@ fn part_two(input: &String) -> i32 {
         let distance = distance(start, &nodes.2, &nodes.0);
         if distance.0.is_some() {
             let value = distance.0.unwrap();
-            smallest = smallest.min(value);            
+            smallest = smallest.min(value);
         } else {
             for node in distance.1 {
                 dead_ends.insert(node);
@@ -45,7 +44,7 @@ fn part_two(input: &String) -> i32 {
 fn distance(
     start: &(usize, usize),
     end: &(usize, usize),
-    nodes: &HashMap<(usize, usize), Vec<(usize, usize)>>
+    nodes: &HashMap<(usize, usize), Vec<(usize, usize)>>,
 ) -> (Option<i32>, HashSet<(usize, usize)>) {
     let mut queue = VecDeque::new();
     let mut visited = HashSet::new();
@@ -53,7 +52,7 @@ fn distance(
     queue.push_back((0, start));
     visited.insert((start.0, start.1));
 
-    while let Some((distance, node)) = queue.pop_front() {     
+    while let Some((distance, node)) = queue.pop_front() {
         for connection in &nodes[node] {
             if connection == end {
                 return (Some(distance + 1), visited);
@@ -63,7 +62,7 @@ fn distance(
                 queue.push_back((distance + 1, connection))
             }
         }
-    }    
+    }
     (None, visited)
 }
 
