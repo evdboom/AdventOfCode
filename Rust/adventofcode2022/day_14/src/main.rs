@@ -4,7 +4,6 @@ use std::time::Instant;
 
 fn main() {
     let input = fs::read_to_string("./input.txt").expect("Could not read file");
-
     let start = Instant::now();
     let part_one = part_one(&input);
     let duration_one = start.elapsed();
@@ -14,15 +13,15 @@ fn main() {
     println!("Part two: {}, took: {:?}", part_two, duration_two);
 }
 
-fn part_one(input: &String) -> usize {
+fn part_one(input: &String) -> i32 {
+    let mut grid = get_grid(input, 0);
     let mut grains = 0;
-    let mut blocks = get_blocks(input);
 
     loop {
-        let grain = drop_grain(&blocks.0, &blocks.1);
-        if grain.1 < blocks.1 {
+        let grain = drop_grain(&grid.0, grid.1, grid.2);
+        if grain.1 < grid.1 {
             grains += 1;
-            blocks.0.insert(grain);
+            grid.0[grain.1][grain.0] = true;
         } else {
             break;
         }
@@ -32,29 +31,40 @@ fn part_one(input: &String) -> usize {
 }
 
 fn part_two(input: &String) -> i32 {
+    let mut grid = get_grid(input, 1);
     let mut grains = 0;
-    let mut blocks = get_blocks(input);
-
-    loop {
-        let grain = drop_grain(&blocks.0, &(blocks.1 + 1));
-        if grain.1 > 0  {
-            grains += 1;
-            blocks.0.insert(grain);
-        } else {
-            break;
-        }
+    while !grid.0[0][grid.2] {
+        let grain = drop_grain(&grid.0, grid.1, grid.2);
+        grid.0[grain.1][grain.0] = true;
+        grains += 1;
     }
 
     grains
 }
 
-fn drop_grain(blocks: &HashSet<(usize, usize)>, y_max: &usize) -> (usize, usize) {
-    let mut grain = (500usize, 0usize);
-    loop {
-        if blocks.contains(&(grain.0, grain.1 + 1)) {
-            if blocks.contains(&(grain.0 - 1, grain.1 + 1)) {
-                if blocks.contains(&(grain.0 + 1, grain.1 + 1)) {
-                    return grain;
+fn get_grid(input: &String, add_lines: usize) -> (Vec<Vec<bool>>, usize, usize) {
+    let blocks = get_blocks(input);
+    let mut result = vec![];
+
+    let width_parts = blocks.2;
+    let width = 1 + 2 * add_lines + width_parts.0 + width_parts.1;
+    for j in 0..=(blocks.1 + add_lines) {
+        result.push(vec![]);
+        for i in 0..=width {
+            result[j].push(blocks.0.contains(&(499 - add_lines - width_parts.0 + i, j)));
+        }
+    }
+
+    (result, blocks.1 + add_lines, width_parts.0 + add_lines + 1)
+}
+
+fn drop_grain(grid: &Vec<Vec<bool>>, y_max: usize, x_min: usize) -> (usize, usize) {
+    let mut grain = (x_min, 0);
+    while grain.1 < y_max {
+        if grid[grain.1 + 1][grain.0] {
+            if grid[grain.1 + 1][grain.0 - 1] {
+                if grid[grain.1 + 1][grain.0 + 1] {
+                    break;
                 } else {
                     grain.0 += 1;
                     grain.1 += 1;
@@ -66,16 +76,15 @@ fn drop_grain(blocks: &HashSet<(usize, usize)>, y_max: &usize) -> (usize, usize)
         } else {
             grain.1 += 1;
         }
-        if &grain.1 == y_max {
-            break;
-        }
     }
     grain
 }
 
-fn get_blocks(input: &String) -> (HashSet<(usize, usize)>, usize) {
+fn get_blocks(input: &String) -> (HashSet<(usize, usize)>, usize, (usize, usize)) {
     let mut result = HashSet::new();
     let mut max_y = 0;
+    let mut width_left = 0;
+    let mut width_right = 0;
     for line in input.lines() {
         let points: Vec<(usize, usize)> = line
             .split(" -> ")
@@ -90,12 +99,24 @@ fn get_blocks(input: &String) -> (HashSet<(usize, usize)>, usize) {
                 if point.1 > max_y {
                     max_y = point.1;
                 }
+                if point.1 > width_left {
+                    width_left = point.1;
+                }
+                if point.1 > width_right {
+                    width_right = point.1;
+                }
+                if point.0 < 500 && 500 - point.0 > width_left {
+                    width_left = 500 - point.0
+                } else if point.0 > 500 && point.0 - 500 > width_right {
+                    width_right = point.0 - 500;
+                }
+
                 result.insert(point);
             }
         }
     }
 
-    (result, max_y)
+    (result, max_y, (width_left, width_right))
 }
 
 fn get_points(from: (usize, usize), to: (usize, usize)) -> Vec<(usize, usize)> {
