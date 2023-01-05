@@ -64,32 +64,27 @@ fn part_two(input: &String) -> isize {
         }
     }    
 
-    let work = pairs.iter().fold((0,0,isize::MAX) ,|min, pair| {
-        if pair.0.2 < pair.1.2 && pair.0.2 < min.2 {
-            (pair.0.0, pair.0.1, pair.0.2)
-        } else if pair.1.2 < min.2 {
-            (pair.1.0, pair.1.1, pair.1.2)
-        } else {
-            min
-        }
-    } );
+    let (sensor_1, sensor_2) = pairs[0];
+    let (sensor_3, sensor_4) = pairs[1];
 
-    for i in 0..=(work.2 + 1) {
-        let x1 = work.0 - i;
-        let x2 = work.0 + i;
-        let y1 = work.1 - (work.2 + 1) + i;
-        let y2 = work.1 + (work.2 + 1) - i;
-
-        for point in [(x1,y1), (x1,y2), (x2,y1), (x2,y2)] {
-            if pairs[0].0.0.abs_diff(point.0) + pairs[0].0.1.abs_diff(point.1) == pairs[0].0.2 as usize + 1 
-            && pairs[0].1.0.abs_diff(point.0) + pairs[0].1.1.abs_diff(point.1) == pairs[0].1.2 as usize + 1 
-            && pairs[1].0.0.abs_diff(point.0) + pairs[1].0.1.abs_diff(point.1) == pairs[1].0.2 as usize + 1 
-            && pairs[1].1.0.abs_diff(point.0) + pairs[1].1.1.abs_diff(point.1) == pairs[1].1.2 as usize + 1 {
-                return point.0 * 4000000 + point.1;                        
-            }
-        }
+    let mut up = true;
+    let mut start_1 = if sensor_1.1 > sensor_2.1 { sensor_1.1 - sensor_1.2 - 1 } else { sensor_1.1 + sensor_1.2 + 1 };
+    if sensor_1.0 > sensor_2.0 {
+        start_1 -= sensor_1.0;
+    } else {
+        start_1 += sensor_1.0;
+        up = false;
     }
-    panic!("no point found!");
+    let mut start_2 = if sensor_3.1 > sensor_4.1 { sensor_3.1 - sensor_3.2 - 1 } else { sensor_3.1 + sensor_3.2 + 1 };
+    if sensor_3.0 > sensor_4.0 {
+        start_2 -= sensor_3.0;
+    } else {
+        start_2 += sensor_3.0;
+    }
+    let x = if up { (start_2 - start_1) / 2 } else { (start_1 - start_2) / 2 };
+    let y = if up { start_1 + x } else { start_1 - x };
+
+    x * 4000000 + y
 }
 
 fn get_sensors(input: &String) -> Vec<Vec<isize>> {
