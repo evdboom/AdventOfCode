@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 use std::fs;
@@ -232,10 +233,10 @@ fn get_maximum_flow(
                             location: closed,
                         }
                     } else {
-                        Actor { 
+                        Actor {
                             eta: actor.eta,
-                            location: actor.location
-                         }
+                            location: actor.location,
+                        }
                     }
                 })
                 .collect();
@@ -249,58 +250,59 @@ fn get_maximum_flow(
             };
             queue.push(new_state);
         } else {
-            for (index, closed) in state.closed_valves.iter().enumerate() {
-                for (other_index, other_closed) in state.closed_valves.iter().enumerate() {
-                    if closed == other_closed {
-                        continue;
-                    }
+            for (closed_1, closed_2) in state
+                .closed_valves
+                .iter()
+                .tuple_combinations::<(&u16, &u16)>()
+            {
+                let distance_1 = distances[&(finished[0].location, *closed_1)];
+                let distance_2 = distances[&(finished[1].location, *closed_2)];
 
-                    let distance_1 = distances[&(finished[0].location, *closed)];
-                    let distance_2 = distances[&(finished[1].location, *other_closed)];
+                let eta_1 = if state.time_remaining > distance_1 + 1 {
+                    state.time_remaining - distance_1 - 1
+                } else {
+                    0
+                };
+                let eta_2 = if state.time_remaining > distance_2 + 1 {
+                    state.time_remaining - distance_2 - 1
+                } else {
+                    0
+                };
 
-                    let eta_1 = if state.time_remaining > distance_1 + 1 {
-                        state.time_remaining - distance_1 - 1
-                    } else {
-                        0
-                    };
-                    let eta_2 = if state.time_remaining > distance_2 + 1 {
-                        state.time_remaining - distance_2 - 1
-                    } else {
-                        0
-                    };
-
-                    let time_remaining = eta_1.max(eta_2);
-                    let flow = state.flow
-                        + eta_1 * valves[closed].flow
-                        + eta_2 * valves[other_closed].flow;
-                    let mut closed_valves = state.closed_valves.clone();
-                    closed_valves.remove(index.max(other_index));
-                    closed_valves.remove(index.min(other_index));
-                    let potential = get_potential(
-                        flow,
-                        time_remaining,
-                        &closed_valves,
-                        valves,
-                        state.actors.len(),
-                    );
-                    let actors = vec![Actor {
+                let time_remaining = eta_1.max(eta_2);
+                let flow =
+                    state.flow + eta_1 * valves[closed_1].flow + eta_2 * valves[closed_2].flow;
+                let mut closed_valves = state.closed_valves.clone();
+                let index_1 = closed_valves.iter().position(|v| v == closed_1).unwrap();
+                let index_2 = closed_valves.iter().position(|v| v == closed_2).unwrap();
+                closed_valves.remove(index_1.max(index_2));
+                closed_valves.remove(index_1.min(index_1));
+                let potential = get_potential(
+                    flow,
+                    time_remaining,
+                    &closed_valves,
+                    valves,
+                    state.actors.len(),
+                );
+                let actors = vec![
+                    Actor {
                         eta: eta_1,
-                        location: *closed
+                        location: *closed_1,
                     },
                     Actor {
                         eta: eta_2,
-                        location: *other_closed
-                    }];
+                        location: *closed_2,
+                    },
+                ];
 
-                    let new_state = State {
-                        time_remaining,
-                        potential,
-                        flow,
-                        closed_valves,
-                        actors,
-                    };
-                    queue.push(new_state);
-                }
+                let new_state = State {
+                    time_remaining,
+                    potential,
+                    flow,
+                    closed_valves,
+                    actors,
+                };
+                queue.push(new_state);
             }
         }
     }
