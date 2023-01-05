@@ -55,14 +55,16 @@ fn main() {
 
 fn part_one(input: &String) -> usize {
     let blueprints = get_blueprints(input);
-    blueprints.into_iter().fold(0, |sum, blueprint| {
-        println!("{}", sum);
+    blueprints.into_iter().fold(0, |sum, blueprint| {        
         sum + blueprint.number * get_geodes(blueprint, 24)
     })
 }
 
 fn part_two(input: &String) -> usize {
-    0
+    let blueprints = get_blueprints(input);
+    blueprints.into_iter().take(3).fold(1, |mul, blueprint| {        
+        mul * get_geodes(blueprint, 32)
+    })
 }
 
 fn get_geodes(blueprint: Blueprint, start_time: usize) -> usize {
@@ -78,6 +80,7 @@ fn get_geodes(blueprint: Blueprint, start_time: usize) -> usize {
         time_remaining: start_time,
         potential: 0
     };
+    let mut current_max = 0;
     let mut cache = HashSet::new();
     let mut queue = BinaryHeap::new();
     queue.push(initial_state);
@@ -88,8 +91,11 @@ fn get_geodes(blueprint: Blueprint, start_time: usize) -> usize {
             max = state.geodes;
             break;
         }
+        if state.geodes > current_max {
+            current_max = state.geodes;
+        }
         let potential = get_potential(&state, &blueprint);
-        if potential == 0 {
+        if potential <= current_max {
             continue;
         }
 
