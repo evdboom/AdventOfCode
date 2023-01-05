@@ -1,8 +1,5 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Services;
-using AdventOfCode2022.Days.Day17Group;
-using System.Drawing;
-using System.Reflection.Emit;
 
 namespace AdventOfCode2022.Days
 {
@@ -32,10 +29,10 @@ namespace AdventOfCode2022.Days
             var visited = new Dictionary<(int x, int y, int z), bool>();
             var touched = new Dictionary<(int x, int y, int z, int side), bool>();
             var point1 = (0, 0, 0);
-            var queue = new Queue<(int x,int y,int z)>();
+            var queue = new Queue<(int x, int y, int z)>();
             queue.Enqueue(point1);
 
-            while(queue.TryDequeue(out var result))
+            while (queue.TryDequeue(out var result))
             {
                 if (visited.ContainsKey(result))
                 {
@@ -114,9 +111,9 @@ namespace AdventOfCode2022.Days
                 }
             }
 
-            return touched.Count;           
+            return touched.Count;
         }
-    
+
         private int GetFreeSides(bool[,,] lavaGrid)
         {
             var freeSides = 0;
@@ -184,7 +181,7 @@ namespace AdventOfCode2022.Days
             });
 
             var result = new bool[max[0] + 3, max[1] + 3, max[2] + 3];
-            foreach(var value in values)
+            foreach (var value in values)
             {
                 result[value[0] + 1, value[1] + 1, value[2] + 1] = true;
             }
