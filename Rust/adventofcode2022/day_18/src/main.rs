@@ -1,4 +1,4 @@
-use std::collections::{HashSet, VecDeque};
+use std::collections::HashSet;
 use std::fs;
 use std::time::Instant;
 
@@ -42,15 +42,15 @@ fn get_sides(grid: Vec<Vec<Vec<bool>>>, mut start_points: HashSet<(usize, usize,
         let start_point = *start_points.iter().next().unwrap();
         start_points.remove(&start_point);
 
-        let mut queue = VecDeque::new();
-        queue.push_back(start_point);
-        while let Some((x, y, z)) = queue.pop_front() {
+        let mut queue = vec![];
+        queue.push(start_point);
+        while let Some((x, y, z)) = queue.pop() {
             if x > 0 {
                 if grid[x - 1][y][z] {
                     touched.insert((x - 1, y, z, 1));
                 } else if visited.insert((x - 1, y, z)) {
                     start_points.remove(&(x - 1, y, z));
-                    queue.push_back((x - 1, y, z));
+                    queue.push((x - 1, y, z));
                 }
             }
             if x < grid.len() - 1 {
@@ -58,7 +58,7 @@ fn get_sides(grid: Vec<Vec<Vec<bool>>>, mut start_points: HashSet<(usize, usize,
                     touched.insert((x + 1, y, z, 2));
                 } else if visited.insert((x + 1, y, z)) {
                     start_points.remove(&(x + 1, y, z));
-                    queue.push_back((x + 1, y, z));
+                    queue.push((x + 1, y, z));
                 }
             }
             if y > 0 {
@@ -66,7 +66,7 @@ fn get_sides(grid: Vec<Vec<Vec<bool>>>, mut start_points: HashSet<(usize, usize,
                     touched.insert((x, y - 1, z, 3));
                 } else if visited.insert((x, y - 1, z)) {
                     start_points.remove(&(x, y - 1, z));
-                    queue.push_back((x, y - 1, z));
+                    queue.push((x, y - 1, z));
                 }
             }
             if y < grid[0].len() - 1 {
@@ -74,7 +74,7 @@ fn get_sides(grid: Vec<Vec<Vec<bool>>>, mut start_points: HashSet<(usize, usize,
                     touched.insert((x, y + 1, z, 4));
                 } else if visited.insert((x, y + 1, z)) {
                     start_points.remove(&(x, y + 1, z));
-                    queue.push_back((x, y + 1, z));
+                    queue.push((x, y + 1, z));
                 }
             }
             if z > 0 {
@@ -82,7 +82,7 @@ fn get_sides(grid: Vec<Vec<Vec<bool>>>, mut start_points: HashSet<(usize, usize,
                     touched.insert((x, y, z - 1, 5));
                 } else if visited.insert((x, y, z - 1)) {
                     start_points.remove(&(x, y, z - 1));
-                    queue.push_back((x, y, z - 1));
+                    queue.push((x, y, z - 1));
                 }
             }
             if z < grid[0][0].len() - 1 {
@@ -90,7 +90,7 @@ fn get_sides(grid: Vec<Vec<Vec<bool>>>, mut start_points: HashSet<(usize, usize,
                     touched.insert((x, y, z + 1, 6));
                 } else if visited.insert((x, y, z + 1)) {
                     start_points.remove(&(x, y, z + 1));
-                    queue.push_back((x, y, z + 1));
+                    queue.push((x, y, z + 1));
                 }
             }
         }
