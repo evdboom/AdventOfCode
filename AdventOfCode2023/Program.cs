@@ -7,7 +7,7 @@ var writer = new ScreenWriter();
 var days = Assembly
     .GetEntryAssembly()?
     .GetTypes()
-    .Where(p => typeof(IDay).IsAssignableFrom(p) && string.Equals(p.Namespace, "AdventOfCode2022.Days"))
+    .Where(p => typeof(IDay).IsAssignableFrom(p) && string.Equals(p.Namespace, "AdventOfCode2023.Days"))
     .Select(CreateDay)
     .Where(p => p is not null)
     .ToDictionary(day => day!.DayNumber, day => day);
