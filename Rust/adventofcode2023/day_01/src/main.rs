@@ -86,3 +86,34 @@ fn get_numeric_and_written_value(input: &String) -> u32 {
         })
         .sum()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn part_one() {
+        let input = String::from(
+            "1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet",
+        );
+        assert_eq!(142, get_numeric_values(&input))
+    }
+
+    #[test]
+    fn part_two() {
+        let input = String::from(
+            "two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen",
+        );
+
+        assert_eq!(281, get_numeric_and_written_value(&input));
+    }
+}
