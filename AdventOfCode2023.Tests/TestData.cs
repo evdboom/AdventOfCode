@@ -9,7 +9,7 @@ namespace AdventOfCode2023.Tests
 
             return _testDataPart switch
             {
-                "Part1" => new[]
+                "Part01" => new[]
                 {
                     "1abc2",
                     "pqr3stu8vwx",

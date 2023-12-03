@@ -32,9 +32,11 @@ namespace AdventOfCode2023.Days
             return input
                 .Aggregate(0, (previous, next) =>
                 {
-                    var first = next.First(c => char.IsNumber(c));
-                    var last = next.Last(c => char.IsNumber(c));
-                    var number = int.Parse($"{first}{last}");
+                    var first = next.FirstOrDefault(c => char.IsNumber(c));
+                    var last = next.LastOrDefault(c => char.IsNumber(c));
+                    var number = first == default || last == default
+                        ? 0
+                        : int.Parse($"{first}{last}");
                     return previous + number;
                 });            
         }
