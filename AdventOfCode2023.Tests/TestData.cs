@@ -111,5 +111,13 @@ namespace AdventOfCode2023.Tests
             ];
         }
 
+        protected override string[] Day06()
+        {
+            return
+            [                
+                "Time:      7  15   30",
+                "Distance:  9  40  200"                
+            ];
+        }
     }
 }
