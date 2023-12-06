@@ -31,7 +31,6 @@ namespace AdventOfCode2023.Tests
         public class Day04Tests : TestDay<Day04, TestData>
         {
             protected override long ExpectedResultPartOne => 13;
-
             protected override long ExpectedResultPartTwo => 30;
         }
 
