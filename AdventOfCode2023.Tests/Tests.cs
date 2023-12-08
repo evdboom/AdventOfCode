@@ -54,8 +54,13 @@ namespace AdventOfCode2023.Tests
 
         public class Day08Tests : TestDay<Day08, TestData>
         {
-            protected override long ExpectedResultPartOne => 6440;
-            protected override long ExpectedResultPartTwo => 5905;
+            public Day08Tests() : base("Part01", "Part02")
+            {
+
+            }
+
+            protected override long ExpectedResultPartOne => 6;
+            protected override long ExpectedResultPartTwo => 6;
         }
     }
 }
