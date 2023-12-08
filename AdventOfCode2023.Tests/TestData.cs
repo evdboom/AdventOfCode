@@ -119,5 +119,17 @@ namespace AdventOfCode2023.Tests
                 "Distance:  9  40  200"                
             ];
         }
+
+        protected override string[] Day07()
+        {
+            return
+            [
+                "32T3K 765",
+                "T55J5 684",
+                "KK677 28",
+                "KTJJT 220",
+                "QQQJA 483"
+            ];
+        }
     }
 }
