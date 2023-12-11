@@ -44,7 +44,7 @@ namespace AdventOfCode2023.Days
                 });
         }
 
-        private List<(long X, long Y)> GetExpandedGalaxies(bool[,] grid, long expandSize)
+        private List<(long X, long Y)> GetExpandedGalaxies(bool[,] grid, long expandFactor)
         {
             var galaxyFreeRows = new List<int>();
             for (var j = 0; j < grid.GetLength(1); j++) 
@@ -88,8 +88,8 @@ namespace AdventOfCode2023.Days
                 {
                     if (grid[i, j])
                     {
-                        var k = i + (expandSize - 1) * galaxyFreeColumns.Where(column => column < i).Count();
-                        var l = j + (expandSize - 1) * galaxyFreeRows.Where(row => row < j).Count();
+                        var k = i + (expandFactor - 1) * galaxyFreeColumns.Where(column => column < i).Count();
+                        var l = j + (expandFactor - 1) * galaxyFreeRows.Where(row => row < j).Count();
                         galaxies.Add((k, l));
                     }
                 }
