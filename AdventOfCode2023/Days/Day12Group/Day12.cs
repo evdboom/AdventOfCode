@@ -1,6 +1,5 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Services;
-using System.Collections.Generic;
 
 namespace AdventOfCode2023.Days
 {
@@ -22,7 +21,7 @@ namespace AdventOfCode2023.Days
                         .Split(",")
                         .Select(int.Parse)
                         .ToList();
-                    var springs = parts[0];                    
+                    var springs = parts[0];
 
                     return arrangements + GetPossibleArrangements(springs, broken);
                 });
@@ -83,7 +82,7 @@ namespace AdventOfCode2023.Days
                         if (springs.Length == index + broken || springs[index + broken] != '#')
                         {
                             yield return index;
-                        }                        
+                        }
                     }
                 }
                 index++;
