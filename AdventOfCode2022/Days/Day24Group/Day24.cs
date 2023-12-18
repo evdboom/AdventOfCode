@@ -67,7 +67,7 @@ namespace AdventOfCode2022.Days
             queue.Enqueue((start, startStep), new State { Distance = 0, Steps = 0 });
             var pointCache = new Dictionary<Point, List<int>> { { start, new List<int> { startStep } } };
             var minStep = int.MaxValue;
-            while (queue.TryDequeue(out (Point Point, int Step) item, out State state))
+            while (queue.TryDequeue(out (Point Point, int Step) item, out State? state))
             {
                 if (item.Point == finish)
                 {
