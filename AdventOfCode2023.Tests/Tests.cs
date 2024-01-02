@@ -167,5 +167,21 @@ namespace AdventOfCode2023.Tests
             protected override long ExpectedResultPartOne => 11687500;
             protected override long ExpectedResultPartTwo => -1;
         }
+
+        public class Day21Tests : TestDay<Day21, TestData>
+        {
+            public Day21Tests() : base()
+            {
+                _day.Steps = 6;
+            }
+            protected override long ExpectedResultPartOne => 32;
+            protected override long ExpectedResultPartTwo => -1;
+        }
+
+        public class Day22Tests : TestDay<Day22, TestData>
+        {
+            protected override long ExpectedResultPartOne => 5;
+            protected override long ExpectedResultPartTwo => 7;
+        }
     }
 }

@@ -23,6 +23,22 @@ namespace AdventOfCode.Shared.Extensions
 
             return grid;
         }
+        
+        public static IEnumerable<Point> Adjacent(this Point point, bool allowDiagonal = false)
+        {
+            yield return point with { X = point.X + 1 };
+            yield return point with { X = point.X - 1 };
+            yield return point with { Y = point.Y + 1 };
+            yield return point with { Y = point.Y - 1 };
+
+            if (allowDiagonal)
+            {
+                yield return point with { X = point.X + 1, Y = point.Y + 1 };
+                yield return point with { X = point.X - 1, Y = point.Y + 1 };
+                yield return point with { X = point.X + 1, Y = point.Y - 1 };
+                yield return point with { X = point.X - 1, Y = point.Y - 1 };
+            }
+        }
 
         public static IEnumerable<Point> Adjacent<T>(this T[,] grid, int x, int y, bool allowDiagonal = false)
         {
