@@ -40,6 +40,11 @@ namespace AdventOfCode.Shared.Extensions
             }
         }
 
+        public static IEnumerable<Point> Adjacent<T>(this T[,] grid, Point point, bool allowDiagonal = false)
+        {
+            return Adjacent(grid, point.X, point.Y, allowDiagonal);
+        }
+
         public static IEnumerable<Point> Adjacent<T>(this T[,] grid, int x, int y, bool allowDiagonal = false)
         {
             if (y > 0)
