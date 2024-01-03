@@ -117,14 +117,14 @@
             return result;
         }
 
-        private static void Print(double[,] matrix)
+        public static void Print(double[,] matrix, int padding = 6)
         {
             System.Diagnostics.Debug.WriteLine(string.Empty);
             for (int j = 0; j < matrix.GetLength(1); j++)
             {
                 for (int i = 0; i < matrix.GetLength(0); i++)
                 {
-                    System.Diagnostics.Debug.Write($"{Math.Round(matrix[i, j], 2),6} ");
+                    System.Diagnostics.Debug.Write($"{Math.Round(matrix[i, j], 2).ToString().PadLeft(padding)} ");
 
                 }
                 System.Diagnostics.Debug.WriteLine(string.Empty);

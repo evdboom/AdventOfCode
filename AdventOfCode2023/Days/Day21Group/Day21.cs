@@ -17,46 +17,59 @@ namespace AdventOfCode2023.Days
         protected override long ProcessPartOne(string[] input)
         {
             var (grid, start) = GetGrid(input);
-
-            HashSet<Point> options = [start];
-            var cache = new Dictionary<Point, IEnumerable<Point>>();
-            options = Walk(options, grid, Steps, cache);
-
-            return options.Count;
+            return Walk(start, grid, [Steps]).First();
         }
 
-        // wrong 1971404079 (too low)
         protected override long ProcessPartTwo(string[] input)
         {
+            var steps = 26501365;
             var (grid, start) = GetGrid(input);
-            var cache = new Dictionary<Point, IEnumerable<Point>>();
             var width = grid.GetLength(0);
-            var half = width / 2;
-            var toEdge = Walk([start], grid, half, cache);
-            var nextEdge = Walk([start], grid, half + width, cache);
-            var thirdEdge = Walk([start], grid, half + width + width, cache);
+            var rem = 26501365 % width;
+            var values = Walk(start, grid, [rem, rem + width, rem + width * 2]).ToList();
 
-            var steps = (26501365 - half) / width;
+            var matrix = new double[4, 3];
+            FillRow(0, 0, 1, values[0], 0, matrix);
+            FillRow(1, 1, 1, values[1], 1, matrix);
+            FillRow(4, 2, 1, values[2], 2, matrix);
 
-            var c = toEdge.Count;
-            var b = (4 * nextEdge.Count - thirdEdge.Count - 3 * c) / 2;
-            var a = nextEdge.Count - c - b;
+            var result = matrix.GaussianElimination();
 
-            return a * steps * steps + b * steps + c;
+            var x = steps / width;
+            var a = (long)Math.Round(result[0]);
+            var b = (long)Math.Round(result[1]);
+            var c = (long)Math.Round(result[2]);
+
+            return a * x * x + b * x + c;
         }
 
-        private HashSet<Point> Walk(HashSet<Point> options, bool[,] grid, int steps, Dictionary<Point, IEnumerable<Point>> cache)
+        private void FillRow(int a, int b, int c, long value, int row, double[,] matrix)
         {
-            for (int i = 0; i < steps; i++)
+            matrix[0, row] = a;
+            matrix[1, row] = b;
+            matrix[2, row] = c;
+            matrix[3, row] = value;
+        }
+
+        private IEnumerable<long> Walk(Point start, bool[,] grid, List<int> steps)
+        {           
+            HashSet<Point> options = [start];
+            if (steps.Contains(0))
+            {
+                yield return options.Count;
+            }
+            var max = steps.Max();
+            for (int i = 1; i <= max; i++)
             {
                 options = options
-                    .SelectMany(option => cache.TryGetValue(option, out var fromCache)
-                        ? fromCache
-                        : GetOptions(option, grid))
+                    .SelectMany(option => GetOptions(option, grid))
                     .ToHashSet();
-            }
 
-            return options;
+                if (steps.Contains(i))
+                {
+                    yield return options.Count;
+                }
+            }
         }
 
         private IEnumerable<Point> GetOptions(Point option, bool[,] grid)
