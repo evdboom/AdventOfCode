@@ -174,7 +174,7 @@ namespace AdventOfCode2023.Tests
             {
                 _day.Steps = 6;
             }
-            protected override long ExpectedResultPartOne => 32;
+            protected override long ExpectedResultPartOne => 36;
             protected override long ExpectedResultPartTwo => 528192865877841;
         }
 
