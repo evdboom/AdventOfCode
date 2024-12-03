@@ -3,16 +3,17 @@ using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode.Shared.Days
 {
-    public class DayRunner
+    public class DayRunner : IDayRunner
     {
         private const string All = "All";
 
         private readonly IDictionary<int, IDay> _days;
         private readonly IScreenWriter _writer;
 
-        public DayRunner(IDictionary<int, IDay> days, IScreenWriter writer)
+        public DayRunner(IEnumerable<IDay> days, IScreenWriter writer)
         {
-            _days = days;
+            _days = days
+                .ToDictionary(day => day.DayNumber, day => day);
             _writer = writer;
         }
    
@@ -21,18 +22,18 @@ namespace AdventOfCode.Shared.Days
             bool running = true;
             while (running)
             {
-                Console.WriteLine($"Which day would you like to process? ({_days.Keys.Min()}-{_days.Keys.Max()} or '{All}' for a complete run)");
+                _writer.WriteLine($"Which day would you like to process? ({_days.Keys.Min()}-{_days.Keys.Max()} or '{All}' for a complete run)");
                 var selectedDay = 0;
                 while (selectedDay == 0)
                 {
-                    var input = Console.ReadLine();
-                    if (input?.ToLower() == All.ToLower())
+                    var input = _writer.ReadLine();
+                    if (string.Equals(input, All, StringComparison.OrdinalIgnoreCase))
                     {
                         selectedDay = -1;
                     }
                     else if (!int.TryParse(input, out int day) || day < _days.Min(d => d.Key) || day > _days.Max(d => d.Key))
                     {
-                        Console.WriteLine($"Enter a valid day (from {_days.Min(d => d.Key)} to {_days.Max(d => d.Key)})");
+                        _writer.WriteLine($"Enter a valid day (from {_days.Min(d => d.Key)} to {_days.Max(d => d.Key)})");
                     }
                     else
                     {
@@ -42,18 +43,18 @@ namespace AdventOfCode.Shared.Days
 
                 if (selectedDay == -1)
                 {
-                    Console.WriteLine("How many runs would you like?");
+                    _writer.WriteLine("How many runs would you like?");
                     var runs = 0;
                     while (runs == 0)
                     {
-                        var runInput = Console.ReadLine();
+                        var runInput = _writer.ReadLine();
                         if (int.TryParse(runInput, out int parsedRuns) && parsedRuns > 0)
                         {
                             runs = parsedRuns;
                         }
                         else
                         {
-                            Console.WriteLine("Please enter a positive integer");
+                            _writer.WriteLine("Please enter a positive integer");
                         }
                     }
                     await ProcessAllAsync(runs);
@@ -63,11 +64,11 @@ namespace AdventOfCode.Shared.Days
                     await ProcessDayAsync(_days[selectedDay], 1);
                 }
 
-                Console.Write("Would you like to process another day? (y/N): ");
-                var key = Console.ReadKey();
-                Console.WriteLine();
-                Console.WriteLine();
-                if (key.Key != ConsoleKey.Y)
+                _writer.Write("Would you like to process another day? (y/N): ");
+                var key = _writer.ReadKey();
+                _writer.NewLine();
+                _writer.NewLine();
+                if (key != ConsoleKey.Y)
                 {
                     running = false;
                 }
@@ -81,18 +82,18 @@ namespace AdventOfCode.Shared.Days
             {
                 await ProcessDayAsync(day.Value, runs);
             }
-            Console.WriteLine();
+            _writer.NewLine();
             var newMemory = GC.GetTotalMemory(false) - memory;
-            Console.WriteLine($"Memory increase (before GC): {newMemory / 1024} kB");
+            _writer.WriteLine($"Memory increase (before GC): {newMemory / 1024} kB");
             newMemory = GC.GetTotalMemory(true) - memory;
-            Console.WriteLine($"Memory increase (after GC): {newMemory / 1024} kB");
+            _writer.WriteLine($"Memory increase (after GC): {newMemory / 1024} kB");
         }
 
         private async Task ProcessDayAsync(IDay day, int runs)
         {
             await ProcessPartAsync(day, Part.One, runs);
             await ProcessPartAsync(day, Part.Two, runs);
-            Console.WriteLine();
+            _writer.NewLine();
         }
 
         private async Task ProcessPartAsync(IDay day, Part part, int runs)
@@ -106,31 +107,31 @@ namespace AdventOfCode.Shared.Days
                 {
                     var (answer, duration) = await day.ProcessPartAsync(part);
                     answered = answer;
-                    durations.Add(duration);
-                    _writer.Disable();
+                    durations.Add(duration);                    
                     run = $"Day {day.DayNumber}, part {part}: run {i + 1}/{runs} completed";
-                    Console.Write(run);
-                    Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
-
+                    _writer.Enable();
+                    _writer.Write(run);
+                    _writer.SetStart();
+                    _writer.Disable();
                 }
-                Console.Write(new string(' ', run.Length));
-                Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
+                _writer.Write(new string(' ', run.Length));
+                _writer.SetStart();
                 _writer.Enable();
-                Console.WriteLine($"The answer for day {day.DayNumber}, part {part} is: {answered}");
+                _writer.WriteLine($"The answer for day {day.DayNumber}, part {part} is: {answered}");
 
                 var avg = Math.Round(durations.Average());
                 var message = runs > 1
                     ? $"Processing took an average of {avg} ms over {runs} runs (min {durations.Min()} ms, max {durations.Max()} ms)"
                     : $"Processing took {durations[0]} ms";
-                Console.WriteLine(message);
+                _writer.WriteLine(message);
             }
             catch (NotImplementedException)
             {
-                Console.WriteLine($"Day {day.DayNumber} part {part} has not yet been solved.");
+                _writer.WriteLine($"Day {day.DayNumber} part {part} has not yet been solved.");
             }
             catch (FileNotFoundException ex)
             {
-                Console.WriteLine($"{ex.Message}");
+                _writer.WriteLine($"{ex.Message}");
             }
         }
     }

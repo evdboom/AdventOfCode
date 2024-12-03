@@ -12,7 +12,9 @@
         void Disable();
         void Enable();
         void WriteTime();
-
+        void SetStart();
+        ConsoleKey ReadKey();
+        string? ReadLine();
 
     }
 }

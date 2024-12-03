@@ -78,5 +78,20 @@
         {
             Write($"{DateTime.Now:G} | ");
         }
+
+        public void SetStart()
+        {
+            Console.SetCursorPosition(0, Console.GetCursorPosition().Top);
+        }
+
+        public ConsoleKey ReadKey()
+        {
+            return Console.ReadKey().Key;
+        }
+
+        public string? ReadLine()
+        {
+            return Console.ReadLine();
+        }
     }
 }

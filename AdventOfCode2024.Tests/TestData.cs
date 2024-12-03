@@ -18,7 +18,7 @@ namespace AdventOfCode2024.Tests
         }
 
         protected override string[] Day02()
-        {
+        {            
             return
             [
                 "7 6 4 2 1",

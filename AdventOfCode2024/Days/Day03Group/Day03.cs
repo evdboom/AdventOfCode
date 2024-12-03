@@ -1,6 +1,5 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Services;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode2024.Days
@@ -16,14 +15,14 @@ namespace AdventOfCode2024.Days
         protected override long ProcessPartOne(string[] input)
         {
             var merged = string.Join('\n', input);
-            return ProcessLine(merged);           
+            return ProcessLine(merged);
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
             var merged = string.Join('\n', input);
             var line = CleanLine(merged);
-            return ProcessLine(line);            
+            return ProcessLine(line);
         }
 
         private string CleanLine(string line)

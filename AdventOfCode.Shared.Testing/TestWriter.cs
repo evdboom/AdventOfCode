@@ -72,5 +72,20 @@ namespace AdventOfCode.Shared.Testing
         {
             Write($"{DateTime.Now:G} | ");
         }
+
+        public void SetStart()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ConsoleKey ReadKey()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string? ReadLine()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
