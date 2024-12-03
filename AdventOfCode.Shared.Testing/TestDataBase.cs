@@ -46,127 +46,127 @@
 
         protected virtual string[] Day01()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day02()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day03()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day04()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day05()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day06()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day07()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day08()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day09()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day10()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day11()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day12()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day13()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day14()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day15()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day16()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day17()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day18()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day19()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day20()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day21()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day22()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day23()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day24()
         {
-            return new string[0];
+            return [];
         }
 
         protected virtual string[] Day25()
         {
-            return new string[0];
+            return [];
         }
     }
 }
