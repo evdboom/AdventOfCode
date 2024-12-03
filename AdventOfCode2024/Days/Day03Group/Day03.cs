@@ -38,13 +38,7 @@ namespace AdventOfCode2024.Days
             var pattern = @"mul\((\d{1,3}),(\d{1,3})\)";
             var matches = Regex.Matches(line, pattern);
             return matches
-                .Aggregate(0L, (acc, match) =>
-                {
-                    var first = int.Parse(match.Groups[1].Value);
-                    var second = int.Parse(match.Groups[2].Value);
-                    acc += first * second;
-                    return acc;
-                });
+                .Sum(match => int.Parse(match.Groups[1].Value) * int.Parse(match.Groups[2].Value));
         }
     }
 }
