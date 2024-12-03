@@ -30,7 +30,8 @@ namespace AdventOfCode2024.Days
         {
             return string.Join(string.Empty, line
                 .Split("do()")
-                .Select(part => part.Split("don't()")[0]));
+                .Select(part => part
+                    .Split("don't()")[0]));
         }
 
         private long ProcessLine(string line)
