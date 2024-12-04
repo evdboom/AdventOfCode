@@ -9,7 +9,6 @@ namespace AdventOfCode.Shared.Grid
 
         private Point _currentPoint = new Point(-1, 0);
 
-
         public GridCell<TValue> Current => _grid.GetCell(_currentPoint);
 
         object IEnumerator.Current => Current;
