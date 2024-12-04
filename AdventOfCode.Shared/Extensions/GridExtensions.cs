@@ -98,6 +98,11 @@ namespace AdventOfCode.Shared.Extensions
                 : AdjecentWithDirection(grid, x, y, compare, Directions.Cardinal);
         }
 
+        public static IEnumerable<(Point Point, Directions Direction, T Value)> AdjecentWithDirection<T>(this Grid<T> grid, Point point, Func<(T Origin, T Target), bool> compare, Directions directions)
+        {
+            return AdjecentWithDirection(grid, point.X, point.Y, compare, directions);
+        }
+
         public static IEnumerable<(Point Point, Directions Direction, T Value)> AdjecentWithDirection<T>(this Grid<T> grid, int x, int y, Func<(T Origin, T Target), bool> compare, Directions directions)
         {
             if ((directions & Directions.Up) > 0 && y > 0)

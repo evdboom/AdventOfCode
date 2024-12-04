@@ -27,51 +27,27 @@ namespace AdventOfCode2024.Days
         protected override long ProcessPartOne(string[] input)
         {
             var grid = input.ToGrid(c => _mappings.TryGetValue(c, out var value) ? value : -1);
-
-            var count = 0L;
-            for (int j = 0; j < grid.Height; j++)
-            {
-                for (int i = 0; i < grid.Width; i++)
-                {
-                    if (grid[i, j] == _mappings['X'])
-                    {
-                        foreach(var word in GetWords(grid, i, j))
-                        {
-                            if (word)
-                            {
-                                count++;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return count;
+            
+            return grid
+                .Where(cell => cell.Value == _mappings['X'])
+                .Sum(cell => GetWords(grid, cell.Point)
+                    .Where(word => word)
+                    .Count());
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
-            var grid = input.ToGrid(c => _mappings.TryGetValue(c, out var value) ? value : -1);
-
-            var count = 0L;
-            for (int j = 0; j < grid.Height; j++)
-            {
-                for (int i = 0; i < grid.Width; i++)
-                {
-                    if (grid[i, j] == _mappings['A'] && GetX(grid, i , j))
-                    {                        
-                            count++;                     
-                    }
-                }
-            }
-
-            return count;
+            var grid = input.ToGrid(c => _mappings.TryGetValue(c, out var value) ? value : -1);            
+            
+            return grid
+                .Where(cell => cell.Value == _mappings['A'] && GetX(grid, cell.Point))
+                .Count();           
         }
 
-        private bool GetX(Grid<int> grid, int i, int j)
+        private bool GetX(Grid<int> grid, Point point)
         {
             var adjecents = grid
-                .AdjecentWithDirection(i, j, (compare) => compare.Target == _mappings['M'] || compare.Target == _mappings['S'], Directions.Diagonal)
+                .AdjecentWithDirection(point, (compare) => compare.Target == _mappings['M'] || compare.Target == _mappings['S'], Directions.Diagonal)
                 .ToList();
 
             return 
@@ -83,9 +59,9 @@ namespace AdventOfCode2024.Days
                     .Sum(adjecent => adjecent.Value) == _mappings['M'] + _mappings['S'];
         }
 
-        private IEnumerable<bool> GetWords(Grid<int> grid, int i, int j)
+        private IEnumerable<bool> GetWords(Grid<int> grid, Point point)
         {
-            foreach(var adjecent in grid.AdjecentWithDirection(i, j, (compare) => compare.Target == 1, true))
+            foreach(var adjecent in grid.AdjecentWithDirection(point, (compare) => compare.Target == 1, true))
             {
                 yield return NextIsValid(grid, adjecent.Point, adjecent.Direction);
             }                       

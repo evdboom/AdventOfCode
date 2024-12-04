@@ -1,8 +1,9 @@
-﻿using System.Drawing;
+﻿using System.Collections;
+using System.Drawing;
 
 namespace AdventOfCode.Shared.Grid
 {
-    public class Grid<TValue>
+    public class Grid<TValue> : IEnumerable<GridCell<TValue>>
     {
         private readonly TValue[,] _grid;
         public Grid(int width, int height)
@@ -26,5 +27,17 @@ namespace AdventOfCode.Shared.Grid
         public long Size => Width * Height;
         public int MaxX => Width - 1;
         public int MaxY => Height - 1;
+
+        public GridCell<TValue> GetCell(Point point) => new(point, this[point]);
+
+        public IEnumerator<GridCell<TValue>> GetEnumerator()
+        {
+            return new GridEnumerator<TValue>(this);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }
