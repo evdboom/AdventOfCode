@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 using AdventOfCode2023.Days.Day17Group;
 using System.Drawing;
@@ -16,20 +17,20 @@ namespace AdventOfCode2023.Days
 
         protected override long ProcessPartOne(string[] input)
         {
-            var grid = input.ToGrid(c => int.Parse($"{c}"));
+            var grid = input.ToIntGrid();
             return FindLowestHeatLoss(grid, 1, 3);
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
-            var grid = input.ToGrid(c => int.Parse($"{c}"));
+            var grid = input.ToIntGrid();
             return FindLowestHeatLoss(grid, 4, 10);
         }
 
-        private long FindLowestHeatLoss(int[,] grid, int minimumDirectionLength, int maximumDirectionLength)
+        private long FindLowestHeatLoss(Grid<int> grid, int minimumDirectionLength, int maximumDirectionLength)
         {
             var startPoint = new Point(0, 0);
-            var endPoint = new Point(grid.GetLength(0) - 1, grid.GetLength(1) - 1);
+            var endPoint = new Point(grid.Width - 1, grid.Height - 1);
             var startState = new State
             {
                 Direction = 'X',
@@ -150,7 +151,7 @@ namespace AdventOfCode2023.Days
             return Math.Abs(startPoint.X - endPoint.X) + Math.Abs(startPoint.Y - endPoint.Y);
         }
 
-        private IEnumerable<(Point Point, State State)> GetNewPoints(Point point, State state, int[,] grid, Point endPoint, int minimumDirectionLength, int maximumDirectionLength)
+        private IEnumerable<(Point Point, State State)> GetNewPoints(Point point, State state, Grid<int> grid, Point endPoint, int minimumDirectionLength, int maximumDirectionLength)
         {
             if (point.X > 0 &&
                 state.Direction != 'R' &&
@@ -192,7 +193,7 @@ namespace AdventOfCode2023.Days
                 yield return (newPoint, newState);
 
             }
-            if (point.X < grid.GetLength(0) - 1 &&
+            if (point.X < grid.Width - 1 &&
                 state.Direction != 'L' &&
                 (
                     (state.Direction != 'R' && state.DirectionLength >= minimumDirectionLength) ||
@@ -212,7 +213,7 @@ namespace AdventOfCode2023.Days
                 yield return (newPoint, newState);
 
             }
-            if (point.Y < grid.GetLength(1) - 1 &&
+            if (point.Y < grid.Height - 1 &&
                 state.Direction != 'U' &&
                 (
                     (state.Direction != 'D' && state.DirectionLength >= minimumDirectionLength) ||

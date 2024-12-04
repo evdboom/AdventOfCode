@@ -1,4 +1,5 @@
 ﻿using AdventOfCode.Shared.Enums;
+using AdventOfCode.Shared.Grid;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 
@@ -6,18 +7,18 @@ namespace AdventOfCode.Shared.Extensions
 {
     public static class GridExtensions
     {
-        public static int[,] ToIntGrid(this string[] input)
+        public static Grid<int> ToIntGrid(this string[] input)
         {
             return ToGrid(input, (c) => int.Parse($"{c}"));
         }
 
-        public static T[,] ToGrid<T>(this string[] input, Func<char, T> parse)
+        public static Grid<T> ToGrid<T>(this string[] input, Func<char, T> parse)
         {
-            var grid = new T[input[0].Length, input.Length];
+            var grid = new Grid<T>(input[0].Length, input.Length);
 
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     grid[i, j] = parse(input[j][i]);
                 }
@@ -42,30 +43,30 @@ namespace AdventOfCode.Shared.Extensions
             }
         }
 
-        public static bool TryGetPointInDirection<T>(this T[,] grid, Point point, Direction direction, Func<(T Origin, T Target), bool> compare, [NotNullWhen(true)] out Point? target)
+        public static bool TryGetPointInDirection<T>(this Grid<T> grid, Point point, Directions direction, Func<(T Origin, T Target), bool> compare, [NotNullWhen(true)] out Point? target)
         {
             return TryGetPointInDirection(grid, point.X, point.Y, direction, compare, out target);
         }
 
-        public static bool TryGetPointInDirection<T>(this T[,] grid, int x, int y, Direction direction, Func<(T Origin, T Target), bool> compare, [NotNullWhen(true)] out Point? target)
+        public static bool TryGetPointInDirection<T>(this Grid<T> grid, int x, int y, Directions direction, Func<(T Origin, T Target), bool> compare, [NotNullWhen(true)] out Point? target)
         {
             target = direction switch
             {
-                Direction.Up => new Point(x, y - 1),
-                Direction.Down => new Point(x, y + 1),
-                Direction.Left => new Point(x - 1, y),
-                Direction.Right => new Point(x + 1, y),
-                Direction.UpLeft => new Point(x - 1, y - 1),
-                Direction.UpRight => new Point(x + 1, y - 1),
-                Direction.DownLeft => new Point(x - 1, y + 1),
-                Direction.DownRight => new Point(x + 1, y + 1),
+                Directions.Up => new Point(x, y - 1),
+                Directions.Down => new Point(x, y + 1),
+                Directions.Left => new Point(x - 1, y),
+                Directions.Right => new Point(x + 1, y),
+                Directions.UpLeft => new Point(x - 1, y - 1),
+                Directions.UpRight => new Point(x + 1, y - 1),
+                Directions.DownLeft => new Point(x - 1, y + 1),
+                Directions.DownRight => new Point(x + 1, y + 1),
                 _ => throw new ArgumentException("Invalid Direction", nameof(direction)),
             };
             var valid = target.Value.X >= 0 &&
-                        target.Value.X < grid.GetLength(0) &&
+                        target.Value.X <= grid.MaxX &&
                         target.Value.Y >= 0 &&
-                        target.Value.Y < grid.GetLength(1) &&
-                        compare((grid[x, y], grid[target.Value.X, target.Value.Y]));
+                        target.Value.Y <= grid.MaxY &&
+                        compare((grid[x, y], grid[target.Value]));
 
             if (!valid)
             {
@@ -75,145 +76,126 @@ namespace AdventOfCode.Shared.Extensions
             return valid;
         }
 
-        public static IEnumerable<(Point Point, Direction Direction)> AdjecentWithDirection<T>(this T[,] grid, Point point, bool allowDiagonal = false)
+        public static IEnumerable<(Point Point, Directions Direction, T Value)> AdjecentWithDirection<T>(this Grid<T> grid, Point point, bool allowDiagonal = false)
         {
             return AdjecentWithDirection(grid, point.X, point.Y, allowDiagonal);
         }
 
-        public static IEnumerable<(Point Point, Direction Direction)> AdjecentWithDirection<T>(this T[,] grid, int x, int y, bool allowDiagonal = false)
+        public static IEnumerable<(Point Point, Directions Direction, T Value)> AdjecentWithDirection<T>(this Grid<T> grid, int x, int y, bool allowDiagonal = false)
         {
-            return AdjecentWithDirection(grid, x, y, (_) => true, allowDiagonal);
+            return AdjecentWithDirection(grid, x, y, _ => true, allowDiagonal);
         }
 
-        public static IEnumerable<(Point Point, Direction Direction)> AdjecentWithDirection<T>(this T[,] grid, Point point, Func<(T Origin, T Target), bool> compare, bool allowDiagonal = false)
+        public static IEnumerable<(Point Point, Directions Direction, T Value)> AdjecentWithDirection<T>(this Grid<T> grid, Point point, Func<(T Origin, T Target), bool> compare, bool allowDiagonal = false)
         {
             return AdjecentWithDirection(grid, point.X, point.Y, compare, allowDiagonal);
         }
 
-        public static IEnumerable<(Point Point, Direction Direction)> AdjecentWithDirection<T>(this T[,] grid, int x, int y, Func<(T Origin, T Target), bool> compare, bool allowDiagonal = false)
+        public static IEnumerable<(Point Point, Directions Direction, T Value)> AdjecentWithDirection<T>(this Grid<T> grid, int x, int y, Func<(T Origin, T Target), bool> compare, bool allowDiagonal = false)
         {
-            if (y > 0 && compare((grid[x, y], grid[x, y - 1])))
-            {
-                yield return (new Point(x, y - 1), Direction.Up);
-            }
-            if (y < grid.GetLength(1) - 1 && compare((grid[x, y], grid[x, y + 1])))
-            {
-                yield return (new Point(x, y + 1), Direction.Down);
-            }
-            if (x > 0 && compare((grid[x, y], grid[x - 1, y])))
-            {
-                yield return (new Point(x - 1, y), Direction.Left);
-            }
-            if (x < grid.GetLength(0) - 1 && compare((grid[x, y], grid[x + 1, y])))
-            {
-                yield return (new Point(x + 1, y), Direction.Right);
-            }
-
-            if (allowDiagonal)
-            {
-                if (x > 0 && y > 0 && compare((grid[x, y], grid[x - 1, y - 1])))
-                {
-                    yield return (new Point(x - 1, y - 1), Direction.UpLeft);
-                }
-                if (x > 0 && y < grid.GetLength(1) - 1 && compare((grid[x, y], grid[x - 1, y + 1])))
-                {
-                    yield return (new Point(x - 1, y + 1), Direction.DownLeft);
-                }
-                if (x < grid.GetLength(0) - 1 && y > 0 && compare((grid[x, y], grid[x + 1, y - 1])))
-                {
-                    yield return (new Point(x + 1, y - 1), Direction.UpRight);
-                }
-                if (x < grid.GetLength(0) - 1 && y < grid.GetLength(1) - 1 && compare((grid[x, y], grid[x + 1, y + 1])))
-                {
-                    yield return (new Point(x + 1, y + 1), Direction.DownRight);
-                }
-            }
+           return allowDiagonal
+                ? AdjecentWithDirection(grid, x, y, compare, Directions.All)
+                : AdjecentWithDirection(grid, x, y, compare, Directions.Cardinal);
         }
 
-        public static IEnumerable<Point> Adjacent<T>(this T[,] grid, Point point, bool allowDiagonal = false)
+        public static IEnumerable<(Point Point, Directions Direction, T Value)> AdjecentWithDirection<T>(this Grid<T> grid, int x, int y, Func<(T Origin, T Target), bool> compare, Directions directions)
+        {
+            if ((directions & Directions.Up) > 0 && y > 0)
+            {
+                var point = new Point(x, y - 1);
+                var value = grid[point];
+                if (compare((grid[x, y], value)))
+                {
+                    yield return (point, Directions.Up, value);
+                }
+            }
+            if ((directions & Directions.Down) > 0 && y < grid.MaxY)
+            {
+                var point = new Point(x, y + 1);
+                var value = grid[point];
+                if (compare((grid[x, y], value)))
+                {
+                    yield return (point, Directions.Down, value);
+                }
+            }
+            if ((directions & Directions.Left) > 0 && x > 0)
+            {
+                var point = new Point(x - 1, y);
+                var value = grid[point];
+                if (compare((grid[x, y], value)))
+                {
+                    yield return (point, Directions.Left, value);
+                }
+            }
+            if ((directions & Directions.Right) > 0 && x < grid.MaxX)
+            {
+                var point = new Point(x + 1, y);
+                var value = grid[point];
+                if (compare((grid[x, y], value)))
+                {
+                    yield return (point, Directions.Right, value);
+                }
+            }
+            if ((directions & Directions.UpLeft) > 0 && x > 0 && y > 0)
+            {
+                var point = new Point(x - 1, y - 1);
+                var value = grid[point];
+                if (compare((grid[x, y], value)))
+                {
+                    yield return (point, Directions.UpLeft, value);
+                }
+            }
+            if ((directions & Directions.DownLeft) > 0 && x > 0 && y < grid.MaxY)
+            {
+                var point = new Point(x - 1, y + 1);
+                var value = grid[point];
+                if (compare((grid[x, y], value)))
+                {
+                    yield return (point, Directions.DownLeft, value);
+                }
+
+            }
+            if ((directions & Directions.UpRight) > 0 && x < grid.MaxX && y > 0)
+            {
+                var point = new Point(x + 1, y - 1);
+                var value = grid[point];
+                if (compare((grid[x, y], value)))
+                {
+                    yield return (point, Directions.UpRight, value);
+                }
+            }
+            if ((directions & Directions.DownRight) > 0 && x < grid.MaxX && y < grid.MaxY)
+            {
+                var point = new Point(x + 1, y + 1);
+                var value = grid[point];
+                if (compare((grid[x, y], value)))
+                {
+                    yield return (point, Directions.DownRight, value);
+                }
+            }
+
+        }
+
+        public static IEnumerable<Point> Adjacent<T>(this Grid<T> grid, Point point, bool allowDiagonal = false)
         {
             return Adjacent(grid, point.X, point.Y, allowDiagonal);
         }
 
-        public static IEnumerable<Point> Adjacent<T>(this T[,] grid, int x, int y, bool allowDiagonal = false)
+        public static IEnumerable<Point> Adjacent<T>(this Grid<T> grid, int x, int y, bool allowDiagonal = false)
         {
-            if (y > 0)
-            {
-                yield return new Point(x, y - 1);
-            }
-            if (y < grid.GetLength(1) - 1)
-            {
-                yield return new Point(x, y + 1);
-            }
-            if (x > 0)
-            {
-                yield return new Point(x - 1, y);
-            }
-            if (x < grid.GetLength(0) - 1)
-            {
-                yield return new Point(x + 1, y);
-            }
-
-            if (allowDiagonal)
-            {
-                if (x > 0 && y > 0)
-                {
-                    yield return new Point(x - 1, y - 1);
-                }
-                if (x > 0 && y < grid.GetLength(1) - 1)
-                {
-                    yield return new Point(x - 1, y + 1);
-                }
-                if (x < grid.GetLength(0) - 1 && y > 0)
-                {
-                    yield return new Point(x + 1, y - 1);
-                }
-                if (x < grid.GetLength(0) - 1 && y < grid.GetLength(1) - 1)
-                {
-                    yield return new Point(x + 1, y + 1);
-                }
-            }
+            return AdjecentWithDirection(grid, x, y, _ => true, allowDiagonal)
+                .Select(adjecent => adjecent.Point);
         }
 
-
-        public static IEnumerable<Point> Adjacent(this int[,] grid, int x, int y, int compare, bool allowDiagonal = false)
+        public static IEnumerable<Point> Adjacent<T>(this Grid<T> grid, int x, int y, Func<(T Origin, T Target), bool> compare, bool allowDiagonal = false)
         {
-            if (y > 0 && grid[x, y - 1] <= compare)
-            {
-                yield return new Point(x, y - 1);
-            }
-            if (y < grid.GetLength(1) - 1 && grid[x, y + 1] <= compare)
-            {
-                yield return new Point(x, y + 1);
-            }
-            if (x > 0 && grid[x - 1, y] <= compare)
-            {
-                yield return new Point(x - 1, y);
-            }
-            if (x < grid.GetLength(0) - 1 && grid[x + 1, y] <= compare)
-            {
-                yield return new Point(x + 1, y);
-            }
+            return AdjecentWithDirection(grid, x, y, compare, allowDiagonal)
+                .Select(adjecent => adjecent.Point);
+        }
 
-            if (allowDiagonal)
-            {
-                if (x > 0 && y > 0 && grid[x - 1, y - 1] <= compare)
-                {
-                    yield return new Point(x - 1, y - 1);
-                }
-                if (x > 0 && y < grid.GetLength(1) - 1 && grid[x - 1, y + 1] <= compare)
-                {
-                    yield return new Point(x - 1, y + 1);
-                }
-                if (x < grid.GetLength(0) - 1 && y > 0 && grid[x + 1, y - 1] <= compare)
-                {
-                    yield return new Point(x + 1, y - 1);
-                }
-                if (x < grid.GetLength(0) - 1 && y < grid.GetLength(1) - 1 && grid[x + 1, y + 1] <= compare)
-                {
-                    yield return new Point(x + 1, y + 1);
-                }
-            }
+        public static IEnumerable<Point> Adjacent(this Grid<int> grid, int x, int y, int compare, bool allowDiagonal = false)
+        {
+            return Adjacent(grid, x, y, (adjecent) => adjecent.Target <= compare, allowDiagonal);
         }
     }
 }

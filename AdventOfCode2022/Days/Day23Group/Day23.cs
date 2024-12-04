@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 using System.Drawing;
 using System.Text;
@@ -26,9 +27,9 @@ namespace AdventOfCode2022.Days
             grid = ShrinkGrid(grid);
 
             var free = 0L;
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     if (!(grid[i, j]))
                     {
@@ -52,14 +53,14 @@ namespace AdventOfCode2022.Days
             return round + 1;
         }
 
-        protected int ProcessRound(bool[,] grid, int round, out bool[,] newGrid)
+        protected int ProcessRound(Grid<bool> grid, int round, out Grid<bool> newGrid)
         {
             grid = ExpandGrid(grid);
             var start = round % 4;
             var moves = new Dictionary<Point, Point>();
-            for (int j = 1; j < grid.GetLength(1) - 1; j++)
+            for (int j = 1; j < grid.Height - 1; j++)
             {
-                for (int i = 1; i < grid.GetLength(0) - 1; i++)
+                for (int i = 1; i < grid.Width - 1; i++)
                 {
                     if (grid[i, j])
                     {
@@ -165,23 +166,23 @@ namespace AdventOfCode2022.Days
             return moves.Count;
         }
 
-        private bool[,] ShrinkGrid(bool[,] grid)
+        private Grid<bool> ShrinkGrid(Grid<bool> grid)
         {
             int top = 0;
             int bottom = 0;
             int left = 0;
             int right = 0;
-            for (int j = 0; j < grid.GetLength(1) / 2; j++)
+            for (int j = 0; j < grid.Height / 2; j++)
             {
                 var topFound = false;
                 var bottomFound = false;
-                for (int i = 0; i < grid.GetLength(0); i ++)
+                for (int i = 0; i < grid.Width; i ++)
                 {
                     if (grid[i, j])
                     {
                         topFound = true;
                     }
-                    if (grid[i, grid.GetLength(1) - 1 - j])
+                    if (grid[i, grid.Height - 1 - j])
                     {
                         bottomFound = true;
                     }
@@ -203,17 +204,17 @@ namespace AdventOfCode2022.Days
                     break;
                 }
             }
-            for (int i = 0; i < grid.GetLength(0) / 2; i++)
+            for (int i = 0; i < grid.Width / 2; i++)
             {
                 var leftFound = false;
                 var rightFound = false;
-                for (int j = 0; j < grid.GetLength(1); j++)
+                for (int j = 0; j < grid.Height; j++)
                 {
                     if (grid[i, j])
                     {
                         leftFound = true;
                     }
-                    if (grid[grid.GetLength(0) - 1 - i, j])
+                    if (grid[grid.Width - 1 - i, j])
                     {
                         rightFound = true;
                     }
@@ -236,13 +237,13 @@ namespace AdventOfCode2022.Days
                 }
             }
 
-            var newHeight = grid.GetLength(1) - top - bottom;
-            var newWidth = grid.GetLength(0) - left - right;
+            var newHeight = grid.Height - top - bottom;
+            var newWidth = grid.Width - left - right;
 
-            var result = new bool[newWidth, newHeight];
-            for (int j = 0; j < result.GetLength(1); j++)
+            var result = new Grid<bool>(newWidth, newHeight);
+            for (int j = 0; j < result.Height; j++)
             {
-                for (int i = 0; i < result.GetLength(0); i++)
+                for (int i = 0; i < result.Width; i++)
                 {
                     result[i , j] = grid[i + left, j + top];
                 }
@@ -250,19 +251,19 @@ namespace AdventOfCode2022.Days
             return result;
         }
 
-        private bool[,] ExpandGrid(bool[,] grid)
+        private Grid<bool> ExpandGrid(Grid<bool> grid)
         {
             var expand = false;
-            var max = Math.Max(grid.GetLength(0), grid.GetLength(1));
+            var max = Math.Max(grid.Width, grid.Height);
             for (int i = 0; i < max; i++) 
             {
-                if (i < grid.GetLength(0))
+                if (i < grid.Width)
                 {
-                    expand = expand || (grid[i, 0]) || (grid[i, grid.GetLength(1) - 1]);
+                    expand = expand || (grid[i, 0]) || (grid[i, grid.Height - 1]);
                 }
-                if (i < grid.GetLength(1))
+                if (i < grid.Height )
                 {
-                    expand = expand || (grid[0, i]) || (grid[grid.GetLength(0) - 1, i]);
+                    expand = expand || (grid[0, i]) || (grid[grid.Width - 1, i]);
                 }
                 if (expand)
                 {
@@ -272,10 +273,10 @@ namespace AdventOfCode2022.Days
 
             if (expand)
             {
-                var newGrid = new bool[grid.GetLength(0) + 2, grid.GetLength(1) + 2];
-                for (int j = 0; j < grid.GetLength(1); j++)
+                var newGrid = new Grid<bool>(grid.Width + 2, grid.Height + 2);
+                for (int j = 0; j < grid.Height; j++)
                 {
-                    for (int i = 0; i < grid.GetLength(0); i++)
+                    for (int i = 0; i < grid.Width; i++)
                     {
                         newGrid[i + 1, j + 1] = grid[i, j];
                     }

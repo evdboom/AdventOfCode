@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 using AdventOfCode2022.Days.Day12Group;
 
@@ -40,9 +41,9 @@ namespace AdventOfCode2022.Days
                     min = end.Distance;
                 }
 
-                for (int j = 0; j < grid.GetLength(1); j ++)
+                for (int j = 0; j < grid.Height; j ++)
                 {
-                    for (int i = 0; i < grid.GetLength(0); i++)
+                    for (int i = 0; i < grid.Width; i++)
                     {
                         grid[i, j].Distance = int.MaxValue;
                         grid[i, j].Visited = false;
@@ -54,12 +55,12 @@ namespace AdventOfCode2022.Days
             return min;
         }
 
-        private Node[,] GetGrid(string[] input, out List<Node> startingNodes, out Node end, params char[] starting)
+        private Grid<Node> GetGrid(string[] input, out List<Node> startingNodes, out Node end, params char[] starting)
         {
-            startingNodes = new();
+            startingNodes = [];
             end = new Node { Value = 1 };
-            var result = new Node[input[0].Length, input.Length];
-            var grid = new int[input[0].Length, input.Length];
+            var result = new Grid<Node>(input[0].Length, input.Length);
+            var grid = new Grid<int>(input[0].Length, input.Length);
             for (int j = 0; j < input.Length; j++)
             {
                 for (int i = 0; i < input[0].Length; i++)
@@ -87,9 +88,9 @@ namespace AdventOfCode2022.Days
                 }
             }
 
-            for (int j = 0; j < result.GetLength(1); j++)
+            for (int j = 0; j < result.Height; j++)
             {
-                for (int i = 0; i < result.GetLength(0); i++)
+                for (int i = 0; i < result.Width; i++)
                 {
                     var current = grid[i, j];
                     foreach (var p in grid.Adjacent(i, j, current + 1))

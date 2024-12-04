@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode2023.Days
@@ -44,13 +45,13 @@ namespace AdventOfCode2023.Days
                 });
         }
 
-        private List<(long X, long Y)> GetExpandedGalaxies(bool[,] grid, long expandFactor)
+        private List<(long X, long Y)> GetExpandedGalaxies(Grid<bool> grid, long expandFactor)
         {
             var galaxyFreeRows = new List<int>();
-            for (var j = 0; j < grid.GetLength(1); j++) 
+            for (var j = 0; j < grid.Height; j++) 
             {
                 var hasGalaxy = false;
-                for (var i = 0; i < grid.GetLength(0); i++)
+                for (var i = 0; i < grid.Width; i++)
                 {
                     if (grid[i, j])
                     {
@@ -64,10 +65,10 @@ namespace AdventOfCode2023.Days
                 }
             }
             var galaxyFreeColumns = new List<int>();
-            for (var i = 0; i < grid.GetLength(0); i++)
+            for (var i = 0; i < grid.Width; i++)
             {
                 var hasGalaxy = false;
-                for (var j = 0; j < grid.GetLength(1); j++)
+                for (var j = 0; j < grid.Height; j++)
                 {
                     if (grid[i, j])
                     {
@@ -82,9 +83,9 @@ namespace AdventOfCode2023.Days
             }
 
             var galaxies = new List<(long X, long Y)>();
-            for (var j = 0; j < grid.GetLength(1); j++)
+            for (var j = 0; j < grid.Height; j++)
             {
-                for (var i = 0; i < grid.GetLength(0); i++)
+                for (var i = 0; i < grid.Width; i++)
                 {
                     if (grid[i, j])
                     {

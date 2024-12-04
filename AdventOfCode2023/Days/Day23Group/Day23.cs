@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 using AdventOfCode2023.Days.Day23Group;
 using Microsoft.VisualBasic;
@@ -25,7 +26,7 @@ namespace AdventOfCode2023.Days
             };
             var end = new Intersection
             {
-                Location = new Point(grid.GetLength(0) - 2, grid.GetLength(1) - 1)
+                Location = new Point(grid.Width - 2, grid.Height - 1)
             };
             var intersections = new Dictionary<Point, Intersection>
             {
@@ -46,7 +47,7 @@ namespace AdventOfCode2023.Days
             };
             var end = new Intersection
             {
-                Location = new Point(grid.GetLength(0) - 2, grid.GetLength(1) - 1)
+                Location = new Point(grid.Width - 2, grid.Height - 1)
             };
             var intersections = new Dictionary<Point, Intersection>
             {
@@ -59,7 +60,7 @@ namespace AdventOfCode2023.Days
         }
 
 
-        private void MapIntersection(Intersection start, Point mapFrom, Dictionary<Point, Intersection> intersections, char[,] grid, bool slippySlopes)
+        private void MapIntersection(Intersection start, Point mapFrom, Dictionary<Point, Intersection> intersections, Grid<char> grid, bool slippySlopes)
         {
             var directions = grid
                 .Adjacent(start.Location)

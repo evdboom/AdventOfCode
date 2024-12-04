@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Enums;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 using System.Drawing;
 
@@ -28,9 +29,9 @@ namespace AdventOfCode2024.Days
             var grid = input.ToGrid(c => _mappings.TryGetValue(c, out var value) ? value : -1);
 
             var count = 0L;
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     if (grid[i, j] == _mappings['X'])
                     {
@@ -53,9 +54,9 @@ namespace AdventOfCode2024.Days
             var grid = input.ToGrid(c => _mappings.TryGetValue(c, out var value) ? value : -1);
 
             var count = 0L;
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     if (grid[i, j] == _mappings['A'] && GetX(grid, i , j))
                     {                        
@@ -67,45 +68,22 @@ namespace AdventOfCode2024.Days
             return count;
         }
 
-        private bool GetX(int[,] grid, int i, int j)
+        private bool GetX(Grid<int> grid, int i, int j)
         {
-            var diagonalDirections = new List<Direction>
-            {
-                Direction.UpLeft,
-                Direction.UpRight,
-                Direction.DownLeft,
-                Direction.DownRight
-            };
-
             var adjecents = grid
-                .AdjecentWithDirection(i, j, (compare) => compare.Target == _mappings['M'] || compare.Target == _mappings['S'], true)
-                .Where(adjecent => diagonalDirections.Contains(adjecent.Direction))
-                .Select(adjecent => new 
-                { 
-                    Value = grid[adjecent.Point.X, adjecent.Point.Y],
-                    adjecent.Direction 
-                })
+                .AdjecentWithDirection(i, j, (compare) => compare.Target == _mappings['M'] || compare.Target == _mappings['S'], Directions.Diagonal)
                 .ToList();
 
-            var upRight = adjecents.FirstOrDefault(adjecent => adjecent.Direction == Direction.UpRight);
-            var downRight = adjecents.FirstOrDefault(adjecent => adjecent.Direction == Direction.DownRight);
-            var upLeft = adjecents.FirstOrDefault(adjecent => adjecent.Direction == Direction.UpLeft);
-            var downLeft = adjecents.FirstOrDefault(adjecent => adjecent.Direction == Direction.DownLeft);
-            
-            var slash = 
-                upRight is not null && 
-                downLeft is not null &&
-                ((upRight.Value == _mappings['M'] && downLeft.Value == _mappings['S']) ||
-                (upRight.Value == _mappings['S'] && downLeft.Value == _mappings['M']));
-            var backSlash =
-                upLeft is not null &&
-                downRight is not null &&
-                ((upLeft.Value == _mappings['M'] && downRight.Value == _mappings['S']) ||
-                (upLeft.Value == _mappings['S'] && downRight.Value == _mappings['M']));
-            return slash && backSlash;
+            return 
+                adjecents
+                    .Where(adjecent => (Directions.Slash & adjecent.Direction) > 0)
+                    .Sum(adjecent => adjecent.Value) == _mappings['M'] + _mappings['S'] &&
+                adjecents
+                    .Where(adjecent => (Directions.Backslash & adjecent.Direction) > 0)
+                    .Sum(adjecent => adjecent.Value) == _mappings['M'] + _mappings['S'];
         }
 
-        private IEnumerable<bool> GetWords(int[,] grid, int i, int j)
+        private IEnumerable<bool> GetWords(Grid<int> grid, int i, int j)
         {
             foreach(var adjecent in grid.AdjecentWithDirection(i, j, (compare) => compare.Target == 1, true))
             {
@@ -113,14 +91,14 @@ namespace AdventOfCode2024.Days
             }                       
         }
 
-        private bool NextIsValid(int[,] grid, Point point, Direction direction)
+        private bool NextIsValid(Grid<int> grid, Point point, Directions direction)
         {
-            if (grid[point.X,point.Y] == EndOfWord)
+            if (grid[point] == EndOfWord)
             {
                 return true;
             }
 
-            if (grid.TryGetPointInDirection(point.X, point.Y, direction, (compare) => compare.Target == compare.Origin + 1, out var nextPoint))
+            if (grid.TryGetPointInDirection(point, direction, (compare) => compare.Target == compare.Origin + 1, out var nextPoint))
             {
                 return NextIsValid(grid, nextPoint.Value, direction);
             }

@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode2023.Days
@@ -27,21 +28,21 @@ namespace AdventOfCode2023.Days
                 .Max();
         }
 
-        private IEnumerable<(int X, int Y, char Direction)> GetStartOptions(char[,] grid)
+        private IEnumerable<(int X, int Y, char Direction)> GetStartOptions(Grid<char> grid)
         {
-            foreach (var optionX in Enumerable.Range(0, grid.GetLength(0)))
+            foreach (var optionX in Enumerable.Range(0, grid.Width))
             {
                 yield return (optionX, -1, 'D');
-                yield return (optionX, grid.GetLength(1), 'U');
+                yield return (optionX, grid.Height, 'U');
             }
-            foreach (var optionY in Enumerable.Range(0, grid.GetLength(1)))
+            foreach (var optionY in Enumerable.Range(0, grid.Height))
             {
                 yield return (-1, optionY, 'R');
-                yield return (grid.GetLength(0), optionY, 'L');
+                yield return (grid.Width, optionY, 'L');
             }
         }
 
-        private long GetEnergizedTiles(int startX, int startY, char startDirection, char[,] grid)
+        private long GetEnergizedTiles(int startX, int startY, char startDirection, Grid<char> grid)
         {
             var energized = new List<(int X, int Y, char Direction)>();
 
@@ -67,12 +68,12 @@ namespace AdventOfCode2023.Days
                 .Count() - 1;
         }
 
-        private IEnumerable<(int X, int Y, char Direction)> GetNextSteps((int X, int Y, char Direction) location, char[,] grid)
+        private IEnumerable<(int X, int Y, char Direction)> GetNextSteps((int X, int Y, char Direction) location, Grid<char> grid)
         {
             switch (location.Direction)
             {
                 case 'R':
-                    if (location.X < grid.GetLength(0) - 1)
+                    if (location.X < grid.Width - 1)
                     {
                         var newLocation = grid[location.X + 1, location.Y];
                         switch (newLocation)
@@ -138,7 +139,7 @@ namespace AdventOfCode2023.Days
                     }
                     break;
                 case 'D':
-                    if (location.Y < grid.GetLength(1) - 1)
+                    if (location.Y < grid.Height - 1)
                     {
                         var newLocation = grid[location.X, location.Y + 1];
                         switch (newLocation)

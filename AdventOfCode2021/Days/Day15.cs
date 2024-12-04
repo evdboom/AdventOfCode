@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 using AdventOfCode2021.Constructs.Day15;
 
@@ -27,22 +28,22 @@ namespace AdventOfCode2021.Days
             return Processday(largeGrid);
         }
 
-        private int[,] EnlargeGrid(int[,] grid, int factor)
+        private Grid<int> EnlargeGrid(Grid<int> grid, int factor)
         {
-            var oldWith = grid.GetLength(0);
-            var oldHeight = grid.GetLength(1);
+            var oldWith = grid.Width;
+            var oldHeight = grid.Height;
             var width = oldWith * factor;
             var heigth = oldHeight * factor;
 
-            var largeGrid = new int[width, heigth];
+            var largeGrid = new Grid<int>(width, heigth);
 
             for (int y = 0; y < factor; y++)
             {
                 for (int x = 0; x < factor; x++)
                 {
-                    for (int j = 0; j < grid.GetLength(1); j++)
+                    for (int j = 0; j < grid.Height; j++)
                     {
-                        for (int i = 0; i < grid.GetLength(0); i++)
+                        for (int i = 0; i < grid.Width; i++)
                         {
                             var value = grid[i, j] + y + x;
                             if (value > 9)
@@ -59,21 +60,21 @@ namespace AdventOfCode2021.Days
             return largeGrid;
         }
 
-        private long Processday(int[,] grid)
+        private long Processday(Grid<int> grid)
         {
-            var nodeGrid = new Node[grid.GetLength(0), grid.GetLength(1)];
-            for (int j = 0; j < grid.GetLength(1); j++)
+            var nodeGrid = new Node[grid.Width, grid.Height];
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     var newNode = new Node { X = i, Y = j, Value = grid[i, j] };
                     nodeGrid[i, j] = newNode;
                 }
             }
 
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     var current = nodeGrid[i, j];
                     foreach (var p in grid.Adjacent(i, j))
@@ -83,7 +84,7 @@ namespace AdventOfCode2021.Days
                 }
             }
 
-            Node wanted = nodeGrid[grid.GetLength(0) - 1, grid.GetLength(1) - 1];
+            Node wanted = nodeGrid[grid.Width - 1, grid.Height - 1];
             Node start = nodeGrid[0, 0];
             start.Distance = 0;
             start.Value = 0;

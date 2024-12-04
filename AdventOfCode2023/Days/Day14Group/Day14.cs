@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode2023.Days
@@ -63,12 +64,12 @@ namespace AdventOfCode2023.Days
             return CalculateLoad(grid);
         }
 
-        private long GetHash(bool?[,] grid)
+        private long GetHash(Grid<bool?> grid)
         {
             var result = 0L;
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     if (grid[i, j] ?? false)
                     {
@@ -79,7 +80,7 @@ namespace AdventOfCode2023.Days
             return result;
         }
 
-        private void Cycle(bool?[,] grid)
+        private void Cycle(Grid<bool?> grid)
         {
             MoveNorth(grid);
             MoveWest(grid);
@@ -87,12 +88,12 @@ namespace AdventOfCode2023.Days
             MoveEast(grid);
         }
 
-        private void MoveNorth(bool?[,] grid)
+        private void MoveNorth(Grid<bool?> grid)
         {
-            for (int i = 0; i < grid.GetLength(0); i++)
+            for (int i = 0; i < grid.Width; i++)
             {
                 var canMoveTo = 0;
-                for (int j = 0; j < grid.GetLength(1); j++)
+                for (int j = 0; j < grid.Height; j++)
                 {
                     var value = grid[i, j];
                     if (value.HasValue && !value.Value)
@@ -109,12 +110,12 @@ namespace AdventOfCode2023.Days
             }
         }
 
-        private void MoveWest(bool?[,] grid)
+        private void MoveWest(Grid<bool?> grid)
         {
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
                 var canMoveTo = 0;
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     var value = grid[i, j];
                     if (value.HasValue && !value.Value)
@@ -131,12 +132,12 @@ namespace AdventOfCode2023.Days
             }
         }
 
-        private void MoveSouth(bool?[,] grid)
+        private void MoveSouth(Grid<bool?> grid)
         {
-            for (int i = 0; i < grid.GetLength(0); i++)
+            for (int i = 0; i < grid.Width; i++)
             {
-                var canMoveTo = grid.GetLength(1) - 1;
-                for (int j = grid.GetLength(1) -1 ; j >= 0; j--)
+                var canMoveTo = grid.Height - 1;
+                for (int j = grid.Height -1 ; j >= 0; j--)
                 {
                     var value = grid[i, j];
                     if (value.HasValue && !value.Value)
@@ -153,12 +154,12 @@ namespace AdventOfCode2023.Days
             }
         }
 
-        private void MoveEast(bool?[,] grid)
+        private void MoveEast(Grid<bool?> grid)
         {
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
-                var canMoveTo = grid.GetLength(0) - 1;
-                for (int i = grid.GetLength(0) - 1; i >= 0; i--)
+                var canMoveTo = grid.Width - 1;
+                for (int i = grid.Width - 1; i >= 0; i--)
                 {
                     var value = grid[i, j];
                     if (value.HasValue && !value.Value)
@@ -175,13 +176,13 @@ namespace AdventOfCode2023.Days
             }
         }
 
-        private long CalculateLoad(bool?[,] grid)
+        private long CalculateLoad(Grid<bool?> grid)
         {
             var result = 0L;
-            var distance = grid.GetLength(0);
-            for (int j = 0; j < grid.GetLength(1); j++)
+            var distance = grid.Width;
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     if (grid[i, j] ?? false)
                     {

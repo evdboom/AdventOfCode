@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode2021.Days
@@ -29,10 +30,9 @@ namespace AdventOfCode2021.Days
         {
             var grid = input.ToIntGrid();
 
-            var size = grid.GetLength(0) * grid.GetLength(1);
             long flashes = 0;
             var steps = 0;
-            while (flashes < size)
+            while (flashes < grid.Size)
             {
                 steps++;
                 flashes = ProcessDay(grid);
@@ -41,12 +41,12 @@ namespace AdventOfCode2021.Days
             return steps;
         }
 
-        private long ProcessDay(int[,] grid)
+        private long ProcessDay(Grid<int> grid)
         {
             long flashes = 0;
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(1); i++)
+                for (int i = 0; i < grid.Height; i++)
                 {
                     grid[i, j]++;
                 }
@@ -56,9 +56,9 @@ namespace AdventOfCode2021.Days
             while (any)
             {
                 any = false;
-                for (int j = 0; j < grid.GetLength(1); j++)
+                for (int j = 0; j < grid.Height; j++)
                 {
-                    for (int i = 0; i < grid.GetLength(1); i++)
+                    for (int i = 0; i < grid.Height; i++)
                     {
                         if (grid[i, j] > 9)
                         {

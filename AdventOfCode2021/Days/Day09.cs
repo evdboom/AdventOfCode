@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode2021.Days
@@ -15,14 +16,14 @@ namespace AdventOfCode2021.Days
 
         protected override long ProcessPartOne(string[] input)
         {
-            var grid = GenerateGrid(input);
+            var grid = input.ToIntGrid();
 
             return GetLowPoints(grid).Sum(p => p.Value + 1);
         }
 
         protected override long ProcessPartTwo(string[] input)
         {
-            var grid = GenerateGrid(input);
+            var grid = input.ToIntGrid();
             var basins = GetLowPoints(grid)
                 .Select(point => GetBasinSize(point.X, point.Y, grid))
                 .OrderByDescending(b => b)
@@ -32,7 +33,7 @@ namespace AdventOfCode2021.Days
             return basins;
         }
 
-        private int GetBasinSize(int x, int y, int[,] grid)
+        private int GetBasinSize(int x, int y, Grid<int> grid)
         {
             var points = new List<(int X, int Y)>();
             GetPoints(x, y, grid, ref points);
@@ -40,7 +41,7 @@ namespace AdventOfCode2021.Days
             return points.Count;
         }
 
-        private void GetPoints(int x, int y, int[,] grid, ref List<(int X, int Y)> points)
+        private void GetPoints(int x, int y, Grid<int> grid, ref List<(int X, int Y)> points)
         {
             if (!points.Any(p => p.X == x && p.Y == y))
             {
@@ -52,11 +53,11 @@ namespace AdventOfCode2021.Days
             }
         }
 
-        private IEnumerable<(int X, int Y, int Value)> GetLowPoints(int[,] grid)
+        private IEnumerable<(int X, int Y, int Value)> GetLowPoints(Grid<int> grid)
         {
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     if (!grid.Adjacent(i, j, grid[i, j]).Any())
                     {
@@ -64,24 +65,6 @@ namespace AdventOfCode2021.Days
                     }
                 }
             }
-        }
-
-        private int[,] GenerateGrid(string[] input)
-        {
-            var width = input[0].Length;
-            var height = input.Length;
-
-            var result = new int[width, height];
-
-            for (var j = 0; j < height; j++)
-            {
-                for (int i = 0; i < width; i++)
-                {
-                    result[i, j] = int.Parse($"{input[j][i]}");
-                }
-            }
-
-            return result;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
+using AdventOfCode.Shared.Grid;
 using AdventOfCode.Shared.Services;
 using System.Diagnostics.CodeAnalysis;
 
@@ -63,14 +64,14 @@ namespace AdventOfCode2023.Days
                 });
         }
 
-        private bool TryFindMirrorColumn(bool[,] grid, [NotNullWhen(true)] out int? position, bool allowSmudge = false)
+        private bool TryFindMirrorColumn(Grid<bool> grid, [NotNullWhen(true)] out int? position, bool allowSmudge = false)
         {
             List<List<bool>> columns = new();
-            for (int i = 0; i < grid.GetLength(0); i++)
+            for (int i = 0; i < grid.Width; i++)
             {
                 var column = new List<bool>();
                 columns.Add(column);
-                for (int j = 0; j < grid.GetLength(1); j++)
+                for (int j = 0; j < grid.Height; j++)
                 {
                     column.Add(grid[i, j]);
                 }
@@ -89,14 +90,14 @@ namespace AdventOfCode2023.Days
             return true;
         }
 
-        private int FindMirrorRow(bool[,] grid, bool allowSmudge = false)
+        private int FindMirrorRow(Grid<bool> grid, bool allowSmudge = false)
         {
             List<List<bool>> rows = new();
-            for (int j = 0; j < grid.GetLength(1); j++)
+            for (int j = 0; j < grid.Height; j++)
             {
                 var row = new List<bool>();
                 rows.Add(row);
-                for (int i = 0; i < grid.GetLength(0); i++)
+                for (int i = 0; i < grid.Width; i++)
                 {
                     row.Add(grid[i, j]);
                 }
