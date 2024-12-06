@@ -12,19 +12,25 @@ namespace AdventOfCode.Shared.Extensions
             return ToGrid(input, (c) => int.Parse($"{c}"));
         }
 
-        public static Grid<T> ToGrid<T>(this string[] input, Func<char, T> parse)
+        public static Grid<T> ToGrid<T>(this string[] input, Func<char, T> parse, Func<char, bool> findStart, out Point? start)
         {
             var grid = new Grid<T>(input[0].Length, input.Length);
-
-            for (int j = 0; j < grid.Height; j++)
+            start = null;
+            foreach (var cell in grid)
             {
-                for (int i = 0; i < grid.Width; i++)
+                var value = input[cell.Point.Y][cell.Point.X];
+                grid[cell.Point] = parse(value);
+                if (findStart(value))
                 {
-                    grid[i, j] = parse(input[j][i]);
+                    start = cell.Point;
                 }
-            }
-
+            }                
             return grid;
+        }
+
+        public static Grid<T> ToGrid<T>(this string[] input, Func<char, T> parse)
+        {
+            return ToGrid(input, parse, _ => false, out _);
         }
         
         public static IEnumerable<Point> Adjacent(this Point point, bool allowDiagonal = false)
@@ -43,9 +49,27 @@ namespace AdventOfCode.Shared.Extensions
             }
         }
 
+        public static void Replace<T>(this Grid<T> grid, Func<GridCell<T>, T> replace)
+        {
+            foreach (var cell in grid)
+            {
+                grid[cell.Point] = replace(cell);
+            }
+        }
+
+        public static bool TryGetPointInDirection<T>(this Grid<T> grid, Point point, Directions direction, [NotNullWhen(true)] out Point? target)
+        {
+            return TryGetPointInDirection(grid, point, direction, _ => true, out target);
+        }
+
         public static bool TryGetPointInDirection<T>(this Grid<T> grid, Point point, Directions direction, Func<(T Origin, T Target), bool> compare, [NotNullWhen(true)] out Point? target)
         {
             return TryGetPointInDirection(grid, point.X, point.Y, direction, compare, out target);
+        }
+
+        public static bool TryGetPointInDirection<T>(this Grid<T> grid, int x, int y, Directions direction, [NotNullWhen(true)] out Point? target)
+        {
+            return TryGetPointInDirection(grid, x, y, direction, _ => true, out target);
         }
 
         public static bool TryGetPointInDirection<T>(this Grid<T> grid, int x, int y, Directions direction, Func<(T Origin, T Target), bool> compare, [NotNullWhen(true)] out Point? target)

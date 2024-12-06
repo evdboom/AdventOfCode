@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Drawing;
+using System.Text;
 
 namespace AdventOfCode.Shared.Grid
 {
@@ -38,6 +39,31 @@ namespace AdventOfCode.Shared.Grid
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            var stringbuilder = new StringBuilder();
+            var row = 0;
+            foreach (var cell in this)
+            {
+                if (cell.Point.Y != row)
+                {
+                    stringbuilder.AppendLine();
+                    row = cell.Point.Y;
+                }
+
+                var value = cell.Value?.ToString();
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    stringbuilder.Append(value[0]);
+                }
+                else
+                {
+                    stringbuilder.Append(' ');
+                }                    
+            }
+            return stringbuilder.ToString();
         }
     }
 }
