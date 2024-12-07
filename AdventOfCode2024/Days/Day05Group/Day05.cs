@@ -36,61 +36,42 @@ namespace AdventOfCode2024.Days
         }
 
         private IEnumerable<int> Reorder(Dictionary<int, HashSet<int>> pages, List<int> order)
-        {    
+        {
             HashSet<int> returned = [];
-            HashSet<int> skipped = [];
-            bool itemAdded = false;
-            for (int i = 0; i < order.Count; i++)
-            {
-                if (itemAdded)
-                {
-                    foreach (var skip in skipped)
-                    {
-                        var canReturnSkipped = order
-                            .Intersect(pages.TryGetValue(skip, out var skippedValue) ? skippedValue : [])
-                            .All(returned.Contains);
-                        if (canReturnSkipped)
-                        {
-                            itemAdded = true;
-                            skipped.Remove(skip);
-                            returned.Add(skip);
-                            yield return skip;
-                        }
-                    }
-                }
+            PriorityQueue<(int Page, List<int> Required), int> skipped = new();
 
-                var page = order[i];
-                var canReturn = order
+            foreach(var page in order)
+            {
+                var inOrder = order
                     .Intersect(pages.TryGetValue(page, out var value) ? value : [])
+                    .ToList();
+                var canReturn = inOrder
                     .All(returned.Contains);
                 if (canReturn)
                 {
-                    itemAdded = true;
                     returned.Add(page);
                     yield return page;
                 }
                 else
                 {
-                    itemAdded = false;
-                    skipped.Add(page);
-                }
-            }    
-            
-            while (skipped.Count > 0)
-            {
-                foreach (var skip in skipped)
-                {
-                    var canReturn = order
-                        .Intersect(pages.TryGetValue(skip, out var skippedValue) ? skippedValue : [])
-                        .All(returned.Contains);
-                    if (canReturn)
-                    {
-                        skipped.Remove(skip);
-                        returned.Add(skip);
-                        yield return skip;
-                    }
+                    skipped.Enqueue((page, inOrder), inOrder.Count);
                 }
             }
+
+            while (skipped.TryDequeue(out var skip, out int priority))
+            {                
+                if (skip.Required.All(returned.Contains))
+                {
+                    returned.Add(skip.Page);
+                    yield return skip.Page;
+                }
+                else
+                {
+                    // should not happen, but a fallback
+                    skipped.Enqueue(skip, priority + 2);
+                }
+            }
+
         }
 
         private IEnumerable<List<int>> ValidateOrders(Dictionary<int, HashSet<int>> pages, List<List<int>> orders, bool valid)

@@ -14,14 +14,13 @@ fn main() {
 }
 
 fn process_part_one(input: &str) -> u32 {
-    let (blocks_by_column, blocks_by_row, start, (width, height)) = get_blocks(input);
+    let (blocks, start, (width, height)) = get_blocks(input);
     let mut visited = HashSet::new();
     visited.insert(start);
 
     let mut direction = '^';
     let mut position = start.clone();
-    while let Some(block) = get_next_block(&blocks_by_column, &blocks_by_row, &direction, &position)
-    {
+    while let Some(block) = get_next_block(&blocks, &direction, &position) {
         let distance = position.0.abs_diff(block.0) + position.1.abs_diff(block.1);
         for _ in 1..distance {
             position = match direction {
@@ -56,83 +55,100 @@ fn process_part_one(input: &str) -> u32 {
 }
 
 fn process_part_two(input: &str) -> u32 {
-    2
+    let (mut blocks, start, _) = get_blocks(input);
+    let mut visited = HashMap::new();
+
+    let mut direction = '^';
+    let mut position = start.clone();
+    while let Some(block) = get_next_block(&blocks, &direction, &position) {
+        let distance = position.0.abs_diff(block.0) + position.1.abs_diff(block.1);
+        for _ in 1..distance {
+            position = match direction {
+                '^' => (position.0, position.1 - 1),
+                '>' => (position.0 + 1, position.1),
+                'v' => (position.0, position.1 + 1),
+                '<' => (position.0 - 1, position.1),
+                _ => panic!("Invalid direction"),
+            };
+            visited.entry(position).or_insert(direction);
+        }
+        direction = turn_right(direction);
+    }
+    visited.remove(&start);
+
+    let mut valid_blocks = HashSet::new();
+    for option in visited {
+        blocks.insert(option.0);
+        position = get_step_back(&(option.0 .0, option.0 .1, option.1));
+        direction = turn_right(option.1);
+        let mut visited_with_direction = HashSet::new();
+        while let Some(block) = get_next_block(&blocks, &direction, &position) {
+            position = get_step_back(&(block.0, block.1, direction));
+            if !visited_with_direction.insert((position.0, position.1, direction)) {
+                valid_blocks.insert(option.0);
+                break;
+            }
+            direction = turn_right(direction);
+        }
+
+        blocks.remove(&(option.0));
+    }
+
+    valid_blocks.len() as u32
+}
+
+fn get_step_back(option: &(usize, usize, char)) -> (usize, usize) {
+    match option.2 {
+        '^' => (option.0, option.1 + 1),
+        '>' => (option.0 - 1, option.1),
+        'v' => (option.0, option.1 - 1),
+        '<' => (option.0 + 1, option.1),
+        _ => panic!("Invalid direction"),
+    }
 }
 
 fn get_next_block(
-    blocks_by_column: &HashMap<usize, Vec<usize>>,
-    blocks_by_row: &HashMap<usize, Vec<usize>>,
+    blocks: &HashSet<(usize, usize)>,
     direction: &char,
     position: &(usize, usize),
 ) -> Option<(usize, usize)> {
     match direction {
-        '^' => {
-            if let Some(column) = blocks_by_column.get(&position.0) {
-                column
-                    .iter()
-                    .rev()
-                    .map(|&row| (position.0, row))
-                    .find(|row| row.1 < position.1)
-            } else {
-                None
-            }
-        }
-        'v' => {
-            if let Some(column) = blocks_by_column.get(&position.0) {
-                column
-                    .iter()
-                    .map(|&row| (position.0, row))
-                    .find(|row| row.1 > position.1)
-            } else {
-                None
-            }
-        }
-        '>' => {
-            if let Some(row) = blocks_by_row.get(&position.1) {
-                row.iter()
-                    .map(|&column| (column, position.1))
-                    .find(|column| column.0 > position.0)
-            } else {
-                None
-            }
-        }
-        '<' => {
-            if let Some(row) = blocks_by_row.get(&position.1) {
-                row.iter()
-                    .rev()
-                    .map(|&column| (column, position.1))
-                    .find(|column| column.0 < position.0)
-            } else {
-                None
-            }
-        }
+        '^' => blocks
+            .iter()
+            .filter(|block| block.0 == position.0 && block.1 < position.1)
+            .max_by(|a, b| a.1.cmp(&b.1))
+            .copied(),
+        'v' => blocks
+            .iter()
+            .filter(|block| block.0 == position.0 && block.1 > position.1)
+            .min_by(|a, b| a.1.cmp(&b.1))
+            .copied(),
+        '>' => blocks
+            .iter()
+            .filter(|block| block.1 == position.1 && block.0 > position.0)
+            .min_by(|a, b| a.0.cmp(&b.0))
+            .copied(),
+        '<' => blocks
+            .iter()
+            .filter(|block| block.1 == position.1 && block.0 < position.0)
+            .max_by(|a, b| a.0.cmp(&b.0))
+            .copied(),
         _ => None,
     }
 }
 
-fn get_blocks(
-    input: &str,
-) -> (
-    HashMap<usize, Vec<usize>>,
-    HashMap<usize, Vec<usize>>,
-    (usize, usize),
-    (usize, usize),
-) {
-    let mut result_by_column = HashMap::new();
-    let mut result_by_row = HashMap::new();
+fn get_blocks(input: &str) -> (HashSet<(usize, usize)>, (usize, usize), (usize, usize)) {
+    let mut result = HashSet::new();
     let mut start: (usize, usize) = (0, 0);
     let mut grid_size: (usize, usize) = (0, 0);
     input.lines().enumerate().for_each(|(row, line)| {
+        if grid_size.0 == 0 {
+            grid_size.0 = line.len();
+        }
         grid_size.1 = row + 1;
-        grid_size.0 = line.len();
         line.chars().enumerate().for_each(|(column, char)| {
             if char == '#' {
-                let column_entry = result_by_column.entry(column).or_insert_with(Vec::new);
-                column_entry.push(row);
-                column_entry.sort();
-                let row_entry = result_by_row.entry(row).or_insert_with(Vec::new);
-                row_entry.push(column);
-                row_entry.sort();
+                result.insert((column, row));
             } else if char == '^' {
                 start.0 = column;
                 start.1 = row;
@@ -140,7 +156,7 @@ fn get_blocks(
         });
     });
 
-    (result_by_column, result_by_row, start, grid_size)
+    (result, start, grid_size)
 }
 
 fn turn_right(direction: char) -> char {

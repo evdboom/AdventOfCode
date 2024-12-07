@@ -6,6 +6,7 @@ namespace AdventOfCode.Shared.Days
     public class DayRunner : IDayRunner
     {
         private const string All = "All";
+        private const string Loop = "Loop";
 
         private readonly IDictionary<int, IDay> _days;
         private readonly IScreenWriter _writer;
@@ -22,14 +23,33 @@ namespace AdventOfCode.Shared.Days
             bool running = true;
             while (running)
             {
-                _writer.WriteLine($"Which day would you like to process? ({_days.Keys.Min()}-{_days.Keys.Max()} or '{All}' for a complete run)");
+                _writer.WriteLine($"Which day would you like to process? ({_days.Keys.Min()}-{_days.Keys.Max()} use '{All}' for a complete run, or '{Loop}' to loop a single day)");
                 var selectedDay = 0;
+                var loopDay = 0;
                 while (selectedDay == 0)
                 {
                     var input = _writer.ReadLine();
                     if (string.Equals(input, All, StringComparison.OrdinalIgnoreCase))
                     {
                         selectedDay = -1;
+                    }
+                    else if (string.Equals(input, Loop, StringComparison.OrdinalIgnoreCase))
+                    {
+                        selectedDay = -1;
+                        _writer.WriteLine($"Enter a day (from {_days.Min(d => d.Key)} to {_days.Max(d => d.Key)}) to loop");
+                        while (loopDay == 0)
+                        {
+                            input = _writer.ReadLine();
+                            if (int.TryParse(input, out int day) && day >= _days.Min(d => d.Key) && day <= _days.Max(d => d.Key))
+                            {
+                                loopDay = day;
+                            }
+                            else
+                            {
+                                _writer.WriteLine($"Enter a valid day (from {_days.Min(d => d.Key)} to {_days.Max(d => d.Key)})");
+                            }
+                        }
+                        
                     }
                     else if (!int.TryParse(input, out int day) || day < _days.Min(d => d.Key) || day > _days.Max(d => d.Key))
                     {
@@ -57,7 +77,7 @@ namespace AdventOfCode.Shared.Days
                             _writer.WriteLine("Please enter a positive integer");
                         }
                     }
-                    await ProcessAllAsync(runs);
+                    await ProcessLoopAsync(runs, loopDay);
                 }
                 else
                 {
@@ -75,12 +95,15 @@ namespace AdventOfCode.Shared.Days
             }
         }
 
-        async Task ProcessAllAsync(int runs)
+        async Task ProcessLoopAsync(int runs, int singleDay = 0)
         {
             var memory = GC.GetTotalMemory(true);
-            foreach (var day in _days)
+            var days = singleDay == 0
+                ? _days.Values
+                : [_days[singleDay]];
+            foreach (var day in days)
             {
-                await ProcessDayAsync(day.Value, runs);
+                await ProcessDayAsync(day, runs);
             }
             _writer.NewLine();
             var newMemory = GC.GetTotalMemory(false) - memory;
