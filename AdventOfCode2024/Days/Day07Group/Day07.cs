@@ -1,10 +1,5 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2024.Days
 {
@@ -53,7 +48,7 @@ namespace AdventOfCode2024.Days
             }
 
             var sum = current + parts[index];
-            var mul = current * parts[index];          
+            var mul = current * parts[index];
 
             if (sum <= target)
             {
