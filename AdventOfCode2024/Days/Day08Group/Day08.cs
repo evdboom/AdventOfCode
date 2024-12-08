@@ -99,7 +99,6 @@ namespace AdventOfCode2024.Days
             {
                 yield return antennnas[antennnas.Count - 1];
             }
-
         }
     }
 }
