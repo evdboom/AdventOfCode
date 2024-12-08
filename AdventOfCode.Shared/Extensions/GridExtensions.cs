@@ -28,6 +28,11 @@ namespace AdventOfCode.Shared.Extensions
             return grid;
         }
 
+        public static Grid<char> ToGrid(this string[] input)
+        {
+            return ToGrid(input, c => c);
+        }
+
         public static Grid<T> ToGrid<T>(this string[] input, Func<char, T> parse)
         {
             return ToGrid(input, parse, _ => false, out _);

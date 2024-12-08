@@ -55,7 +55,7 @@ fn process_part_one(input: &str) -> u32 {
 }
 
 fn process_part_two(input: &str) -> u32 {
-    let (mut blocks, start, _) = get_blocks(input);
+    let (mut blocks, start, (width, height)) = get_blocks(input);
     let mut visited = HashMap::new();
 
     let mut direction = '^';
@@ -73,6 +73,23 @@ fn process_part_two(input: &str) -> u32 {
             visited.entry(position).or_insert(direction);
         }
         direction = turn_right(direction);
+    }
+    let distance_to_edge = match direction {
+        '^' => position.1,
+        '>' => width - position.0 - 1,
+        'v' => height - position.1 - 1,
+        '<' => position.0,
+        _ => panic!("Invalid direction"),
+    };
+    for _ in 0..distance_to_edge {
+        position = match direction {
+            '^' => (position.0, position.1 - 1),
+            '>' => (position.0 + 1, position.1),
+            'v' => (position.0, position.1 + 1),
+            '<' => (position.0 - 1, position.1),
+            _ => panic!("Invalid direction"),
+        };
+        visited.entry(position).or_insert(direction);
     }
     visited.remove(&start);
 
