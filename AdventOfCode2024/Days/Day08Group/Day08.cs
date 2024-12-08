@@ -2,7 +2,6 @@
 using AdventOfCode.Shared.Extensions;
 using AdventOfCode.Shared.Services;
 using System.Drawing;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AdventOfCode2024.Days
 {
@@ -58,30 +57,6 @@ namespace AdventOfCode2024.Days
             return point.X >= 0 && point.X <= mapMaxX && point.Y >= 0 && point.Y <= mapMaxY;
         }
 
-        private void UpdatePoints(ref Point pointOne, ref Point pointTwo, Point current, Point next, int distanceX, int distanceY)
-        {
-            if (current.X < next.X)
-            {
-                pointOne.X -= distanceX;
-                pointTwo.X += distanceX;
-            }
-            else
-            {
-                pointOne.X += distanceX;
-                pointTwo.X -= distanceX;
-            }
-            if (current.Y < next.Y)
-            {
-                pointOne.Y -= distanceY;
-                pointTwo.Y += distanceY;
-            }
-            else
-            {
-                pointOne.Y += distanceY;
-                pointTwo.Y -= distanceY;
-            }
-        }
-
         private IEnumerable<Point> GetNodes(List<Point> antennnas, int mapMaxX, int mapMaxY, bool all = false)
         {
             for (int i = 0; i < antennnas.Count - 1; i++)
@@ -90,51 +65,41 @@ namespace AdventOfCode2024.Days
                 if (all)
                 {
                     yield return current;
-                }            
+                }
 
                 for (int j = i + 1; j < antennnas.Count; j++)
-                {                    
+                {
                     var next = antennnas[j];
-                    var distanceX = Math.Abs(current.X - next.X);
-                    var distanceY = Math.Abs(current.Y - next.Y);
+                    var distanceX = current.X - next.X;
+                    var distanceY = current.Y - next.Y;
 
                     var pointOne = new Point(current.X, current.Y);
                     var pointTwo = new Point(next.X, next.Y);
-
-                    UpdatePoints(ref pointOne, ref pointTwo, current, next, distanceX, distanceY);
-
-                    if (PointOnMap(pointOne, mapMaxX, mapMaxY))
+                    do
                     {
-                        yield return pointOne;
-                    }
-                    if (PointOnMap(pointTwo, mapMaxX, mapMaxY))
-                    {
-                        yield return pointTwo;
-                    }
+                        pointOne.X += distanceX;
+                        pointOne.Y += distanceY;
+                        pointTwo.X -= distanceX;
+                        pointTwo.Y -= distanceY;
 
-                    if (all)
-                    {
-                        while (PointOnMap(pointOne, mapMaxX, mapMaxY) || PointOnMap(pointTwo, mapMaxX, mapMaxY))
+                        if (PointOnMap(pointOne, mapMaxX, mapMaxY))
                         {
-                            UpdatePoints(ref pointOne, ref pointTwo, current, next, distanceX, distanceY);
-
-                            if (PointOnMap(pointOne, mapMaxX, mapMaxY))
-                            {
-                                yield return pointOne;
-                            }
-                            if (PointOnMap(pointTwo, mapMaxX, mapMaxY))
-                            {
-                                yield return pointTwo;
-                            }
+                            yield return pointOne;
+                        }
+                        if (PointOnMap(pointTwo, mapMaxX, mapMaxY))
+                        {
+                            yield return pointTwo;
                         }
                     }
-                }
-
-                if (all)
-                {
-                    yield return antennnas[antennnas.Count - 1];
+                    while (all && (PointOnMap(pointOne, mapMaxX, mapMaxY) || PointOnMap(pointTwo, mapMaxX, mapMaxY)));
                 }
             }
+
+            if (all)
+            {
+                yield return antennnas[antennnas.Count - 1];
+            }
+
         }
     }
 }
