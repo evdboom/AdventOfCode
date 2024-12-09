@@ -141,5 +141,13 @@ namespace AdventOfCode2024.Tests
                 "............",
             ];            
         }
+
+        protected override string[] Day09()
+        {
+            return            
+            [
+                "2333133121414131402",
+            ];            
+        }
     }
 }
