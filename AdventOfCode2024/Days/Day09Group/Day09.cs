@@ -151,12 +151,5 @@ namespace AdventOfCode2024.Days
             }
             return result;
         }
-
-        private List<(int Index, bool IsFile, int Size)> GetHardDiscContents(string input)
-        {
-            return input
-                .Select((c, i) => (i / 2, i % 2 == 0, c - '0'))
-                .ToList();
-        }
     }
 }
