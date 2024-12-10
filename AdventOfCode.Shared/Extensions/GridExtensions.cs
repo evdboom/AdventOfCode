@@ -207,7 +207,11 @@ namespace AdventOfCode.Shared.Extensions
                     yield return (point, Directions.DownRight, value);
                 }
             }
+        }
 
+        public static IEnumerable<Point> Adjacent<T>(this Grid<T> grid, Point point, Func<(T Origin, T Target), bool> compare, bool allowDiagonal = false)
+        {
+            return Adjacent(grid, point.X, point.Y, compare, allowDiagonal);
         }
 
         public static IEnumerable<Point> Adjacent<T>(this Grid<T> grid, Point point, bool allowDiagonal = false)
