@@ -7,46 +7,39 @@ namespace AdventOfCode2024.Days
     {
         public override int DayNumber => 11;
 
-        private Dictionary<long, Dictionary<int, long>> _cache = [];
-
         protected override long ProcessPartOne(string[] input)
         {
             return input[0]
                 .Split(' ')
-                .Select(long.Parse)
-                .Aggregate(0L, (acc, stone) => acc + PerformSteps(stone, 25));
+                .Select(stone => PerformSteps(long.Parse(stone), 25, []))
+                .Sum();
 
         }
 
         protected override long ProcessPartTwo(string[] input)
-        {
+        {            
             return input[0]
                 .Split(' ')
-                .Select(long.Parse)
-                .Aggregate(0L, (acc, stone) => acc + PerformSteps(stone, 75));
+                .Select(stone => PerformSteps(long.Parse(stone), 75, []))
+                .Sum();                
         }
 
-        private long PerformSteps(long stone, int stepCount)
+        private long PerformSteps(long stone, int stepCount, Dictionary<(long Stone, int Step), long> cache)
         {
             if (stepCount == 0)
             {
                 return 1;
             }
-            else if (_cache.TryGetValue(stone, out var cache) && cache.TryGetValue(stepCount, out var cachedResult))
+            else if (cache.TryGetValue((stone, stepCount), out var cachedResult))
             {
                 return cachedResult;
             }
 
             var result = Blink(stone)
-                .Select(next => PerformSteps(next, stepCount - 1))
+                .Select(next => PerformSteps(next, stepCount - 1, cache))
                 .Sum();
-            if (!_cache.TryGetValue(stone, out var innerCache))
-            {
-                innerCache = new Dictionary<int, long>();
-                _cache[stone] = innerCache;
-            }
 
-            innerCache[stepCount] = result;
+            cache[(stone, stepCount)] = result;
             return result;
         }
 
