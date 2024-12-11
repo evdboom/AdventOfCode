@@ -164,5 +164,13 @@ namespace AdventOfCode2024.Tests
                 "10456732",                
             ];            
         }
+
+        protected override string[] Day11()
+        {
+            return            
+            [
+                "125 17",
+            ];            
+        }
     }
 }
