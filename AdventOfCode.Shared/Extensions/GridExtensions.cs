@@ -37,7 +37,24 @@ namespace AdventOfCode.Shared.Extensions
         {
             return ToGrid(input, parse, _ => false, out _);
         }
-        
+
+        public static Point GetAdjacentInDirection(this Point point, Directions direction)
+        {
+            return direction switch
+            { 
+                Directions.Up => point with { Y = point.Y - 1 },
+                Directions.Down => point with { Y = point.Y + 1 },
+                Directions.Left => point with { X = point.X - 1 },
+                Directions.Right => point with { X = point.X + 1 },
+                Directions.UpLeft => point with { X = point.X - 1, Y = point.Y - 1 },
+                Directions.UpRight => point with { X = point.X + 1, Y = point.Y - 1 },
+                Directions.DownLeft => point with { X = point.X - 1, Y = point.Y + 1 },
+                Directions.DownRight => point with { X = point.X + 1, Y = point.Y + 1 },
+                _ => throw new ArgumentException("Invalid Direction", nameof(direction)),
+            };
+
+        }
+
         public static IEnumerable<Point> Adjacent(this Point point, bool allowDiagonal = false)
         {
             yield return point with { X = point.X + 1 };
@@ -115,7 +132,7 @@ namespace AdventOfCode.Shared.Extensions
             return AdjecentWithDirection(grid, x, y, _ => true, allowDiagonal);
         }
 
-        public static IEnumerable<(Point Point, Directions Direction, T Value)> AdjecentWithDirection<T>(this Grid<T> grid, Point point, Func<(T Origin, T Target), bool> compare, bool allowDiagonal = false)
+        public static IEnumerable<(Point Point, Directions Direction, T Value)> AdjacentWithDirection<T>(this Grid<T> grid, Point point, Func<(T Origin, T Target), bool> compare, bool allowDiagonal = false)
         {
             return AdjecentWithDirection(grid, point.X, point.Y, compare, allowDiagonal);
         }

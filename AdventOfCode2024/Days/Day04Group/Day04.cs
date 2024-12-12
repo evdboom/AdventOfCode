@@ -61,7 +61,7 @@ namespace AdventOfCode2024.Days
 
         private IEnumerable<bool> GetWords(Grid<int> grid, Point point)
         {
-            foreach(var adjecent in grid.AdjecentWithDirection(point, (compare) => compare.Target == 1, true))
+            foreach(var adjecent in grid.AdjacentWithDirection(point, (compare) => compare.Target == 1, true))
             {
                 yield return NextIsValid(grid, adjecent.Point, adjecent.Direction);
             }                       

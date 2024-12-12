@@ -172,5 +172,22 @@ namespace AdventOfCode2024.Tests
                 "125 17",
             ];            
         }
+
+        protected override string[] Day12()
+        {
+            return               
+            [
+                "RRRRIICCFF",
+                "RRRRIICCCF",
+                "VVRRRCCFFF",
+                "VVRCCCJFFF",
+                "VVVVCJJCFE",
+                "VVIVCCJJEE",
+                "VVIIICJJEE",
+                "MIIIIIJJEE",
+                "MIIISIJEEE",
+                "MMMISSJEEE"
+            ];                
+        }
     }
 }
