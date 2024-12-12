@@ -3,7 +3,7 @@
 use std::hash::{self, Hash};
 use std::ops::Add;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq)]
 pub struct Point {
     pub x: usize,
     pub y: usize,
@@ -27,9 +27,22 @@ impl Add for Point {
     }
 }
 
+impl PartialEq for Point {
+    fn eq(&self, other: &Self) -> bool {
+        self.x == other.x && self.y == other.y
+    }
+}
+
 impl Point {
     pub fn new(x: usize, y: usize) -> Self {
         Point { x, y }
+    }
+
+    pub fn is_adjacent(&self, other: &Point) -> bool {
+        self.left() == Some(*other)
+            || self.right() == Some(*other)
+            || self.up() == Some(*other)
+            || self.down() == Some(*other)
     }
 
     pub fn left(&self) -> Option<Point> {
@@ -164,6 +177,74 @@ impl<T> Grid<T> {
                 *cell = value;
             }
         }
+    }
+
+    pub fn get_filtered_adjacent(&self, point: &Point, filter: fn(&T) -> bool) -> Vec<Point> {
+        let mut adjacent = Vec::new();
+
+        if let Some(left) = point.left() {
+            if let Some(value) = self.get(&left) {
+                if filter(value) {
+                    adjacent.push(left);
+                }
+            }
+        }
+
+        if let Some(right) = point.right() {
+            if let Some(value) = self.get(&right) {
+                if filter(value) {
+                    adjacent.push(right);
+                }
+            }
+        }
+
+        if let Some(up) = point.up() {
+            if let Some(value) = self.get(&up) {
+                if filter(value) {
+                    adjacent.push(up);
+                }
+            }
+        }
+
+        if let Some(down) = point.down() {
+            if let Some(value) = self.get(&down) {
+                if filter(value) {
+                    adjacent.push(down);
+                }
+            }
+        }
+
+        adjacent
+    }
+
+    pub fn get_adjacent(&self, point: &Point) -> Vec<Point> {
+        let mut adjacent = Vec::new();
+
+        if let Some(left) = point.left() {
+            if self.get(&left).is_some() {
+                adjacent.push(left);
+            }
+        }
+
+        if let Some(right) = point.right() {
+            if self.get(&right).is_some() {
+                adjacent.push(right);
+            }
+        }
+
+        if let Some(up) = point.up() {
+            if self.get(&up).is_some() {
+                adjacent.push(up);
+            }
+        }
+
+        if let Some(down) = point.down() {
+            if self.get(&down).is_some() {
+                adjacent.push(down);
+            }
+        }
+
+        adjacent
     }
 
     pub fn width(&self) -> usize {
