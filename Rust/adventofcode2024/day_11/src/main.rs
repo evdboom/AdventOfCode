@@ -16,34 +16,37 @@ fn main() {
 fn process_part_one(input: &str) -> usize {
     let mut cache = HashMap::new();
     input
+        .lines()
+        .next()
+        .unwrap()
         .split(" ")
-        .filter(|x| x.parse::<usize>().is_ok())
         .map(|x| perform_blinks(x.parse::<usize>().unwrap(), 25, &mut cache))
         .sum()
 }
 
 fn process_part_two(input: &str) -> usize {
-    2
-    // let mut cache = HashMap::new();
-    // input
-    //     .split(" ")
-    //     .filter(|x| x.parse::<usize>().is_ok())
-    //     .map(|x| perform_blinks(x.parse::<usize>().unwrap(), 75, &mut cache))
-    //     .sum()
+    let mut cache = HashMap::new();
+    input
+        .lines()
+        .next()
+        .unwrap()
+        .split(" ")
+        .map(|x| perform_blinks(x.parse::<usize>().unwrap(), 75, &mut cache))
+        .sum()
 }
 
 fn perform_blinks(stone: usize, steps: usize, cache: &mut HashMap<(usize, usize), usize>) -> usize {
     if steps == 0 {
-        return stone;
+        return 1;
     }
     if let Some(&value) = cache.get(&(stone, steps)) {
         return value;
     }
 
-    let mut result = 0;
-    for b in blink(stone) {
-        result += perform_blinks(b, steps - 1, cache);
-    }
+    let result = blink(stone)
+        .iter()
+        .map(|&b| perform_blinks(b, steps - 1, cache))
+        .sum();
     cache.insert((stone, steps), result);
     result
 }
