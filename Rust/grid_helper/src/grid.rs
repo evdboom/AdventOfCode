@@ -80,6 +80,22 @@ impl Point {
             y: self.y + 1,
         })
     }
+
+    pub fn up_left(&self) -> Option<Point> {
+        self.up().and_then(|up| up.left())
+    }
+
+    pub fn up_right(&self) -> Option<Point> {
+        self.up().and_then(|up| up.right())
+    }
+
+    pub fn down_left(&self) -> Option<Point> {
+        self.down().and_then(|down| down.left())
+    }
+
+    pub fn down_right(&self) -> Option<Point> {
+        self.down().and_then(|down| down.right())
+    }
 }
 
 #[derive(Clone, Debug)]
