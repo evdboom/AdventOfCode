@@ -14,6 +14,18 @@ namespace AdventOfCode2023.Days
 
         protected override long ProcessPartOne(string[] input)
         {
+            var x = input
+                .Select(line =>
+                {
+                    var parts = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                    return new Hand
+                    {
+                        Cards = parts[0],
+                        Bid = long.Parse(parts[1])
+                    };
+                })
+                .OrderDescending();
+
             return input
                 .Select(line =>
                 {
