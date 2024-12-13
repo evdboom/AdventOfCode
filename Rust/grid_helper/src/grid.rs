@@ -81,6 +81,10 @@ impl Point {
         Point { x, y }
     }
 
+    pub fn manhattan_distance(&self, other: &Point) -> usize {
+        self.x.abs_diff(other.x) + self.y.abs_diff(other.y)
+    }
+
     pub fn is_adjacent(&self, other: &Point) -> bool {
         self.left() == Some(*other)
             || self.right() == Some(*other)
@@ -236,6 +240,19 @@ impl<T> Grid<T> {
                 *cell = value;
             }
         }
+    }
+
+    pub fn get_row(&self, y: usize) -> Option<&Vec<T>> {
+        self.grid.get(y)
+    }
+
+    pub fn get_column(&self, x: usize) -> Option<Vec<&T>> {
+        if x >= self.width {
+            return None;
+        }
+
+        let column: Vec<&T> = self.grid.iter().map(|row| &row[x]).collect();
+        Some(column)
     }
 
     pub fn get_filtered_adjacent(&self, point: &Point, filter: fn(&T) -> bool) -> Vec<Point> {
