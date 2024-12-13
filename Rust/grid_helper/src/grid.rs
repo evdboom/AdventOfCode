@@ -3,6 +3,49 @@
 use std::hash::{self, Hash};
 use std::ops::Add;
 
+pub enum Direction {
+    Up(Point),
+    Down(Point),
+    Left(Point),
+    Right(Point),
+}
+
+impl Direction {
+    pub fn point(&self) -> Point {
+        match self {
+            Direction::Up(point) => *point,
+            Direction::Down(point) => *point,
+            Direction::Left(point) => *point,
+            Direction::Right(point) => *point,
+        }
+    }
+
+    pub fn from_direction(direction: &Direction, point: Point) -> Self {
+        match direction {
+            Direction::Up(_) => Direction::Up(point),
+            Direction::Down(_) => Direction::Down(point),
+            Direction::Left(_) => Direction::Left(point),
+            Direction::Right(_) => Direction::Right(point),
+        }
+    }
+
+    pub fn up(point: Point) -> Self {
+        Direction::Up(point)
+    }
+
+    pub fn down(point: Point) -> Self {
+        Direction::Down(point)
+    }
+
+    pub fn left(point: Point) -> Self {
+        Direction::Left(point)
+    }
+
+    pub fn right(point: Point) -> Self {
+        Direction::Right(point)
+    }
+}
+
 #[derive(Clone, Copy, Debug, Eq)]
 pub struct Point {
     pub x: usize,
@@ -233,34 +276,41 @@ impl<T> Grid<T> {
         adjacent
     }
 
-    pub fn get_adjacent(&self, point: &Point) -> Vec<Point> {
+    pub fn get_adjacent_with_direction(&self, point: &Point) -> Vec<Direction> {
         let mut adjacent = Vec::new();
 
         if let Some(left) = point.left() {
             if self.get(&left).is_some() {
-                adjacent.push(left);
+                adjacent.push(Direction::left(left));
             }
         }
 
         if let Some(right) = point.right() {
             if self.get(&right).is_some() {
-                adjacent.push(right);
+                adjacent.push(Direction::right(right));
             }
         }
 
         if let Some(up) = point.up() {
             if self.get(&up).is_some() {
-                adjacent.push(up);
+                adjacent.push(Direction::up(up));
             }
         }
 
         if let Some(down) = point.down() {
             if self.get(&down).is_some() {
-                adjacent.push(down);
+                adjacent.push(Direction::down(down));
             }
         }
 
         adjacent
+    }
+
+    pub fn get_adjacent(&self, point: &Point) -> Vec<Point> {
+        self.get_adjacent_with_direction(point)
+            .iter()
+            .map(|d| d.point())
+            .collect()
     }
 
     pub fn width(&self) -> usize {
