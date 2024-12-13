@@ -13,10 +13,6 @@
 		</Content>
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Inputs\" />
-	</ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\AdventOfCode.Shared\AdventOfCode.Shared.csproj" />
   </ItemGroup>
