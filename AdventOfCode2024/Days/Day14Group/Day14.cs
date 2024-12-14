@@ -71,22 +71,24 @@ namespace AdventOfCode2024.Days
                         continue;
                     }
 
-                    var queue = new Queue<Robot>();
-                    queue.Enqueue(robot);
+                    var queue = new Queue<Point>();
+                    queue.Enqueue(robot.Location);
 
-                    while (queue.TryDequeue(out var current))
+                    while (queue.TryDequeue(out var location))
                     {
-                        foreach (var adjecent in current.Location.Adjacent())
+                        foreach (var adjacent in location.Adjacent())
                         {
-                            if (robots.FirstOrDefault(r => r.Location == adjecent) is { } next)
-                            {                               
-                                if (!positions.Add(next.Location))
-                                {
-                                    continue;
-                                }
-                                count++;
-                                queue.Enqueue(next);
+                            if (!positions.Add(adjacent))
+                            {
+                                continue;
                             }
+
+                            var add = robots.Count(r => r.Location == adjacent);
+                            if (add > 0)
+                            {
+                                count += add;
+                                queue.Enqueue(adjacent);
+                            }                            
                         }
                     }
 
