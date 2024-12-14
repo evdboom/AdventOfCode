@@ -82,5 +82,19 @@ namespace AdventOfCode2024.Tests
             protected override long ExpectedResultPartOne => 480;
             protected override long ExpectedResultPartTwo => 875318608908;
         }
+
+        public class Day14Tests : TestDay<Day14, TestData>
+        {
+            protected override void ChangeDay(Day14 day)
+            {                
+                day.GridWidth = 11;
+                day.GridHeight = 7;
+            }
+
+
+            protected override long ExpectedResultPartOne => 12;
+            // actually no solution possible with the testdata.
+            protected override long ExpectedResultPartTwo => -1;
+        }
     }
 }

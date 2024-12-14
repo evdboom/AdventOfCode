@@ -16,8 +16,6 @@ namespace AdventOfCode.Shared.Testing
         protected abstract long ExpectedResultPartOne { get; }
         protected abstract long ExpectedResultPartTwo { get; }
 
-        public Day GetDay() => _day;
-
         public TestDay() : this(string.Empty)
         {
 
@@ -43,9 +41,14 @@ namespace AdventOfCode.Shared.Testing
             }
         }
 
+        protected virtual void ChangeDay(Day day)
+        {
+        }
+
         protected async Task<long> RunPartOne()
         {
             _testData.SetTestDataPart(_testDataPartOne);
+            ChangeDay(_day);
             var (answer, _) = await _day.ProcessPartAsync(Part.One);
 
             return answer;
@@ -54,6 +57,7 @@ namespace AdventOfCode.Shared.Testing
         protected async Task<long> RunPartTwo()
         {
             _testData.SetTestDataPart(_testDataPartTwo);
+            ChangeDay(_day);
             var (answer, _) = await _day.ProcessPartAsync(Part.Two);
 
             return answer;
