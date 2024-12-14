@@ -24,10 +24,26 @@ namespace AdventOfCode2024.Days
         private bool IsValidGame((double X, double Y) prize, (double dX, double dY) buttonA, (double dX, double dY) buttonB, int? maxPresses, out long cost)
         {
             cost = 0;
+            // a * dXA + b * dXB = X
+            // a * dYA + b * dYB = Y
+
+            // from first:
+            // a = (X - b * dXB) / dXA
+
+            // substitute a in second:
+            // (X - b * dXB) / dXA * dYA + b * dYB = Y
+            // X * dYA / dXA - b * dXB * dYA / dXA  + b * dYB = Y
+            // b * dYB - b * dXB * dYA / dXA = Y - X * dYA / dXA
+            // b * (dYB - dXB * dYA / dXA) = Y - X * dYA / dXA
+            // b = (Y - X * dYA / dXA) / (dYB - dXB * dYA / dXA)
+
+            // after calculating b, calculate a
+            // a = (X - b * dXB) / dXA
 
             var b = (prize.Y - prize.X * buttonA.dY / buttonA.dX) / (buttonB.dY - buttonB.dX * buttonA.dY / buttonA.dX);
             var a = (prize.X - b * buttonB.dX) / buttonA.dX;
 
+            // as we use floating point numbers, we need to round them to integers (fixing floating point errors)
             var aPressed = (long)Math.Round(a);
             var bPressed = (long)Math.Round(b);
 
@@ -36,6 +52,7 @@ namespace AdventOfCode2024.Days
                 return false;
             }
 
+            // check if the calculated values are correct
             if ((long)buttonA.dX * aPressed + (long)buttonB.dX * bPressed == prize.X &&
                 (long)buttonA.dY * aPressed + (long)buttonB.dY * bPressed == prize.Y)
             {
