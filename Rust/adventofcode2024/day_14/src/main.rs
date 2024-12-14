@@ -82,6 +82,7 @@ fn process_part_two(input: &str, dimension: (isize, isize)) -> usize {
         })
         .collect::<Vec<_>>();
 
+    // net actually needed, but feels cleaner :)
     let loop_count = find_loops(&mut robots, dimension);
 
     for k in 0..loop_count {
@@ -95,6 +96,9 @@ fn process_part_two(input: &str, dimension: (isize, isize)) -> usize {
                     acc.1.insert(y, acc.1[&y] + 1);
                     (acc.0, acc.1)
                 });
+
+        // from moving backward, found the image then made the filter for forward move.. not the prettiest solution
+        // better would be to check spread, or neighbour count.. perhaps for c# solution
         let big_enough = in_column.iter().filter(|(_, &v)| v > 30).count() >= 2
             && in_row.iter().filter(|(_, &v)| v > 30).count() >= 2;
         if big_enough {
