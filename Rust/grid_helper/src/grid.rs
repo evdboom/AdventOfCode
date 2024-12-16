@@ -1,13 +1,50 @@
 // src/grid.rs
 
+use std::fmt::Display;
 use std::hash::{self, Hash};
 use std::ops::Add;
 
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Direction {
     Up(Point),
     Down(Point),
     Left(Point),
     Right(Point),
+}
+
+impl Hash for Direction {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        match self {
+            Direction::Up(point) => {
+                "Up".hash(state);
+                point.hash(state);
+            }
+            Direction::Down(point) => {
+                "Down".hash(state);
+                point.hash(state);
+            }
+            Direction::Left(point) => {
+                "Left".hash(state);
+                point.hash(state);
+            }
+            Direction::Right(point) => {
+                "Right".hash(state);
+                point.hash(state);
+            }
+        }
+    }
+}
+
+impl Display for Direction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let direction = match self {
+            Direction::Up(_) => "Up",
+            Direction::Down(_) => "Down",
+            Direction::Left(_) => "Left",
+            Direction::Right(_) => "Right",
+        };
+        write!(f, "{}", direction)
+    }
 }
 
 impl Direction {
@@ -22,6 +59,25 @@ impl Direction {
 
     pub fn from_direction(direction: &Direction, point: Point) -> Self {
         match direction {
+            Direction::Up(_) => Direction::Up(point),
+            Direction::Down(_) => Direction::Down(point),
+            Direction::Left(_) => Direction::Left(point),
+            Direction::Right(_) => Direction::Right(point),
+        }
+    }
+
+    pub fn same_direction(&self, other: &Direction) -> bool {
+        match (self, other) {
+            (Direction::Up(_), Direction::Up(_)) => true,
+            (Direction::Down(_), Direction::Down(_)) => true,
+            (Direction::Left(_), Direction::Left(_)) => true,
+            (Direction::Right(_), Direction::Right(_)) => true,
+            _ => false,
+        }
+    }
+
+    pub fn in_same_direction(&self, point: Point) -> Self {
+        match self {
             Direction::Up(_) => Direction::Up(point),
             Direction::Down(_) => Direction::Down(point),
             Direction::Left(_) => Direction::Left(point),
@@ -50,6 +106,12 @@ impl Direction {
 pub struct Point {
     pub x: usize,
     pub y: usize,
+}
+
+impl Display for Point {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
+    }
 }
 
 impl Hash for Point {
@@ -256,12 +318,19 @@ impl<T> Grid<T> {
     }
 
     pub fn get_filtered_adjacent(&self, point: &Point, filter: fn(&T) -> bool) -> Vec<Point> {
+        self.get_filtered_directions(point, filter)
+            .iter()
+            .map(|d| d.point())
+            .collect()
+    }
+
+    pub fn get_filtered_directions(&self, point: &Point, filter: fn(&T) -> bool) -> Vec<Direction> {
         let mut adjacent = Vec::new();
 
         if let Some(left) = point.left() {
             if let Some(value) = self.get(&left) {
                 if filter(value) {
-                    adjacent.push(left);
+                    adjacent.push(Direction::left(left));
                 }
             }
         }
@@ -269,7 +338,7 @@ impl<T> Grid<T> {
         if let Some(right) = point.right() {
             if let Some(value) = self.get(&right) {
                 if filter(value) {
-                    adjacent.push(right);
+                    adjacent.push(Direction::right(right));
                 }
             }
         }
@@ -277,7 +346,7 @@ impl<T> Grid<T> {
         if let Some(up) = point.up() {
             if let Some(value) = self.get(&up) {
                 if filter(value) {
-                    adjacent.push(up);
+                    adjacent.push(Direction::up(up));
                 }
             }
         }
@@ -285,7 +354,7 @@ impl<T> Grid<T> {
         if let Some(down) = point.down() {
             if let Some(value) = self.get(&down) {
                 if filter(value) {
-                    adjacent.push(down);
+                    adjacent.push(Direction::down(down));
                 }
             }
         }
