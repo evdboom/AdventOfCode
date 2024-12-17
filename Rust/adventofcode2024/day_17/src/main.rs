@@ -36,11 +36,26 @@ fn process_part_two(input: &str) -> usize {
     let source = get_program(input);
     let mut found = vec![0];
 
+    // hardcoded from program: A always is divided by 8
+    // (havent figured out a way to determine that runtime).
+    //
+    // move backwards through the program:
+    //   for the last step: which values of A < 8 (as A must be 0 for the program to Halt)
+    //   could have been used to get the last instruction.
+    //
+    //   multiply that by 8 and check which of the possible values of A could have been used
+    //   to get the previous instruction.
+    //   because of truncation we need to check all values (previous A + 0-7).
+    //
+    //   repeat until we have found the first values of A, and take the lowest (if multiple).
+    //   because we are processing one loop at a time, we break at a jump instruction.
+
     for step in 0..source.get_instruction_count() {
         let mut new_found = Vec::new();
         for f in 0..found.len() {
             for i in 0..=7 {
                 if i == 0 && step == 0 {
+                    // last input starts at 1, otherwise program would have halted a step earlier
                     continue;
                 }
 
@@ -63,8 +78,8 @@ fn process_part_two(input: &str) -> usize {
                         } else {
                             break;
                         }
-                    } else if let OperationResult::Jump(value) = operation {
-                        iterator.jump(value);
+                    } else if let OperationResult::Jump(_) = operation {
+                        break;
                     }
                 }
             }
