@@ -67,6 +67,14 @@ impl Program {
             Some(record.1)
         }
     }
+
+    pub fn get_operands_for_opcode(&self, opcode: usize) -> Vec<usize> {
+        self.program
+            .iter()
+            .filter(|(op, _)| *op == opcode)
+            .map(|(_, operand)| *operand)
+            .collect()
+    }
 }
 
 pub struct ProgramIterator<'a> {

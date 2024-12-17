@@ -36,31 +36,43 @@ fn process_part_two(input: &str) -> usize {
     let source = get_program(input);
     let mut found = vec![0];
 
-    // hardcoded from program: A always is divided by 8
-    // (havent figured out a way to determine that runtime).
+    // hardcoded from input.txt:
+    //   A always is divided by a static number (not operand > 3)
+    //   1 output per loop
     //
     // move backwards through the program:
-    //   for the last step: which values of A < 8 (as A must be 0 for the program to Halt)
+    //   for the last step: which values of A < factor (as A must be 0 for the program to Halt)
     //   could have been used to get the last instruction.
     //
-    //   multiply that by 8 and check which of the possible values of A could have been used
+    //   multiply that by factor and check which of the possible values of A could have been used
     //   to get the previous instruction.
-    //   because of truncation we need to check all values (previous A + 0-7).
+    //   because of truncation we need to check all values (previous A + 0..factor).
     //
     //   repeat until we have found the first values of A, and take the lowest (if multiple).
-    //   because we are processing one loop at a time, we break at a jump instruction.
+
+    let factor = source
+        .get_operands_for_opcode(0)
+        .iter()
+        .fold(1, |acc, operand| {
+            if operand > &3 {
+                panic!("Cannot dynamically determine factor for operand > 3");
+            }
+            acc * 2usize.pow(*operand as u32)
+        });
 
     for step in 0..source.get_instruction_count() {
         let mut new_found = Vec::new();
         for f in 0..found.len() {
-            for i in 0..=7 {
+            for i in 0..factor {
                 if i == 0 && step == 0 {
                     // last input starts at 1, otherwise program would have halted a step earlier
                     continue;
                 }
 
+                let operator_a = factor * found[f] + i;
+
                 let mut program = source.clone();
-                program.set_a(8 * found[f] + i);
+                program.set_a(operator_a);
                 let cloned_program = program.clone();
                 let mut iterator = cloned_program.iter();
                 while let Some((opcode, operand)) = iterator.next() {
@@ -70,7 +82,7 @@ fn process_part_two(input: &str) -> usize {
                             source.get_instruction(&(source.get_instruction_count() - step - 1))
                         {
                             if instruction == value {
-                                new_found.push(8 * found[f] + i);
+                                new_found.push(operator_a);
                                 break;
                             } else {
                                 break;
@@ -78,8 +90,6 @@ fn process_part_two(input: &str) -> usize {
                         } else {
                             break;
                         }
-                    } else if let OperationResult::Jump(_) = operation {
-                        break;
                     }
                 }
             }
