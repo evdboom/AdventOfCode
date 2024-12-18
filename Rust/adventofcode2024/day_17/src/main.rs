@@ -46,7 +46,7 @@ fn process_part_two(input: &str) -> usize {
     //
     //   multiply that by factor and check which of the possible values of A could have been used
     //   to get the previous instruction.
-    //   because of truncation we need to check all values (previous A + 0..factor).
+    //   because of truncation we need to check all values (factor * previous A + 0..factor).
     //
     //   repeat until we have found the first values of A, and take the lowest (if multiple).
 

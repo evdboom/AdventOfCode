@@ -425,4 +425,13 @@ impl<T> Grid<T> {
             current_point: Point { x: 0, y: 0 },
         }
     }
+
+    pub fn print(&self, display: fn(&T) -> char) {
+        for row in &self.grid {
+            for cell in row {
+                print!("{}", display(cell));
+            }
+            println!();
+        }
+    }
 }
