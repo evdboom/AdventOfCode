@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fs;
 use std::time::Instant;
 
-static NUMERIC_KEYPAD: [(u8, (isize, isize)); 11] = [
+const NUMERIC_KEYPAD: [(u8, (isize, isize)); 11] = [
     (b'7', (0, 0)),
     (b'8', (1, 0)),
     (b'9', (2, 0)),
@@ -16,7 +16,7 @@ static NUMERIC_KEYPAD: [(u8, (isize, isize)); 11] = [
     (b'A', (2, 3)),
 ];
 
-static DIRECTIONAL_KEYPAD: [(u8, (isize, isize)); 5] = [
+const DIRECTIONAL_KEYPAD: [(u8, (isize, isize)); 5] = [
     (b'^', (1, 0)),
     (b'A', (2, 0)),
     (b'<', (0, 1)),
