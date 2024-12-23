@@ -139,7 +139,12 @@ namespace AdventOfCode2024.Tests
                 await RunPartTwo();
                 Assert.Equal("6,1", _day.PartTwoResult());
             }
+        }
 
+        public class Day19Tests : TestDay<Day19, TestData>
+        {
+            protected override long ExpectedResultPartOne => 6;
+            protected override long ExpectedResultPartTwo => 16;
         }
     }
 }

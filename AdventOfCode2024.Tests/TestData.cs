@@ -337,5 +337,22 @@ namespace AdventOfCode2024.Tests
                 "2,0",                
             ];
         }
+
+        protected override string[] Day19()
+        {
+            return
+            [                
+                "r, wr, b, g, bwu, rb, gb, br",
+                "",
+                "brwrr",
+                "bggr",
+                "gbbr",
+                "rrbgbr",
+                "ubwu",
+                "bwurrg",
+                "brgr",
+                "bbrgwb",                
+            ];
+        }
     }
 }
