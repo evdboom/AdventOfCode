@@ -146,5 +146,16 @@ namespace AdventOfCode2024.Tests
             protected override long ExpectedResultPartOne => 6;
             protected override long ExpectedResultPartTwo => 16;
         }
+
+        public class Day20Tests : TestDay<Day20, TestData>
+        {
+            protected override void ChangeDay(Day20 day)
+            {
+                day.TimeToSave = 60;
+            }
+
+            protected override long ExpectedResultPartOne => 1;
+            protected override long ExpectedResultPartTwo => 129;
+        }
     }
 }

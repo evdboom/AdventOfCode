@@ -226,6 +226,13 @@ namespace AdventOfCode.Shared.Extensions
             }
         }
 
+        public static IEnumerable<GridCell<T>> AdjacentCells<T>(this Grid<T> grid, GridCell<T> cell, Func<(GridCell<T> Origin, GridCell<T> Target), bool> compare, bool allowDiagonal = false)
+        {
+            return AdjecentWithDirection(grid, cell.Point, allowDiagonal)
+                .Select(adjacent => new GridCell<T>(adjacent.Point, adjacent.Value))
+                .Where(cell => compare((cell, cell)));
+        }
+
         public static IEnumerable<Point> Adjacent<T>(this Grid<T> grid, Point point, Func<(T Origin, T Target), bool> compare, bool allowDiagonal = false)
         {
             return Adjacent(grid, point.X, point.Y, compare, allowDiagonal);
