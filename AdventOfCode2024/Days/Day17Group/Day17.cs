@@ -33,16 +33,16 @@ namespace AdventOfCode2024.Days
                     {
                         throw new InvalidOperationException("Invalid instruction for automatic factor determination");
                     }
-                    return acc * program.Instructions[value.Index + 1];
+                    return acc * (int)Math.Pow(2, program.Instructions[value.Index + 1]);
                 });
-            var result = new List<int>
+            var result = new List<long>
             {
                 0
             };
 
             for (int i = program.Instructions.Count - 1; i >= 0; i--)
             {
-                var intermediateResult = new List<int>();
+                var intermediateResult = new List<long>();
                 for (int j = 0; j < result.Count; j++)
                 {
                     for (int k = 0; k < factor; k++)
@@ -53,7 +53,10 @@ namespace AdventOfCode2024.Days
                         }
 
                         var operatorA = factor * result[j] + k;
+                        if (operatorA < 0)
+                        {
 
+                        }
                         program = GetProgram(input);
                         program.RegisterA = operatorA;
 
@@ -61,7 +64,7 @@ namespace AdventOfCode2024.Days
                         
                         if (value == program.Instructions[i])
                         {
-                            intermediateResult.Add(k);
+                            intermediateResult.Add(operatorA);
                         }
                     }
                 }
@@ -72,7 +75,7 @@ namespace AdventOfCode2024.Days
             return result.Min();
         }
 
-        private IEnumerable<int> RunProgram(ProgramRegister program)
+        private IEnumerable<long> RunProgram(ProgramRegister program)
         {
             for (int i = 0; i < program.Instructions.Count; i += 2)
             {
@@ -125,7 +128,7 @@ namespace AdventOfCode2024.Days
                     program.RegisterA = program.RegisterA / (long)Math.Pow(2, GetCombo(operation.Operand, program));
                     break;
                 case 1:
-                    program.RegisterB = program.RegisterB ^ operation.Operand;
+                    program.RegisterB = program.RegisterB ^ (long)operation.Operand;
                     break;
                 case 2:
                     program.RegisterB = GetCombo(operation.Operand, program) % 8;
@@ -142,13 +145,13 @@ namespace AdventOfCode2024.Days
                     break;
                 case 5:
                     result = OperationResult.Value;
-                    value = (int)GetCombo(operation.Operand, program) % 8;
+                    value = (int)(GetCombo(operation.Operand, program) % 8);
                     break;
                 case 6:
                     program.RegisterB = program.RegisterA / (long)Math.Pow(2, GetCombo(operation.Operand, program));
                     break;
                 case 7:
-                    program.RegisterC = program.RegisterA / (long)Math.Pow(2, GetCombo(operation.Operand, program));
+                    program.RegisterC = program.RegisterA / (long)Math.Round(Math.Pow(2, GetCombo(operation.Operand, program)));
                     break;
             };
 

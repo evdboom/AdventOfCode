@@ -120,6 +120,25 @@ namespace AdventOfCode2024.Tests
                 await RunPartOne();
                 Assert.Equal("4,6,3,5,6,3,5,2,1,0", _day.PartOneResult());
             }
+        }
+
+        public class Day18Tests : TestDay<Day18, TestData>
+        {
+            protected override void ChangeDay(Day18 day)
+            {
+                day.GridSize = 7;
+                day.BytesToRead = 12;
+            }
+
+            protected override long ExpectedResultPartOne => 22;
+            protected override long ExpectedResultPartTwo => -1;
+
+            [Fact]
+            public async Task OwnTestPartTwo()
+            {
+                await RunPartTwo();
+                Assert.Equal("6,1", _day.PartTwoResult());
+            }
 
         }
     }
