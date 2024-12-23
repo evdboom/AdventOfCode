@@ -376,5 +376,17 @@ namespace AdventOfCode2024.Tests
                 ###############
                 """".Split(Environment.NewLine);
         }
+
+        protected override string[] Day21()
+        {
+            return
+                """"
+                029A
+                980A
+                179A
+                456A
+                379A
+                """".Split(Environment.NewLine);
+        }
     }
 }
