@@ -40,7 +40,6 @@ fn process_part_one(input: &str) -> usize {
 }
 
 fn process_part_two(input: &str) -> usize {
-    // need to figure this one out.. currently creates a very very very long path, and takes forever
     perform_keypad_presses(input, 25)
 }
 

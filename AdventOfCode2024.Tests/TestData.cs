@@ -282,5 +282,28 @@ namespace AdventOfCode2024.Tests
                     "#################",
                 ];                
         }
+
+        protected override string[] Day17()
+        {
+            return _testDataPart switch
+            {
+                "PartOne" =>
+                [
+                    "Register A: 729",
+                    "Register B: 0",
+                    "Register C: 0",
+                    "",
+                    "Program: 0,1,5,4,3,0",
+                ],
+                _ =>
+                [
+                    "Register A: 2024",
+                    "Register B: 0",
+                    "Register C: 0",
+                    "",
+                    "Program: 0,3,5,4,3,0",
+                ]
+            };
+        }
     }
 }

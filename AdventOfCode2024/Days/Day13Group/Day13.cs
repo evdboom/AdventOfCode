@@ -1,4 +1,5 @@
 ﻿using AdventOfCode.Shared.Days;
+using AdventOfCode.Shared.Extensions;
 using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode2024.Days
@@ -24,28 +25,20 @@ namespace AdventOfCode2024.Days
         private bool IsValidGame((double X, double Y) prize, (double dX, double dY) buttonA, (double dX, double dY) buttonB, int? maxPresses, out long cost)
         {
             cost = 0;
-            // a * dXA + b * dXB = X
-            // a * dYA + b * dYB = Y
 
-            // from first:
-            // a = (X - b * dXB) / dXA
+            var values = new double[3, 2];
+            values[0, 0] = buttonA.dX;
+            values[0, 1] = buttonA.dY;
+            values[1, 0] = buttonB.dX;
+            values[1, 1] = buttonB.dY;
+            values[2, 0] = prize.X;
+            values[2, 1] = prize.Y;
 
-            // substitute a in second:
-            // (X - b * dXB) / dXA * dYA + b * dYB = Y
-            // X * dYA / dXA - b * dXB * dYA / dXA  + b * dYB = Y
-            // b * dYB - b * dXB * dYA / dXA = Y - X * dYA / dXA
-            // b * (dYB - dXB * dYA / dXA) = Y - X * dYA / dXA
-            // b = (Y - X * dYA / dXA) / (dYB - dXB * dYA / dXA)
-
-            // after calculating b, calculate a
-            // a = (X - b * dXB) / dXA
-
-            var b = (prize.Y - prize.X * buttonA.dY / buttonA.dX) / (buttonB.dY - buttonB.dX * buttonA.dY / buttonA.dX);
-            var a = (prize.X - b * buttonB.dX) / buttonA.dX;
+            var coeficients = values.GaussianElimination();
 
             // as we use floating point numbers, we need to round them to integers (fixing floating point errors)
-            var aPressed = (long)Math.Round(a);
-            var bPressed = (long)Math.Round(b);
+            var aPressed = (long)Math.Round(coeficients[0]);
+            var bPressed = (long)Math.Round(coeficients[1]);
 
             if (aPressed < 0 || bPressed < 0 || maxPresses.HasValue && (aPressed > maxPresses || bPressed > maxPresses))
             {               

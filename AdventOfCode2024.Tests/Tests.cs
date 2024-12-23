@@ -108,5 +108,19 @@ namespace AdventOfCode2024.Tests
             protected override long ExpectedResultPartOne => 11048;
             protected override long ExpectedResultPartTwo => 64;
         }
+
+        public class Day17Tests() : TestDay<Day17, TestData>("PartOne", "PartTwo")
+        {
+            protected override long ExpectedResultPartOne => -1;
+            protected override long ExpectedResultPartTwo => 117440;
+
+            [Fact]
+            public async Task OwnTestPartOne()
+            {
+                await RunPartOne();
+                Assert.Equal("4,6,3,5,6,3,5,2,1,0", _day.PartOneResult());
+            }
+
+        }
     }
 }
