@@ -3,7 +3,7 @@ use std::fs;
 use std::time::Instant;
 
 fn main() {
-    let input = fs::read_to_string("./input-test.txt").expect("Could not read file");
+    let input = fs::read_to_string("./input.txt").expect("Could not read file");
     let start = Instant::now();
     let part_one = process_part_one(&input);
     let duration_one = start.elapsed();

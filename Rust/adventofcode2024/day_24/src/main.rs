@@ -21,7 +21,7 @@ fn process_part_one(input: &str) -> usize {
     let (mut wires, gates) = get_wires_and_gates(input);
 
     calculate_output(&mut wires, &gates);
-    get_value(&wires, b'z').0
+    get_value(&wires, b'z')
 }
 
 // iteration 9 :), with a lot if help (fdumontmd)
@@ -135,7 +135,7 @@ fn process_part_two(input: &str) -> String {
         .join(",")
 }
 
-fn get_value(wires: &HashMap<Vec<u8>, bool>, to_get: u8) -> (usize, Vec<bool>) {
+fn get_value(wires: &HashMap<Vec<u8>, bool>, to_get: u8) -> usize {
     let mut with_char = wires
         .iter()
         .filter(|(key, _)| key[0] == to_get)
@@ -144,16 +144,14 @@ fn get_value(wires: &HashMap<Vec<u8>, bool>, to_get: u8) -> (usize, Vec<bool>) {
     with_char.sort_by(|a, b| a.0.cmp(b.0));
 
     let mut result = 0;
-    let mut values = Vec::new();
     for i in 0..with_char.len() {
         let value = *with_char[i].1;
         if value {
             result += 1 << i;
         }
-        values.push(value);
     }
 
-    (result, values)
+    result
 }
 
 fn calculate_output(wires: &mut HashMap<Vec<u8>, bool>, gates: &Vec<LogicGate>) -> Option<bool> {
