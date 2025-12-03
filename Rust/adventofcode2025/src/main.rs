@@ -1,6 +1,7 @@
 mod days;
 
 use std::{env, fs, process};
+use std::time::Instant;
 
 fn main() {
     if let Err(err) = run() {
@@ -22,11 +23,15 @@ fn run() -> Result<(), String> {
 
     let input = read_input(day)?;
 
-    let result = days::run(day, input.as_str())?;
+    let start_time = Instant::now();
+    let result_one = days::run(day, input.as_str(), 1)?;
+    let duration_one = start_time.elapsed();
+    let result_two = days::run(day, input.as_str(), 2)?;
+    let duration_two = start_time.elapsed() - duration_one;
 
     println!("Day {day:02}");
-    println!("  Part 1: {}", result.part_one);
-    println!("  Part 2: {}", result.part_two);
+    println!("  Part 1: {} took {:?}", result_one, duration_one);
+    println!("  Part 2: {} took {:?}", result_two, duration_two);
 
     Ok(())
 }

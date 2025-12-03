@@ -14,7 +14,6 @@ fn part_one(input: &str) -> usize {
 
 fn part_two(input: &str) -> usize {
     let ranges = parse_input(input);
-    println!("Ranges: {:?}", ranges);
     ranges.iter().map(|(start, end)| sum_equal_splits_in_range(*start, *end)).sum()
 }
 
@@ -30,7 +29,6 @@ fn sum_equal_splits_in_range(start: usize, end: usize) -> usize {
 fn sum_equal_splits_in_range_with_parts(start: usize, end: usize, parts: &[usize]) -> usize {
     (start..=end)
         .filter(|&id| {
-            println!("Checking ID {}", id);
             let s = id.to_string();
             sum_equal_splits_in_range_with_parts_inner(&s, parts)
         })
@@ -38,32 +36,25 @@ fn sum_equal_splits_in_range_with_parts(start: usize, end: usize, parts: &[usize
 }
 
 fn sum_equal_splits_in_range_with_parts_inner(s: &str, parts: &[usize]) -> bool {
-    println!("Checking string '{}' with parts {:?}", s, parts);
     let len = s.len();
     let result = parts.iter().any(|&p| {
-        println!("  Trying part count p = {} (len % p = {})", p, len % p);
         if len % p != 0 {
-            println!("  -> Skipping p = {} because {} % {} != 0", p, len, p);
             return false;
         }
         let chunk = len / p;
         let first = &s[..chunk];
-        println!("  -> chunk size = {}, first chunk = '{}'", chunk, first);
 
         let all_equal = (1..p).all(|i| {
             let start = i * chunk;
             let end = (i + 1) * chunk;
             let cur = &s[start..end];
             let equal = cur == first;
-            println!("     Comparing chunk {} ('{}') == first ('{}') -> {}", i, cur, first, equal);
             equal
         });
 
-        println!("  -> p = {} yields all_equal = {}", p, all_equal);
         all_equal
     });
 
-    println!("Final result for '{}' = {}", s, result);
     result
 }
 
