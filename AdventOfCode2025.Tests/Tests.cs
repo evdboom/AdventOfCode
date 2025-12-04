@@ -22,4 +22,10 @@ public class Tests
         protected override long ExpectedResultPartOne => 357;
         protected override long ExpectedResultPartTwo => 3121910778619;
     }
+
+    public class Day04Tests : TestDay<Day04, TestData>
+    {
+        protected override long ExpectedResultPartOne => 13;
+        protected override long ExpectedResultPartTwo => 43;
+    }
 }
