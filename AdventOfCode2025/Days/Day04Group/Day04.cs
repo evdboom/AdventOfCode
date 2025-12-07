@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Shared.Days;
 using AdventOfCode.Shared.Extensions;
 using AdventOfCode.Shared.Services;
+using AdventOfCode2025.Days.Day04Group;
 
 namespace AdventOfCode2025.Days;
 
@@ -10,36 +11,35 @@ public class Day04(IFileImporter fileImporter) : Day(fileImporter)
 
     protected override long ProcessPartOne(string[] input)
     {
-        var grid = input.ToGrid();
-        return grid.Count(cell =>
-            cell.Value == '@'
-            && grid.Adjacent(cell.Point, cell => cell.Target == '@', allowDiagonal: true).Count()
-                < 4
-        );
+        return GetPaperRolls(input).Count(roll => roll.CanRemove);
     }
 
     protected override long ProcessPartTwo(string[] input)
     {
-        var grid = input.ToGrid();
-        var removed = true;
-        var count = 0;
-        while (removed)
-        {
-            removed = false;
-            var removableCells = grid.Where(cell =>
-                cell.Value == '@'
-                && grid.Adjacent(cell.Point, cell => cell.Target == '@', allowDiagonal: true)
-                    .Count() < 4
-            );
+        var rolls = GetPaperRolls(input);
+        var removablePaperRolls = rolls.Where(roll => roll.CanRemove).ToList();
 
-            foreach (var cell in removableCells)
-            {
-                count++;
-                removed = true;
-                grid[cell.Point] = '.';
-            }
+        foreach (var roll in removablePaperRolls)
+        {
+            roll.RemoveIfAble();
         }
 
-        return count;
+        return rolls.Count(roll => roll.Removed);
+    }
+
+    private static List<PaperRoll> GetPaperRolls(string[] input)
+    {
+        var grid = input.ToGrid(c => c == '@' ? new PaperRoll() : null);
+        return grid.Where(cell => cell.Value is not null)
+            .Select(cell =>
+            {
+                cell.Value!.AdjacentRolls.AddRange(
+                    grid.AdjacentCells(cell, compare => compare.Target.Value is not null, true)
+                        .Select(t => t.Value!)
+                );
+
+                return cell.Value;
+            })
+            .ToList();
     }
 }
