@@ -47,7 +47,7 @@ namespace AdventOfCode2024.Days
         private bool GetX(Grid<int> grid, Point point)
         {
             var adjecents = grid
-                .AdjecentWithDirection(point, (compare) => compare.Target == _mappings['M'] || compare.Target == _mappings['S'], Directions.Diagonal)
+                .AdjacentWithDirection(point, (compare) => compare.Target == _mappings['M'] || compare.Target == _mappings['S'], Directions.Diagonal)
                 .ToList();
 
             return 

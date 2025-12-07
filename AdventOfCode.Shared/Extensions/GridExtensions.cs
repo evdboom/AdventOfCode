@@ -183,18 +183,18 @@ namespace AdventOfCode.Shared.Extensions
             Point Point,
             Directions Direction,
             T Value
-        )> AdjecentWithDirection<T>(this Grid<T> grid, Point point, bool allowDiagonal = false)
+        )> AdjacentWithDirection<T>(this Grid<T> grid, Point point, bool allowDiagonal = false)
         {
-            return AdjecentWithDirection(grid, point.X, point.Y, allowDiagonal);
+            return AdjacentWithDirection(grid, point.X, point.Y, allowDiagonal);
         }
 
         public static IEnumerable<(
             Point Point,
             Directions Direction,
             T Value
-        )> AdjecentWithDirection<T>(this Grid<T> grid, int x, int y, bool allowDiagonal = false)
+        )> AdjacentWithDirection<T>(this Grid<T> grid, int x, int y, bool allowDiagonal = false)
         {
-            return AdjecentWithDirection(grid, x, y, _ => true, allowDiagonal);
+            return AdjacentWithDirection(grid, x, y, _ => true, allowDiagonal);
         }
 
         public static IEnumerable<(
@@ -208,14 +208,14 @@ namespace AdventOfCode.Shared.Extensions
             bool allowDiagonal = false
         )
         {
-            return AdjecentWithDirection(grid, point.X, point.Y, compare, allowDiagonal);
+            return AdjacentWithDirection(grid, point.X, point.Y, compare, allowDiagonal);
         }
 
         public static IEnumerable<(
             Point Point,
             Directions Direction,
             T Value
-        )> AdjecentWithDirection<T>(
+        )> AdjacentWithDirection<T>(
             this Grid<T> grid,
             int x,
             int y,
@@ -224,29 +224,29 @@ namespace AdventOfCode.Shared.Extensions
         )
         {
             return allowDiagonal
-                ? AdjecentWithDirection(grid, x, y, compare, Directions.All)
-                : AdjecentWithDirection(grid, x, y, compare, Directions.Cardinal);
+                ? AdjacentWithDirection(grid, x, y, compare, Directions.All)
+                : AdjacentWithDirection(grid, x, y, compare, Directions.Cardinal);
         }
 
         public static IEnumerable<(
             Point Point,
             Directions Direction,
             T Value
-        )> AdjecentWithDirection<T>(
+        )> AdjacentWithDirection<T>(
             this Grid<T> grid,
             Point point,
             Func<(T Origin, T Target), bool> compare,
             Directions directions
         )
         {
-            return AdjecentWithDirection(grid, point.X, point.Y, compare, directions);
+            return AdjacentWithDirection(grid, point.X, point.Y, compare, directions);
         }
 
         public static IEnumerable<(
             Point Point,
             Directions Direction,
             T Value
-        )> AdjecentWithDirection<T>(
+        )> AdjacentWithDirection<T>(
             this Grid<T> grid,
             int x,
             int y,
@@ -335,7 +335,7 @@ namespace AdventOfCode.Shared.Extensions
             bool allowDiagonal = false
         )
         {
-            return AdjecentWithDirection(grid, cell.Point, allowDiagonal)
+            return AdjacentWithDirection(grid, cell.Point, allowDiagonal)
                 .Select(adjacent => new GridCell<T>(adjacent.Point, adjacent.Value))
                 .Where(adjacent => compare((cell, adjacent)));
         }
@@ -366,7 +366,7 @@ namespace AdventOfCode.Shared.Extensions
             bool allowDiagonal = false
         )
         {
-            return AdjecentWithDirection(grid, x, y, _ => true, allowDiagonal)
+            return AdjacentWithDirection(grid, x, y, _ => true, allowDiagonal)
                 .Select(adjecent => adjecent.Point);
         }
 
@@ -378,7 +378,7 @@ namespace AdventOfCode.Shared.Extensions
             bool allowDiagonal = false
         )
         {
-            return AdjecentWithDirection(grid, x, y, compare, allowDiagonal)
+            return AdjacentWithDirection(grid, x, y, compare, allowDiagonal)
                 .Select(adjecent => adjecent.Point);
         }
 

@@ -18,6 +18,10 @@
         Cardinal = Vertical | Horizontal,
         Slash = UpRight | DownLeft,
         Backslash = UpLeft | DownRight,
-        All = Diagonal | Cardinal
+        CaretUp = UpLeft | UpRight,
+        CaretDown = DownLeft | DownRight,
+        CaretLeft = UpLeft | DownLeft,
+        CaretRight = DownRight | UpRight,
+        All = Diagonal | Cardinal,
     }
 }
