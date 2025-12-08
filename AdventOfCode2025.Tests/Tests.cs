@@ -46,4 +46,16 @@ public class Tests
         protected override long ExpectedResultPartOne => 21;
         protected override long ExpectedResultPartTwo => 40;
     }
+
+    public class Day08Tests : TestDay<Day08, TestData>
+    {
+        public Day08Tests()
+            : base()
+        {
+            _day.Steps = 10;
+        }
+
+        protected override long ExpectedResultPartOne => 40;
+        protected override long ExpectedResultPartTwo => 25272;
+    }
 }
