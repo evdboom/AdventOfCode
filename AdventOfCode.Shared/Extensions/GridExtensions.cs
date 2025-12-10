@@ -2,6 +2,7 @@
 using System.Drawing;
 using AdventOfCode.Shared.Enums;
 using AdventOfCode.Shared.Grid;
+using AdventOfCode.Shared.Services;
 
 namespace AdventOfCode.Shared.Extensions
 {
@@ -391,6 +392,58 @@ namespace AdventOfCode.Shared.Extensions
         )
         {
             return Adjacent(grid, x, y, (adjecent) => adjecent.Target <= compare, allowDiagonal);
+        }
+
+        public static void PrintGrid(this Grid<int> grid, IScreenWriter screenWriter)
+        {
+            for (int j = 0; j < grid.Height; j++)
+            {
+                for (int i = 0; i < grid.Width; i++)
+                {
+                    screenWriter.Write(grid[i, j]);
+                }
+                screenWriter.NewLine();
+            }
+        }
+
+        public static void PrintGrid(this Grid<bool> grid, IScreenWriter screenWriter)
+        {
+            for (int j = 0; j < grid.Height; j++)
+            {
+                for (int i = 0; i < grid.Width; i++)
+                {
+                    screenWriter.Write(grid[i, j] ? 'T' : 'F');
+                }
+                screenWriter.NewLine();
+            }
+        }
+
+        public static void PrintGrid(this Grid<char> grid, IScreenWriter screenWriter)
+        {
+            for (int j = 0; j < grid.Height; j++)
+            {
+                for (int i = 0; i < grid.Width; i++)
+                {
+                    screenWriter.Write(grid[i, j]);
+                }
+                screenWriter.NewLine();
+            }
+        }
+
+        public static void PrintGrid<T>(
+            this Grid<T> grid,
+            IScreenWriter screenWriter,
+            Func<T, char> writeFunction
+        )
+        {
+            for (int j = 0; j < grid.Height; j++)
+            {
+                for (int i = 0; i < grid.Width; i++)
+                {
+                    screenWriter.Write(writeFunction(grid[i, j]));
+                }
+                screenWriter.NewLine();
+            }
         }
     }
 }

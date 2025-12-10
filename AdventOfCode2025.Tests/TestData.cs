@@ -98,4 +98,9 @@ public class TestData : TestDataBase<TestData>
             "425,690,689",
         ];
     }
+
+    protected override string[] Day09()
+    {
+        return ["7,1", "11,1", "11,7", "9,7", "9,5", "2,5", "2,3", "7,3"];
+    }
 }

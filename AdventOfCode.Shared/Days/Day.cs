@@ -1,18 +1,13 @@
-﻿using AdventOfCode.Shared.Enums;
+﻿using System.Diagnostics;
+using AdventOfCode.Shared.Enums;
 using AdventOfCode.Shared.Services;
-using System.Diagnostics;
 
 namespace AdventOfCode.Shared.Days
 {
-    public abstract class Day : IDay
+    public abstract class Day(IFileImporter importer) : IDay
     {
-        private readonly IFileImporter _importer;
+        private readonly IFileImporter _importer = importer;
         public abstract int DayNumber { get; }
-
-        public Day(IFileImporter importer)
-        {
-            _importer = importer;
-        }
 
         public async Task<(long answer, long duration)> ProcessPartAsync(Part part)
         {
@@ -30,7 +25,10 @@ namespace AdventOfCode.Shared.Days
             {
                 Part.One => ProcessPartOne(input),
                 Part.Two => ProcessPartTwo(input),
-                _ => throw new ArgumentException($"{part} is not valid (should be 1 or 2)", nameof(part))
+                _ => throw new ArgumentException(
+                    $"{part} is not valid (should be 1 or 2)",
+                    nameof(part)
+                ),
             };
         }
 
